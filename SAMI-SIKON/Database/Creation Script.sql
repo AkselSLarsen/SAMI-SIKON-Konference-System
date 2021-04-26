@@ -16,19 +16,30 @@
 --);
 
 
+CREATE TABLE _User (
+	_User_Id INT IDENTITY(1,1),
+	Email VARCHAR(120) NOT NULL,
+	Password CHAR(64) NOT NULL,
+	Salt CHAR(16) NOT NULL,
+	Phone_Number VARCHAR(30),
+	_Name VARCHAR(100),
+	Administrator BIT NOT NULL,
 
+	PRIMARY KEY (_User_Id)--,
+	--FOREIGN KEY (Email) REFERENCES Event_Holder(Email)
+);
 
 
 
 
 --CREATE Table Booking (
---	Booking_ID INT IDENTITY(1,1),
---	Seat_ID INT NOT NULL,
---	Event_ID INT NOT NULL,
---	_User_ID INT NOT NULL,
+--	Booking_Id INT IDENTITY(1,1),
+--	Seat_Id INT NOT NULL,
+--	Event_Id INT NOT NULL,
+--	_User_Id INT NOT NULL,
 --	Locked BIT NOT NULL,
---	PRIMARY KEY (Booking_ID),
---	FOREIGN KEY (Seat_ID) REFERENCES Seat(Seat_ID),
---	FOREIGN KEY (Event_ID) REFERENCES Seat(Event_ID),
---	FOREIGN KEY (_User_ID) REFERENCES _User(_User_ID)
+--	PRIMARY KEY (Booking_Id),
+--	FOREIGN KEY (Seat_Id) REFERENCES Seat(Seat_Id),
+--	FOREIGN KEY (Event_Id) REFERENCES Seat(Event_Id),
+--	FOREIGN KEY (_User_Id) REFERENCES _User(_User_Id)
 --);
