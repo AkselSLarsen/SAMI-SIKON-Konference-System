@@ -5,8 +5,4 @@
     <RootNamespace>SAMI_SIKON</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-
 </Project>
