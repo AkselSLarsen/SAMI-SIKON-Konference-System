@@ -191,9 +191,8 @@ namespace SAMI_SIKON.Services {
         }
 
         public abstract Task<List<T>> GetAllItems();
-        public abstract Task<List<T>> GetItemsWithKey(int keyNr, object key);
+        public abstract Task<List<T>> GetItemsWithKey(int keyNr, int key);
         public abstract Task<List<T>> GetItemsWithAttribute(int attributeNr, object attribute);
-        public abstract Task<List<T>> GetItemsWithKeyLike(int keyNr, string key);
         public abstract Task<List<T>> GetItemsWithAttributeLike(int attributeNr, string attribute);
         public abstract Task<T> GetItem(int[] ids);
         public abstract Task<bool> CreateItem(T t);

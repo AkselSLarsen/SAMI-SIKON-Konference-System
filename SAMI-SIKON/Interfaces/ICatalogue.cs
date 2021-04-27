@@ -32,7 +32,7 @@ namespace SAMI_SIKON.Interfaces {
         /// <param name="keyNr">The placement of the keyname in the array returned by RelationalKeys</param>
         /// <param name="key">The value the key should have for the element to be returned</param>
         /// <returns>A list of all elements with the specified key</returns>
-        Task<List<T>> GetItemsWithKey(int keyNr, object key);
+        Task<List<T>> GetItemsWithKey(int keyNr, int key);
         /// <summary>
         /// Retrieves all elements of the table where the attribute with the given number is equal to the given attribute.
         /// Elements possess all keys and attributes contained by the RelationalKeys and RelationalAttributes properties.
@@ -41,14 +41,6 @@ namespace SAMI_SIKON.Interfaces {
         /// <param name="attribute">The value the attribute should have for the element to be returned</param>
         /// <returns>A list of all elements with the specified attribute</returns>
         Task<List<T>> GetItemsWithAttribute(int attributeNr, object attribute);
-        /// <summary>
-        /// Retrieves all elements of the table where the key with the given number contains the given key.
-        /// Elements possess all keys and attributes contained by the RelationalKeys and RelationalAttributes properties.
-        /// </summary>
-        /// <param name="keyNr">The placement of the keyname in the array returned by RelationalKeys</param>
-        /// <param name="key">The value the key should contain for the element to be returned</param>
-        /// <returns>A list of all elements with the key containing the specified key</returns>
-        Task<List<T>> GetItemsWithKeyLike(int keyNr, string key);
         /// <summary>
         /// Retrieves all elements of the table where the attribute with the given number contains the given attribute.
         /// Elements possess all keys and attributes contained by the RelationalKeys and RelationalAttributes properties.

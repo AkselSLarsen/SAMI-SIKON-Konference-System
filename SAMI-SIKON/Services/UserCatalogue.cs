@@ -42,36 +42,226 @@ namespace SAMI_SIKON.Services {
             return false;
         }
 
-        public override Task<IUser> DeleteItem(int[] ids) {
-            throw new NotImplementedException();
+        public override async Task<IUser> DeleteItem(int[] ids) {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(SQLDelete, connection))
+                    {
+
+                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", ids[0]);
+
+                        await command.Connection.OpenAsync();
+                        IUser result = await GetItem(ids);
+                        int i = await command.ExecuteNonQueryAsync();
+                        return result;
+                    }
+                }
+                
+            }
+            catch (Exception)
+            {
+
+            }
+            return null;
         }
 
-        public override Task<List<IUser>> GetAllItems() {
-            throw new NotImplementedException();
+        public override async Task<List<IUser>> GetAllItems() {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(SQLGetAll, connection))
+                    {
+
+
+
+                        await command.Connection.OpenAsync();
+                        List<IUser> users = new List<IUser>();
+                        SqlDataReader reader = await command.ExecuteReaderAsync();
+                        while (reader.Read())
+                        {
+                            IUser user = null;
+                            if (reader.GetBoolean(0) == false)
+                            {
+                                user = new Participant();
+                            }
+                            else
+                            {
+                                user = new Administrator();
+                            }
+
+                            user.Id = reader.GetInt32(0);
+                            user.Email = reader.GetString(0);
+                            user.Name = reader.GetString(4);
+                            user.Password = reader.GetString(1);
+                            user.Salt = reader.GetString(2);
+                            user.PhoneNumber = reader.GetString(3);
+                            users.Add(user);
+                        }
+
+                        return users;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return null;
         }
 
-        public override Task<IUser> GetItem(int[] ids) {
-            throw new NotImplementedException();
+        public override async Task<IUser> GetItem(int[] ids) {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(SQLInsert, connection))
+                    {
+
+                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", ids[0]);
+                        
+
+                        await command.Connection.OpenAsync();
+                        IUser user=null;
+                        SqlDataReader reader = await command.ExecuteReaderAsync();
+                        while (reader.Read())
+                        {
+                            
+                            if (reader.GetBoolean(0) == false)
+                            {
+                                user=new Participant();
+                            }
+                            else
+                            {
+                                user=new Administrator();
+                            }
+
+                            user.Id = ids[0];
+                            user.Email = reader.GetString(0);
+                            user.Name = reader.GetString(4);
+                            user.Password = reader.GetString(1);
+                            user.Salt = reader.GetString(2);
+                            user.PhoneNumber = reader.GetString(3);
+                        }
+
+                        return user;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return null;
         }
 
-        public override Task<List<IUser>> GetItemsWithAttribute(int attributeNr, object attribute) {
-            throw new NotImplementedException();
+        public override async Task<List<IUser>> GetItemsWithAttribute(int attributeNr, object attribute) {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr,attribute.ToString()), connection))
+                    {
+
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
+
+
+                        await command.Connection.OpenAsync();
+                        List<IUser> users = new List<IUser>();
+                        SqlDataReader reader = await command.ExecuteReaderAsync();
+                        while (reader.Read())
+                        {
+                            IUser user = null;
+                            if (reader.GetBoolean(0) == false)
+                            {
+                                user = new Participant();
+                            }
+                            else
+                            {
+                                user = new Administrator();
+                            }
+
+                            user.Id = reader.GetInt32(0);
+                            user.Email = reader.GetString(0);
+                            user.Name = reader.GetString(4);
+                            user.Password = reader.GetString(1);
+                            user.Salt = reader.GetString(2);
+                            user.PhoneNumber = reader.GetString(3);
+                            users.Add(user);
+                        }
+
+                        return users;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return null;
         }
 
-        public override Task<List<IUser>> GetItemsWithAttributeLike(int attributeNr, string attribute) {
-            throw new NotImplementedException();
+        public override async Task<List<IUser>> GetItemsWithAttributeLike(int attributeNr, string attribute) {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(SQLGetLikeAtttribute(attributeNr, attribute), connection))
+                    {
+
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
+
+
+                        await command.Connection.OpenAsync();
+                        List<IUser> users = new List<IUser>();
+                        SqlDataReader reader = await command.ExecuteReaderAsync();
+                        while (reader.Read())
+                        {
+                            IUser user = null;
+                            if (reader.GetBoolean(0) == false)
+                            {
+                                user = new Participant();
+                            }
+                            else
+                            {
+                                user = new Administrator();
+                            }
+
+                            user.Id = reader.GetInt32(0);
+                            user.Email = reader.GetString(0);
+                            user.Name = reader.GetString(4);
+                            user.Password = reader.GetString(1);
+                            user.Salt = reader.GetString(2);
+                            user.PhoneNumber = reader.GetString(3);
+                            users.Add(user);
+                        }
+
+                        return users;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return null;
         }
 
-        public override Task<List<IUser>> GetItemsWithKey(int keyNr, object key) {
-            throw new NotImplementedException();
+        public override async Task<List<IUser>> GetItemsWithKey(int keyNr, int key)
+        {
+            List<IUser> result = new List<IUser>();
+            result.Add(await GetItem(new int[] { key }));
+            return result;
         }
 
-        public override Task<List<IUser>> GetItemsWithKeyLike(int keyNr, string key) {
-            throw new NotImplementedException();
-        }
+        
 
-        public override Task<bool> UpdateItem(IUser t, int[] ids) {
-            throw new NotImplementedException();
+        public override async Task<bool> UpdateItem(IUser t, int[] ids)
+        {
+            await DeleteItem(ids);
+            return await CreateItem(t);
         }
     }
 }
