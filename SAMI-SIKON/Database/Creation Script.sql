@@ -25,8 +25,7 @@ CREATE TABLE _User (
 	_Name VARCHAR(100),
 	Administrator BIT NOT NULL,
 
-	PRIMARY KEY (_User_Id)--,
-	--FOREIGN KEY (Email) REFERENCES Event_Holder(Email)
+	PRIMARY KEY (_User_Id)
 );
 
 
