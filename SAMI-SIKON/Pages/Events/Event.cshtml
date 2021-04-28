@@ -1,0 +1,33 @@
+﻿@page
+@model SAMI_SIKON.Pages.Events.EventModel
+@{
+}
+
+<div style="background-color:beige;">
+    <h2 class="offset-1">@Model.Name</h2>
+</div>
+
+<div class="col-4" style="float:left;margin:auto;">
+    <p>@Model.Description</p>
+</div>
+
+<div class="col-8" style="float:right;margin:auto;">
+    <img src="@Model.PictureSrc" alt="@Model.PictureAlt" style="width:100%;height:auto;" />
+
+    <div class="border border-dark" style="margin-top:1vh;overflow:hidden;">
+
+        <div style="text-align:center;width:34%;float:left;">
+            <p class="border border-info btn" style="margin-top:1em;">Seats Left: @Model.Seats</p>
+        </div>
+
+        <div style="text-align:center;width:33%;float:left;">
+            <input class="border border-primary btn" style="margin-top:1em;" type="button" value="Book Seat" />
+        </div>
+
+        <div style="text-align:center;width:33%;float:right;">
+            <input class="border border-secondary btn" style="margin-top:1em;" type="button" value="Chooce seat" />
+        </div>
+
+    </div>
+
+</div>
