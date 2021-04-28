@@ -18,7 +18,7 @@ namespace SAMI_SIKON.Model
 
         public void Login()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
