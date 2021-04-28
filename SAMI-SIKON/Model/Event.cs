@@ -7,17 +7,20 @@ namespace SAMI_SIKON.Model
 {
     public class Event
     {
-        private int room;
+        public int RoomNr;
         private int duration;
         private int bookedSeats;
-        public int SeatsLeft;
         public DateTime StartTime;
-        public DateTime StopTime;
         public string Description;
         public string Name;
         public string Theme;
         private bool seatTaken; 
         public List<Participant> Speaker;
+
+        public DateTime StopTime { get; private set; }
+        public int SeatsLeft { get; private set; }
+
+
 
 
     }

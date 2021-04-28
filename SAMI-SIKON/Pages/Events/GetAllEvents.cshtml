@@ -1,8 +1,8 @@
 ﻿@page
-@model SAMI_SIKON.Pages.Event.EventsModel
+@using SAMI_SIKON.Model
+@model SAMI_SIKON.Pages.Events.GetAllEventsModel
 @{
 }
-
 <form>
     <p>
         Search: <input type="text" asp-for="Criteria" />
@@ -13,7 +13,8 @@
 <h4 style="color:aquamarine">List of Events</h4>
 
 <div class="col-8">
-    @foreach(Event evt in Model.SortedEvents) {
+    @foreach (Event evt in Model.SortedEvents)
+    {
 
 
 
