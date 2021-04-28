@@ -16,7 +16,9 @@ namespace SAMI_SIKON.Services {
         public override async Task<bool> CreateItem(IUser user) {
             try {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
-                    using (SqlCommand command = new SqlCommand(SQLInsert, connection)) {
+                    using (SqlCommand command = new SqlCommand(SQLInsert, connection))
+                    {
+
 
                         command.Parameters.AddWithValue($"@{_relationalKeys[0]}", user.Id);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", user.Email);

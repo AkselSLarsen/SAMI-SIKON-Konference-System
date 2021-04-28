@@ -1,0 +1,24 @@
+﻿@page
+@using SAMI_SIKON.Model
+@model SAMI_SIKON.Pages.Events.GetAllEventsModel
+@{
+}
+<form>
+    <p>
+        Search: <input type="text" asp-for="Criteria" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<h4 style="color:aquamarine">List of Events</h4>
+
+<div class="col-8">
+    @foreach (Event evt in Model.SortedEvents)
+    {
+
+
+
+
+
+    }
+</div>
