@@ -260,10 +260,36 @@ namespace SAMI_SIKON.Services {
 
         
 
-        public override async Task<bool> UpdateItem(IUser t, int[] ids)
+        public override async Task<bool> UpdateItem(IUser user, int[] ids)
         {
-            await DeleteItem(ids);
-            return await CreateItem(t);
+            try {
+                using (SqlConnection connection = new SqlConnection(connectionString)) {
+                    using (SqlCommand command = new SqlCommand(SQLUpdate, connection)) {
+
+                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", user.Id);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", user.Email);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", user.Password);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", user.Salt);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", user.PhoneNumber);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", user.Name);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", user is Administrator);
+                        command.Parameters.AddWithValue($"@To_Update_0", ids[0]);
+
+                        await command.Connection.OpenAsync();
+
+                        int i = await command.ExecuteNonQueryAsync();
+                        if (i == 0) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+            } catch (Exception) {
+
+            }
+            return false;
         }
+    }
     }
 }
