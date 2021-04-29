@@ -7,6 +7,7 @@ namespace SAMI_SIKON.Model
 {
     public class Event
     {
+        public int Event_Id;
         public int RoomNr;
         private int duration;
         private int bookedSeats;

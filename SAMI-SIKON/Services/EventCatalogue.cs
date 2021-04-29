@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using SAMI_SIKON.Interfaces;
@@ -40,9 +41,41 @@ namespace SAMI_SIKON.Services
             throw new NotImplementedException();
         }
 
-        public override Task<bool> CreateItem(Event t)
+        public override async Task<bool> CreateItem(Event t)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(SQLInsert, connection))
+                    {
+
+
+                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", t.Event_Id);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", t.Description);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", t.Name);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", t.StartTime);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", t.RoomNr);
+
+                        await command.Connection.OpenAsync();
+
+                        int i = await command.ExecuteNonQueryAsync();
+                        if (i != 1)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return false;
         }
 
         public override Task<bool> UpdateItem(Event t, int[] ids)
