@@ -28,6 +28,19 @@ CREATE TABLE _User (
 	PRIMARY KEY (_User_Id)
 );
 
+--CREATE TABLE Event (
+--	Event_Id INT IDENTITY (1,1),
+--	Description VARCHAR(500) NOT NULL,
+--	Name VARCHAR(100) NOT NULL,
+--	Booked_Seats INT,
+--	StartTime DateTime NOT NULL,
+--	Duration INT,
+--	Room_Id INT NOT NULL,
+
+--	PRIMARY KEY (Event_Id),
+--	FOREIGN KEY (Room_Id) REFERENCES Room(Room_Id)
+--	);
+
 
 
 
@@ -39,6 +52,6 @@ CREATE TABLE _User (
 --	Locked BIT NOT NULL,
 --	PRIMARY KEY (Booking_Id),
 --	FOREIGN KEY (Seat_Id) REFERENCES Seat(Seat_Id),
---	FOREIGN KEY (Event_Id) REFERENCES Seat(Event_Id),
+--	FOREIGN KEY (Event_Id) REFERENCES Event(Event_Id),
 --	FOREIGN KEY (_User_Id) REFERENCES _User(_User_Id)
 --);
