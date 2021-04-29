@@ -31,8 +31,15 @@ namespace SAMI_Testing {
             users = await uc.GetAllItems();
             int postNr = users.Count;
 
-            Assert.IsTrue(preNr == postNr-1);
+            Assert.IsTrue(preNr == postNr - 1);
         }
+
+        //[TestMethod]
+        //public async Task UserCatalogueUpdateTest() {
+        //    UserCatalogue uc = new UserCatalogue();
+
+
+        //}
 
         [TestMethod]
         public async Task UserCatalogueReadAllTest() {

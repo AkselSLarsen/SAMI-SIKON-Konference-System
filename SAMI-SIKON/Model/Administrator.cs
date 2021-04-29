@@ -8,6 +8,20 @@ namespace SAMI_SIKON.Model
 {
     public class Administrator : IUser
     {
+
+        public Administrator() {
+
+        }
+
+        public Administrator(int id, string email, string password, string salt, string phoneNumber, string name) {
+            Id = id;
+            Email = email;
+            Password = password;
+            Salt = salt;
+            PhoneNumber = phoneNumber;
+            Name = name;
+        }
+
         public string Email { get; set; }
         public string Password { get; set; }
         public string Salt { get; set; }

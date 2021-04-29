@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 namespace SAMI_SIKON.Services {
     public abstract class Catalogue<T> : ICatalogue<T> {
 
+        private bool AutomaticKeyIndexation = true;
+
         /// <summary>
         /// The connection address to the underlying relational database in string format.
         /// </summary>
-        protected static string connectionString = "";
+        protected static string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=SAMI_SIKON;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         /// <summary>
         /// The name of the table in the relational database in string format.
         /// </summary>
@@ -122,8 +124,10 @@ namespace SAMI_SIKON.Services {
         protected string SQLInsert {
             get {
                 string re = $"INSERT INTO {_relationalName} (";
-                foreach (string s in _relationalKeys) {
-                    re += s + ",";
+                if (!AutomaticKeyIndexation) {
+                    foreach (string s in _relationalKeys) {
+                        re += s + ",";
+                    }
                 }
                 foreach (string s in _relationalAttributes) {
                     re += s + ",";
@@ -131,8 +135,10 @@ namespace SAMI_SIKON.Services {
                 re = re.Remove(re.Length - 1);
 
                 re += ") VALUES(";
-                foreach (string s in _relationalKeys) {
-                    re += "@" + s + ",";
+                if(!AutomaticKeyIndexation) {
+                    foreach (string s in _relationalKeys) {
+                        re += "@" + s + ",";
+                    }
                 }
                 foreach (string s in _relationalAttributes) {
                     re += "@" + s + ",";
