@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SAMI_SIKON.Interfaces;
+using SAMI_SIKON.Model;
+using SAMI_SIKON.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +24,8 @@ namespace SAMI_SIKON {
         // egmwglwwkweobswopwb
         public void ConfigureServices(IServiceCollection services) {
             services.AddRazorPages();
+            services.AddTransient<ICatalogue<IUser>, UserCatalogue>();
+            services.AddTransient<ICatalogue<Event>, EventCatalogue>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
