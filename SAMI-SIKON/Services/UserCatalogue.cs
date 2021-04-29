@@ -5,17 +5,23 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
-namespace SAMI_SIKON.Services {
-    public class UserCatalogue : Catalogue<IUser> {
+namespace SAMI_SIKON.Services
+{
+    public class UserCatalogue : Catalogue<IUser>
+    {
 
         public UserCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes) { }
 
         public UserCatalogue() : base("_User", new string[] { "_User_Id" }, new string[] { "Email", "Password", "Salt", "Phone_Number", "Name", "Administrator" }) { }
-
-        public override async Task<bool> CreateItem(IUser user) {
-            try {
-                using (SqlConnection connection = new SqlConnection(connectionString)) {
+        public IUser CurrentUser = null;
+        public override async Task<bool> CreateItem(IUser user)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
                     using (SqlCommand command = new SqlCommand(SQLInsert, connection))
                     {
 
@@ -31,20 +37,56 @@ namespace SAMI_SIKON.Services {
                         await command.Connection.OpenAsync();
 
                         int i = await command.ExecuteNonQueryAsync();
-                        if (i != 1) {
+                        if (i != 1)
+                        {
                             return false;
-                        } else {
+                        }
+                        else
+                        {
                             return true;
                         }
                     }
                 }
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
 
             }
             return false;
         }
 
-        public override async Task<IUser> DeleteItem(int[] ids) {
+        public IUser RegisterUser(int userId, string email, string password, string phoneNumber, string userName, bool isAdmin)
+        {
+            int saltSize = 16;
+            IUser result = null;
+            if (isAdmin)
+            {
+                result = new Administrator();
+            }
+            else
+            {
+                result = new Participant();
+            }
+
+            result.Id = userId;
+            result.Email = email;
+            result.Name = userName;
+            result.PhoneNumber = phoneNumber;
+            string salt = PasswordHasher.SaltMaker(saltSize);
+            result.Salt = salt;
+            result.Password = PasswordHasher.HashPasswordAndSalt(password, result.Salt, 1000, 48);
+            return result;
+        }
+
+        public bool ValidateUser(string email, string password)
+        {
+            IUser user = GetItemsWithAttribute(0, email).Result[0];
+            string prePwd = PasswordHasher.HashPasswordAndSalt(password, user.Salt, 1000, 48);
+            return prePwd.SequenceEqual(user.Password);
+        }
+
+        public override async Task<IUser> DeleteItem(int[] ids)
+        {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -60,7 +102,7 @@ namespace SAMI_SIKON.Services {
                         return result;
                     }
                 }
-                
+
             }
             catch (Exception)
             {
@@ -69,7 +111,8 @@ namespace SAMI_SIKON.Services {
             return null;
         }
 
-        public override async Task<List<IUser>> GetAllItems() {
+        public override async Task<List<IUser>> GetAllItems()
+        {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -114,7 +157,8 @@ namespace SAMI_SIKON.Services {
             return null;
         }
 
-        public override async Task<IUser> GetItem(int[] ids) {
+        public override async Task<IUser> GetItem(int[] ids)
+        {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -123,21 +167,21 @@ namespace SAMI_SIKON.Services {
                     {
 
                         command.Parameters.AddWithValue($"@{_relationalKeys[0]}", ids[0]);
-                        
+
 
                         await command.Connection.OpenAsync();
-                        IUser user=null;
+                        IUser user = null;
                         SqlDataReader reader = await command.ExecuteReaderAsync();
                         while (reader.Read())
                         {
-                            
+
                             if (reader.GetBoolean(0) == false)
                             {
-                                user=new Participant();
+                                user = new Participant();
                             }
                             else
                             {
-                                user=new Administrator();
+                                user = new Administrator();
                             }
 
                             user.Id = ids[0];
@@ -159,12 +203,13 @@ namespace SAMI_SIKON.Services {
             return null;
         }
 
-        public override async Task<List<IUser>> GetItemsWithAttribute(int attributeNr, object attribute) {
+        public override async Task<List<IUser>> GetItemsWithAttribute(int attributeNr, object attribute)
+        {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr,attribute.ToString()), connection))
+                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr, attribute.ToString()), connection))
                     {
 
                         command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
@@ -205,7 +250,8 @@ namespace SAMI_SIKON.Services {
             return null;
         }
 
-        public override async Task<List<IUser>> GetItemsWithAttributeLike(int attributeNr, string attribute) {
+        public override async Task<List<IUser>> GetItemsWithAttributeLike(int attributeNr, string attribute)
+        {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -258,13 +304,16 @@ namespace SAMI_SIKON.Services {
             return result;
         }
 
-        
+
 
         public override async Task<bool> UpdateItem(IUser user, int[] ids)
         {
-            try {
-                using (SqlConnection connection = new SqlConnection(connectionString)) {
-                    using (SqlCommand command = new SqlCommand(SQLUpdate, connection)) {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(SQLUpdate, connection))
+                    {
 
                         command.Parameters.AddWithValue($"@{_relationalKeys[0]}", user.Id);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", user.Email);
@@ -278,23 +327,30 @@ namespace SAMI_SIKON.Services {
                         await command.Connection.OpenAsync();
 
                         int i = await command.ExecuteNonQueryAsync();
-                        if (i == 0) {
+                        if (i == 0)
+                        {
                             return false;
-                        } else {
+                        }
+                        else
+                        {
                             return true;
                         }
                     }
                 }
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
 
             }
             return false;
         }
 
-        public void Login()
+        public void Login(string email, string password)
         {
-
+            if (ValidateUser(email, password))
+            {
+                CurrentUser = GetItemsWithAttribute(0, email).Result[0];
+            }
         }
-    }
     }
 }
