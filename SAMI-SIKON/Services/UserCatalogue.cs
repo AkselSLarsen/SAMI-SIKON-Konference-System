@@ -291,5 +291,5 @@ namespace SAMI_SIKON.Services {
             return false;
         }
     }
-    }
 }
+

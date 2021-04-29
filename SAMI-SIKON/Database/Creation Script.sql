@@ -32,7 +32,7 @@ CREATE TABLE _User (
 --	Event_Id INT IDENTITY (1,1),
 --	Description VARCHAR(500) NOT NULL,
 --	Name VARCHAR(100) NOT NULL,
---	Booked_Seats INT,
+--	Seats_Taken INT,
 --	StartTime DateTime NOT NULL,
 --	Duration INT,
 --	Room_Id INT NOT NULL,
