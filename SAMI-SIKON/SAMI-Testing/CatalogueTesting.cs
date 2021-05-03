@@ -34,13 +34,6 @@ namespace SAMI_Testing {
             Assert.IsTrue(preNr == postNr - 1);
         }
 
-        //[TestMethod]
-        //public async Task UserCatalogueUpdateTest() {
-        //    UserCatalogue uc = new UserCatalogue();
-
-
-        //}
-
         [TestMethod]
         public async Task UserCatalogueReadAllTest() {
             UserCatalogue uc = new UserCatalogue();
@@ -50,107 +43,31 @@ namespace SAMI_Testing {
             Assert.IsTrue(users.Count > 0);
         }
 
-        /*
         [TestMethod]
-        public async Task HotelReadTestAsync() {
-            HotelService hs = new HotelService();
+        public async Task UserCatalogueUpdateTest() {
+            UserCatalogue uc = new UserCatalogue();
 
-            List<Hotel> hotels = await hs.GetAllItems();
+            List<IUser> users = await uc.GetItemsWithAttribute(0, "test@test.mail.com");
+            IUser preUser = users[0];
 
-            Assert.IsTrue(hotels.Count > 0);
-        }
+            IUser postUser = new Administrator(preUser.Id, "Test@Admin.org", "12345", "5417", "34343260", "Org.Slave Nr. ADM-217");
 
-        [TestMethod]
-        public async Task RoomReadTestAsync() {
-            RoomService rs = new RoomService();
+            bool success = await uc.UpdateItem(postUser, new int[] { preUser.Id });
 
-            List<Room> rooms = await rs.GetAllItems();
-
-            Assert.IsTrue(rooms.Count > 0);
+            Assert.IsTrue(success);
         }
 
         [TestMethod]
-        public async Task HotelCreateDeleteTestAsync() {
-            HotelService hs = new HotelService();
+        public async Task UserCatalogueDeleteTest() {
+            UserCatalogue uc = new UserCatalogue();
 
-            List<Hotel> hotels = await hs.GetAllItems();
+            List<IUser> users = await uc.GetItemsWithAttribute(0, "Test@Admin.org");
+            IUser inputUser = users[0];
 
-            int id = getUniqueHotelId(hotels);
+            IUser outputUser = await uc.DeleteItem(new int[] { inputUser.Id });
 
-            Hotel testHotel = new Hotel(id, "test_name", "test_address");
-
-            bool createSuccess = await hs.CreateItem(testHotel);
-            Hotel deletedHotel = await hs.DeleteItem(new int[] { id });
-
-            Assert.IsTrue(createSuccess && deletedHotel.Equals(testHotel));
+            Assert.AreEqual(inputUser.Id, outputUser.Id);
         }
-
-        [TestMethod]
-        public async Task RoomCreateDeleteTestAsync() {
-            HotelService hs = new HotelService();
-            RoomService rs = new RoomService();
-
-            //create hotel
-            List<Hotel> hotels = await hs.GetAllItems();
-
-            int hotelId = getUniqueHotelId(hotels);
-
-            Hotel testHotel = new Hotel(hotelId, "test_name", "test_address");
-            bool createHotelSuccess = await hs.CreateItem(testHotel);
-
-            //create room
-            List<Room> rooms = await rs.GetItemsWithKey(0, hotelId);
-
-            int roomId = getUniqueRoomId(rooms);
-
-            Room testRoom = new Room(roomId, hotelId, RoomTypes.S, 0.0D);
-            bool createRoomSuccess = await rs.CreateItem(testRoom);
-
-            //delete
-            Room deletedRoom = await rs.DeleteItem(new int[] { roomId, hotelId });
-            Hotel deletedHotel = await hs.DeleteItem(new int[] { hotelId });
-
-            Assert.IsTrue(createHotelSuccess && createRoomSuccess && deletedHotel.Equals(testHotel) && deletedRoom.Equals(testRoom));
-        }
-
-        private int getUniqueHotelId(List<Hotel> hotels) {
-            int id = -1;
-            for (int i = 0; i < int.MaxValue; i++) {
-                bool idTaken = false;
-                foreach (Hotel hotel in hotels) {
-                    if (hotel.Hotel_No == i) {
-                        idTaken = true;
-                    }
-                }
-
-                if (!idTaken) {
-                    id = i;
-                    break;
-                }
-            }
-
-            return id;
-        }
-
-        private int getUniqueRoomId(List<Room> rooms) {
-            int id = -1;
-            for (int i = 0; i < int.MaxValue; i++) {
-                bool idTaken = false;
-                foreach (Room room in rooms) {
-                    if (room.Hotel_No == i) {
-                        idTaken = true;
-                    }
-                }
-
-                if (!idTaken) {
-                    id = i;
-                    break;
-                }
-            }
-
-            return id;
-        }
-        */
     }
 }
         
