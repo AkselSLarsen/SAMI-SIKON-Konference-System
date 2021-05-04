@@ -21,7 +21,7 @@ namespace SAMI_SIKON.Model {
                 _events = value;
 
                 UpdateTracks();
-            }
+           }
         }
 
         public List<List<Event>> Tracks {

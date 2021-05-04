@@ -35,7 +35,7 @@ namespace SAMI_SIKON.Model
             RoomNr = r.Next(1, 100);
             duration = r.Next(30, 120);
             bookedSeats = r.Next(0, 100);
-            StartTime = DateTime.Today.AddMinutes(r.Next(0, 1440));
+            StartTime = DateTime.Today.AddHours(r.Next(8, 14));
             Description = "";
             Name = "";
             Theme = r.Next(0, 2) < 1 ? "a" : r.Next(0, 2) < 1 ? "b" : "c";

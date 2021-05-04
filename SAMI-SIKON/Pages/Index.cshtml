@@ -5,7 +5,7 @@
     ViewData["Title"] = "Overview";
 }
 
-<div>
+<div class="overview">
 
     <div id="time_column">
 
@@ -15,9 +15,11 @@
 
             @foreach (Event evt in Model.Tracks[i]) {
 
-                <div style="background-color:@Model.ThemeToColor(evt);">
-                    <p>@evt.Theme</p>
-                </div>
+            <div class="overview_event" style="background-color:@Model.ThemeToColor(evt);top:@Model.GetOffset(evt);height:@Model.GetDuration(evt);">
+                <p>Theme: @evt.Theme</p>
+                <p>StartTime: @evt.StartTime.TimeOfDay</p>
+                <p>StopTime: @evt.StopTime.TimeOfDay</p>
+            </div>
 
             }
 
