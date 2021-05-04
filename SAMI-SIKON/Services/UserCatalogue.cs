@@ -78,12 +78,7 @@ namespace SAMI_SIKON.Services
             return result;
         }
 
-        public bool ValidateUser(string email, string password)
-        {
-            IUser user = GetItemsWithAttribute(0, email).Result[0];
-            string prePwd = PasswordHasher.HashPasswordAndSalt(password, user.Salt, 1000, 48);
-            return prePwd.SequenceEqual(user.Password);
-        }
+        
 
         public override async Task<IUser> DeleteItem(int[] ids)
         {
@@ -343,6 +338,13 @@ namespace SAMI_SIKON.Services
 
             }
             return false;
+        }
+
+        public bool ValidateUser(string email, string password)
+        {
+            IUser user = GetItemsWithAttribute(0, email).Result[0];
+            string prePwd = PasswordHasher.HashPasswordAndSalt(password, user.Salt, 1000, 48);
+            return prePwd.SequenceEqual(user.Password);
         }
 
         public void Login(string email, string password)
