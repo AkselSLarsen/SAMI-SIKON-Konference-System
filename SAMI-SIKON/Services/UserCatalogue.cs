@@ -62,11 +62,10 @@ namespace SAMI_SIKON.Services {
                         return result;
                     }
                 }
-                
-            }
-            catch (Exception)
-            {
-
+            } catch (Exception e) {
+                string s = e.StackTrace;
+                Console.WriteLine(s);
+                Console.Beep();
             }
             return null;
         }
@@ -151,10 +150,10 @@ namespace SAMI_SIKON.Services {
                         return user;
                     }
                 }
-            }
-            catch (Exception)
-            {
-
+            } catch (Exception e) {
+                string s = e.StackTrace;
+                Console.WriteLine(s);
+                Console.Beep();
             }
             return null;
         }
@@ -166,8 +165,6 @@ namespace SAMI_SIKON.Services {
                 {
                     using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr, attribute), connection))
                     {
-
-                        //command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
 
                         await command.Connection.OpenAsync();
                         List<IUser> users = new List<IUser>();
@@ -196,9 +193,7 @@ namespace SAMI_SIKON.Services {
                         return users;
                     }
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 string s = e.StackTrace;
                 Console.WriteLine(s);
                 Console.Beep();
@@ -214,9 +209,6 @@ namespace SAMI_SIKON.Services {
                     using (SqlCommand command = new SqlCommand(SQLGetLikeAtttribute(attributeNr, attribute), connection))
                     {
 
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
-
-
                         await command.Connection.OpenAsync();
                         List<IUser> users = new List<IUser>();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -244,10 +236,10 @@ namespace SAMI_SIKON.Services {
                         return users;
                     }
                 }
-            }
-            catch (Exception)
-            {
-
+            } catch (Exception e) {
+                string s = e.StackTrace;
+                Console.WriteLine(s);
+                Console.Beep();
             }
             return null;
         }
@@ -258,8 +250,6 @@ namespace SAMI_SIKON.Services {
             result.Add(await GetItem(new int[] { key }));
             return result;
         }
-
-        
 
         public override async Task<bool> UpdateItem(IUser user, int[] ids)
         {
@@ -295,4 +285,3 @@ namespace SAMI_SIKON.Services {
         }
     }
 }
-

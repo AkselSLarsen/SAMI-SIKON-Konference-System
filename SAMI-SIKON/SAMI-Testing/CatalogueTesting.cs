@@ -11,6 +11,7 @@ namespace SAMI_Testing {
     [TestClass]
     public class CatalogueTesting {
 
+        #region UserCatalogue Testing
         [TestMethod]
         public async Task UserCatalogueInsertTest() {
             UserCatalogue uc = new UserCatalogue();
@@ -68,6 +69,60 @@ namespace SAMI_Testing {
 
             Assert.AreEqual(inputUser.Id, outputUser.Id);
         }
+        #endregion
+        #region RoomCatalogue Testing
+        [TestMethod]
+        public async Task RoomCatalogueInsertTest() {
+            RoomCatalogue rc = new RoomCatalogue();
+
+            List<Room> rooms = await rc.GetAllItems();
+            int preNr = rooms.Count;
+
+            Room room = new Room(1, "S");
+
+            await rc.CreateItem(room);
+
+            rooms = await rc.GetAllItems();
+            int postNr = rooms.Count;
+
+            Assert.IsTrue(preNr == postNr - 1);
+        }
+
+        [TestMethod]
+        public async Task RoomCatalogueReadAllTest() {
+            RoomCatalogue rc = new RoomCatalogue();
+
+            List<Room> rooms = await rc.GetAllItems();
+
+            Assert.IsTrue(rooms.Count > 0);
+        }
+
+        [TestMethod]
+        public async Task RoomCatalogueUpdateTest() {
+            RoomCatalogue rc = new RoomCatalogue();
+
+            List<Room> rooms = await rc.GetItemsWithAttribute(0, "S");
+            Room preRoom = rooms[0];
+
+            Room postRoom = new Room(2, "SS");
+
+            bool success = await rc.UpdateItem(postRoom, new int[] { preRoom.Id });
+
+            Assert.IsTrue(success);
+        }
+
+        [TestMethod]
+        public async Task RoomCatalogueDeleteTest() {
+            RoomCatalogue rc = new RoomCatalogue();
+
+            List<Room> rooms = await rc.GetItemsWithAttribute(0, "SS");
+            Room inputRoom = rooms[0];
+
+            Room outputRoom = await rc.DeleteItem(new int[] { inputRoom.Id });
+
+            Assert.AreEqual(inputRoom.Id, outputRoom.Id);
+        }
+        #endregion
     }
 }
         

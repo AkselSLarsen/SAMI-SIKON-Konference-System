@@ -8,13 +8,19 @@ namespace SAMI_SIKON.Model
     public class Room
     {
         private static char SeatSymbol = 'S'; //should maybe be public, if you need it in some other class feel free to make it so.
+        private static char EndLineSymbol = ';';
 
-
+        public int Id;
         public int Seats;
         private List<List<char>> _layout;
 
-        public Room(List<List<char>> layout)
-        {
+        public Room(int id, string layout) {
+            Id = id;
+            Layout = LayoutFromString(layout);
+        }
+
+        public Room(int id,  List<List<char>> layout) {
+            Id = id;
             Layout = layout;
         }
 
@@ -40,6 +46,36 @@ namespace SAMI_SIKON.Model
         public int FindSeat(int x, int y)
         {
             throw new NotImplementedException();
+        }
+
+        public List<List<char>> LayoutFromString(string layout) {
+            List<List<char>> llc = new List<List<char>>();
+            llc.Add(new List<char>());
+
+            int lineNr = 0;
+            foreach(char c in layout) {
+                if(c == EndLineSymbol) {
+                    lineNr++;
+                    llc.Add(new List<char>());
+                } else {
+                    llc[lineNr].Add(c);
+                }
+            }
+
+            return llc;
+        }
+
+        public string GetLayoutAsString() {
+            string layout = "";
+            foreach (List<char> cs in _layout) {
+                foreach (char c in cs) {
+                    layout += c;
+                }
+                layout += EndLineSymbol;
+            }
+            layout = layout.Remove(layout.Length-1); //remove last EndLineSymbol
+
+            return layout;
         }
     }
 }
