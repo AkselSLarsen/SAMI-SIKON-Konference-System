@@ -1,10 +1,28 @@
 ﻿@page
+@using SAMI_SIKON.Model;
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Overview";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+
+    <div id="time_column">
+
+    </div>
+    @for (int i = 0; i < Model.NrOfTracks; i++) {
+        <div class="event_track" style="width:@Model.TrackWidth();">
+
+            @foreach (Event evt in Model.Tracks[i]) {
+
+                <div style="background-color:@Model.ThemeToColor(evt);">
+                    <p>@evt.Theme</p>
+                </div>
+
+            }
+
+        </div>
+    }
+
+
 </div>

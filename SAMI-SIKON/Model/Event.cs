@@ -18,10 +18,29 @@ namespace SAMI_SIKON.Model
         private bool seatTaken; 
         public List<Participant> Speaker;
 
-        public DateTime StopTime { get; private set; }
+        public DateTime StopTime {
+            get {
+                return StartTime.AddMinutes(duration);
+            }
+        }
         public int SeatsLeft { get; private set; }
 
-
+        /// <summary>
+        /// This is a testing constructor, please delete.
+        /// </summary>
+        /// <param name="testing"></param>
+        public Event(bool testing) {
+            Random r = new Random();
+            Event_Id = r.Next(1, 10000);
+            RoomNr = r.Next(1, 100);
+            duration = r.Next(30, 120);
+            bookedSeats = r.Next(0, 100);
+            StartTime = DateTime.Today.AddMinutes(r.Next(0, 1440));
+            Description = "";
+            Name = "";
+            Theme = r.Next(0, 2) < 1 ? "a" : r.Next(0, 2) < 1 ? "b" : "c";
+            Speaker = null;
+        }
 
 
     }
