@@ -17,10 +17,13 @@ namespace SAMI_SIKON.Services
         public UserCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes) { }
 
         public UserCatalogue() : base("_User", new string[] { "_User_Id" }, new string[] { "Email", "Password", "Salt", "Phone_Number", "_Name", "Administrator" }) { }
-
-        public override async Task<bool> CreateItem(IUser user) {
-            try {
-                using (SqlConnection connection = new SqlConnection(connectionString)) {
+        public IUser CurrentUser = null;
+        public override async Task<bool> CreateItem(IUser user)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
                     using (SqlCommand command = new SqlCommand(SQLInsert, connection))
                     {
                         //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", user.Id); //not needed
@@ -44,7 +47,9 @@ namespace SAMI_SIKON.Services
                         }
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 string s = e.StackTrace;
                 Console.WriteLine(s);
                 Console.Beep();
@@ -75,7 +80,7 @@ namespace SAMI_SIKON.Services
             return result;
         }
 
-        
+
 
         public override async Task<IUser> DeleteItem(int[] ids)
         {
@@ -94,7 +99,9 @@ namespace SAMI_SIKON.Services
                         return result;
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 string s = e.StackTrace;
                 Console.WriteLine(s);
                 Console.Beep();
@@ -114,7 +121,7 @@ namespace SAMI_SIKON.Services
                         List<IUser> users = new List<IUser>();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
                         while (reader.Read())
-                        {   
+                        {
                             int user_Id = reader.GetInt32(0);
                             string user_Email = reader.GetString(1);
                             string user_Password = reader.GetString(2);
@@ -124,9 +131,12 @@ namespace SAMI_SIKON.Services
 
                             IUser user = null;
 
-                            if (reader.GetBoolean(6) == false) {
+                            if (reader.GetBoolean(6) == false)
+                            {
                                 user = new Participant(user_Id, user_Email, user_Password, user_Salt, user_PhoneNumber, user_Name);
-                            } else {
+                            }
+                            else
+                            {
                                 user = new Administrator(user_Id, user_Email, user_Password, user_Salt, user_PhoneNumber, user_Name);
                             }
 
@@ -163,7 +173,7 @@ namespace SAMI_SIKON.Services
                         SqlDataReader reader = await command.ExecuteReaderAsync();
                         while (reader.Read())
                         {
-                            
+
                             if (reader.GetBoolean(6) == false)
                             {
                                 user = new Participant();
@@ -184,7 +194,9 @@ namespace SAMI_SIKON.Services
                         return user;
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 string s = e.StackTrace;
                 Console.WriteLine(s);
                 Console.Beep();
@@ -228,7 +240,9 @@ namespace SAMI_SIKON.Services
                         return users;
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 string s = e.StackTrace;
                 Console.WriteLine(s);
                 Console.Beep();
@@ -272,7 +286,9 @@ namespace SAMI_SIKON.Services
                         return users;
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 string s = e.StackTrace;
                 Console.WriteLine(s);
                 Console.Beep();
@@ -318,16 +334,12 @@ namespace SAMI_SIKON.Services
                         }
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 string s = e.StackTrace;
                 Console.WriteLine(s);
                 Console.Beep();
-                    }
-                }
-            }
-            catch (Exception)
-            {
-
             }
             return false;
         }
@@ -358,7 +370,4 @@ namespace SAMI_SIKON.Services
         }
     }
 }
-            return false;
-        }
-    }
-}
+
