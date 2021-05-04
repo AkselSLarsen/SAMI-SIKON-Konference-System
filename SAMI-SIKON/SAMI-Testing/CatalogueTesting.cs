@@ -34,16 +34,17 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(preNr == postNr - 1);
         }
-
         [TestMethod]
-        public async Task UserCatalogueReadAllTest() {
+        public async Task UserCatalogueReadTest() {
             UserCatalogue uc = new UserCatalogue();
 
             List<IUser> users = await uc.GetAllItems();
 
-            Assert.IsTrue(users.Count > 0);
-        }
+            int id = users[0].Id;
+            IUser user = await uc.GetItem(new int[] { id });
 
+            Assert.IsTrue(user.Id == users[0].Id);
+        }
         [TestMethod]
         public async Task UserCatalogueUpdateTest() {
             UserCatalogue uc = new UserCatalogue();
@@ -57,7 +58,6 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(success);
         }
-
         [TestMethod]
         public async Task UserCatalogueDeleteTest() {
             UserCatalogue uc = new UserCatalogue();
@@ -68,6 +68,28 @@ namespace SAMI_Testing {
             IUser outputUser = await uc.DeleteItem(new int[] { inputUser.Id });
 
             Assert.AreEqual(inputUser.Id, outputUser.Id);
+        }
+        [TestMethod]
+        public async Task UserCatalogueFindTest() {
+            UserCatalogue uc = new UserCatalogue();
+
+            List<IUser> users = await uc.GetAllItems();
+
+            IUser user = users[0];
+            List<IUser> usersWithKey = await uc.GetItemsWithKey(0, user.Id);
+
+            string userEmail = user.Email[1..(user.Email.Length-1)];
+            List<IUser> usersWithAttributeLike = await uc.GetItemsWithAttributeLike(0, userEmail);
+
+            bool findsSameUser = false;
+            foreach(IUser uwk in usersWithKey) {
+                foreach(IUser uwal in usersWithAttributeLike) {
+                    if(uwk.Id == uwal.Id) {
+                        findsSameUser = true;
+                    }
+                }
+            }
+            Assert.IsTrue(findsSameUser);
         }
         #endregion
         #region RoomCatalogue Testing
@@ -87,16 +109,16 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(preNr == postNr - 1);
         }
-
         [TestMethod]
-        public async Task RoomCatalogueReadAllTest() {
+        public async Task RoomCatalogueReadTest() {
             RoomCatalogue rc = new RoomCatalogue();
 
             List<Room> rooms = await rc.GetAllItems();
+            int id = rooms[0].Id;
+            Room room = await rc.GetItem(new int[] { id });
 
-            Assert.IsTrue(rooms.Count > 0);
+            Assert.IsTrue(room.Id == rooms[0].Id);
         }
-
         [TestMethod]
         public async Task RoomCatalogueUpdateTest() {
             RoomCatalogue rc = new RoomCatalogue();
@@ -110,7 +132,6 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(success);
         }
-
         [TestMethod]
         public async Task RoomCatalogueDeleteTest() {
             RoomCatalogue rc = new RoomCatalogue();
@@ -121,6 +142,28 @@ namespace SAMI_Testing {
             Room outputRoom = await rc.DeleteItem(new int[] { inputRoom.Id });
 
             Assert.AreEqual(inputRoom.Id, outputRoom.Id);
+        }
+        [TestMethod]
+        public async Task RoomCatalogueFindTest() {
+            RoomCatalogue rc = new RoomCatalogue();
+
+            List<Room> rooms = await rc.GetAllItems();
+
+            Room room = rooms[0];
+            List<Room> roomsWithKey = await rc.GetItemsWithKey(0, room.Id);
+
+            string roomLayout = room.GetLayoutAsString()[1..(room.GetLayoutAsString().Length - 1)];
+            List<Room> roomsWithAttributeLike = await rc.GetItemsWithAttributeLike(0, roomLayout);
+
+            bool findsSameRoom = false;
+            foreach (Room rwk in roomsWithKey) {
+                foreach (Room rwal in roomsWithAttributeLike) {
+                    if (rwk.Id == rwal.Id) {
+                        findsSameRoom = true;
+                    }
+                }
+            }
+            Assert.IsTrue(findsSameRoom);
         }
         #endregion
     }

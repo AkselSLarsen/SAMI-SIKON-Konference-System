@@ -85,6 +85,7 @@ namespace SAMI_SIKON.Services {
                             string room_Layout = reader.GetString(1);
 
                             Room room = new Room(room_Id, room_Layout);
+                            rooms.Add(room);
                         }
 
                         return rooms;
