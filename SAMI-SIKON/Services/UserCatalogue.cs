@@ -17,7 +17,7 @@ namespace SAMI_SIKON.Services
         public UserCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes) { }
 
         public UserCatalogue() : base("_User", new string[] { "_User_Id" }, new string[] { "Email", "Password", "Salt", "Phone_Number", "_Name", "Administrator" }) { }
-        public IUser CurrentUser = null;
+        public static IUser CurrentUser = null;
         public override async Task<bool> CreateItem(IUser user)
         {
             try
@@ -367,6 +367,11 @@ namespace SAMI_SIKON.Services
             }
 
             return false;
+        }
+
+        public static void Logout()
+        {
+            CurrentUser = null;
         }
     }
 }
