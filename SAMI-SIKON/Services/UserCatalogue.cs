@@ -20,7 +20,7 @@ namespace SAMI_SIKON.Services {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
                     using (SqlCommand command = new SqlCommand(SQLInsert, connection))
                     {
-                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", user.Id);
+                        //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", user.Id); //not needed
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", user.Email);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", user.Password);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", user.Salt);
@@ -62,11 +62,10 @@ namespace SAMI_SIKON.Services {
                         return result;
                     }
                 }
-                
-            }
-            catch (Exception)
-            {
-
+            } catch (Exception e) {
+                string s = e.StackTrace;
+                Console.WriteLine(s);
+                Console.Beep();
             }
             return null;
         }
@@ -119,7 +118,7 @@ namespace SAMI_SIKON.Services {
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(SQLInsert, connection))
+                    using (SqlCommand command = new SqlCommand(SQLGet, connection))
                     {
 
                         command.Parameters.AddWithValue($"@{_relationalKeys[0]}", ids[0]);
@@ -151,10 +150,10 @@ namespace SAMI_SIKON.Services {
                         return user;
                     }
                 }
-            }
-            catch (Exception)
-            {
-
+            } catch (Exception e) {
+                string s = e.StackTrace;
+                Console.WriteLine(s);
+                Console.Beep();
             }
             return null;
         }
@@ -164,11 +163,8 @@ namespace SAMI_SIKON.Services {
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr,attribute.ToString()), connection))
+                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr, attribute), connection))
                     {
-
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
-
 
                         await command.Connection.OpenAsync();
                         List<IUser> users = new List<IUser>();
@@ -176,7 +172,7 @@ namespace SAMI_SIKON.Services {
                         while (reader.Read())
                         {
                             IUser user = null;
-                            if (reader.GetBoolean(0) == false)
+                            if (reader.GetBoolean(6) == false)
                             {
                                 user = new Participant();
                             }
@@ -197,10 +193,10 @@ namespace SAMI_SIKON.Services {
                         return users;
                     }
                 }
-            }
-            catch (Exception)
-            {
-
+            } catch (Exception e) {
+                string s = e.StackTrace;
+                Console.WriteLine(s);
+                Console.Beep();
             }
             return null;
         }
@@ -213,16 +209,13 @@ namespace SAMI_SIKON.Services {
                     using (SqlCommand command = new SqlCommand(SQLGetLikeAtttribute(attributeNr, attribute), connection))
                     {
 
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
-
-
                         await command.Connection.OpenAsync();
                         List<IUser> users = new List<IUser>();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
                         while (reader.Read())
                         {
                             IUser user = null;
-                            if (reader.GetBoolean(0) == false)
+                            if (reader.GetBoolean(6) == false)
                             {
                                 user = new Participant();
                             }
@@ -243,10 +236,10 @@ namespace SAMI_SIKON.Services {
                         return users;
                     }
                 }
-            }
-            catch (Exception)
-            {
-
+            } catch (Exception e) {
+                string s = e.StackTrace;
+                Console.WriteLine(s);
+                Console.Beep();
             }
             return null;
         }
@@ -257,8 +250,6 @@ namespace SAMI_SIKON.Services {
             result.Add(await GetItem(new int[] { key }));
             return result;
         }
-
-        
 
         public override async Task<bool> UpdateItem(IUser user, int[] ids)
         {
@@ -272,7 +263,7 @@ namespace SAMI_SIKON.Services {
                         command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", user.Salt);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", user.PhoneNumber);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", user.Name);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", user is Administrator);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", (user is Administrator).ToString());
                         command.Parameters.AddWithValue($"@To_Update_0", ids[0]);
 
                         await command.Connection.OpenAsync();
@@ -285,11 +276,12 @@ namespace SAMI_SIKON.Services {
                         }
                     }
                 }
-            } catch (Exception) {
-
+            } catch (Exception e) {
+                string s = e.StackTrace;
+                Console.WriteLine(s);
+                Console.Beep();
             }
             return false;
         }
     }
 }
-

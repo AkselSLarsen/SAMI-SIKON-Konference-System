@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SAMI_SIKON.Services {
     public abstract class Catalogue<T> : ICatalogue<T> {
 
-        private bool AutomaticKeyIndexation = true;
+        private bool _automaticKeyIndexation;
 
         /// <summary>
         /// The connection address to the underlying relational database in string format.
@@ -30,6 +30,19 @@ namespace SAMI_SIKON.Services {
             _relationalName = relationalName;
             _relationalKeys = relationalKeys;
             _relationalAttributes = relationalAttributes;
+
+            if(_relationalKeys.Length == 1) {
+                _automaticKeyIndexation = true;
+            } else {
+                _automaticKeyIndexation = false;
+            }
+        }
+
+        public Catalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes, bool automaticKeyIndexation) {
+            _relationalName = relationalName;
+            _relationalKeys = relationalKeys;
+            _relationalAttributes = relationalAttributes;
+            _automaticKeyIndexation = automaticKeyIndexation;
         }
 
         string ICatalogue<T>.RelationalName {
@@ -73,7 +86,10 @@ namespace SAMI_SIKON.Services {
         /// <param name="attributeNr">The index number of the attribute. Must be a non-negative integer less than the length of the array contained by RelationalAttributes</param>
         /// <param name="value">The value the attribute should have for the element to be returned</param>
         /// <returns>An SQL statement in string format that retrieves all elements with the attribute of the given number equal to the given value</returns>
-        protected string SQLGetFromAtttribute(int attributeNr, string value) {
+        protected string SQLGetFromAtttribute(int attributeNr, object value) {
+            if(value is string) {
+                value = "'" + value + "'";
+            }
             string re = $"SELECT * FROM {_relationalName} WHERE {_relationalAttributes[attributeNr]} = {value};";
 
             return re;
@@ -124,7 +140,7 @@ namespace SAMI_SIKON.Services {
         protected string SQLInsert {
             get {
                 string re = $"INSERT INTO {_relationalName} (";
-                if (!AutomaticKeyIndexation) {
+                if (!_automaticKeyIndexation) {
                     foreach (string s in _relationalKeys) {
                         re += s + ",";
                     }
@@ -135,7 +151,7 @@ namespace SAMI_SIKON.Services {
                 re = re.Remove(re.Length - 1);
 
                 re += ") VALUES(";
-                if(!AutomaticKeyIndexation) {
+                if(!_automaticKeyIndexation) {
                     foreach (string s in _relationalKeys) {
                         re += "@" + s + ",";
                     }
@@ -174,8 +190,10 @@ namespace SAMI_SIKON.Services {
         protected string SQLUpdate {
             get {
                 string re = $"UPDATE {_relationalName} SET ";
-                foreach (string s in _relationalKeys) {
-                    re += s + " = @" + s + ",";
+                if (!_automaticKeyIndexation) {
+                    foreach (string s in _relationalKeys) {
+                        re += s + " = @" + s + ",";
+                    }
                 }
                 foreach (string s in _relationalAttributes) {
                     re += s + " = @" + s + ",";
