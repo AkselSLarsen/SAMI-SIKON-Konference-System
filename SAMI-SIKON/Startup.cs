@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SAMI_SIKON.Services;
 
 namespace SAMI_SIKON {
     public class Startup {
@@ -21,6 +22,7 @@ namespace SAMI_SIKON {
         // egmwglwwkweobswopwb
         public void ConfigureServices(IServiceCollection services) {
             services.AddRazorPages();
+            services.AddSingleton<UserCatalogue>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

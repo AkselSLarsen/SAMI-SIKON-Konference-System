@@ -347,12 +347,22 @@ namespace SAMI_SIKON.Services
             return prePwd.SequenceEqual(user.Password);
         }
 
-        public void Login(string email, string password)
+        public bool Login(string email, string password)
         {
-            if (ValidateUser(email, password))
+            if (GetItemsWithAttribute(0, email).Result.Count != 0)
             {
-                CurrentUser = GetItemsWithAttribute(0, email).Result[0];
+                if (ValidateUser(email, password))
+                {
+                    CurrentUser = GetItemsWithAttribute(0, email).Result[0];
+                    return true;
+                }
             }
+            else
+            {
+                return false;
+            }
+
+            return false;
         }
     }
 }
