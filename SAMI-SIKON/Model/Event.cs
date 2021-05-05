@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace SAMI_SIKON.Model
@@ -25,6 +26,16 @@ namespace SAMI_SIKON.Model
         }
         public int SeatsLeft { get; private set; }
 
+        public Event(int id, int roomNr, int _duration, DateTime startTime, string description, string name, int seatsTaken)
+        {
+            Event_Id = id;
+            RoomNr = roomNr;
+            duration = _duration;
+            StartTime = startTime;
+            Description = description;
+            Name = name;
+            bookedSeats = seatsTaken;
+        }
         /// <summary>
         /// This is a testing constructor, please delete.
         /// </summary>
