@@ -25,6 +25,7 @@ namespace SAMI_SIKON {
         public void ConfigureServices(IServiceCollection services) {
             services.AddRazorPages();
             services.AddTransient<ICatalogue<IUser>, UserCatalogue>();
+            services.AddTransient<ICatalogue<Room>, RoomCatalogue>();
             services.AddTransient<ICatalogue<Event>, EventCatalogue>();
         }
 
