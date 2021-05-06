@@ -37,18 +37,18 @@ namespace SAMI_SIKON.Model
             bookedSeats = seatsTaken;
         }
         /// <summary>
-        /// This is a testing constructor, please delete.
+        /// This is a testing constructor, please delete it after explaining all about what it was for in the report.
         /// </summary>
-        /// <param name="testing"></param>
+        /// <param name="testing">Doesn't do anything, just there to make it not interfere with the rest of the class</param>
         public Event(bool testing) {
             Random r = new Random();
             Id = r.Next(1, 10000);
             RoomNr = r.Next(1, 100);
-            duration = r.Next(30, 120);
+            duration = r.Next(1, 4) * 30;
             bookedSeats = r.Next(0, 100);
-            StartTime = DateTime.Today.AddHours(r.Next(8, 14));
+            StartTime = DateTime.Today.AddMinutes(r.Next(16, 28) * 30);
             Description = "";
-            Name = "";
+            Name = "Name Here";
             Theme = r.Next(0, 2) < 1 ? "a" : r.Next(0, 2) < 1 ? "b" : "c";
             Speaker = null;
         }
