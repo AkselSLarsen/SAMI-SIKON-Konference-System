@@ -8,7 +8,7 @@ namespace SAMI_SIKON.Model
 {
     public class Event
     {
-        public int Event_Id;
+        public int Id;
         public int RoomNr;
         private int duration;
         private int bookedSeats;
@@ -28,7 +28,7 @@ namespace SAMI_SIKON.Model
 
         public Event(int id, int roomNr, int _duration, DateTime startTime, string description, string name, int seatsTaken)
         {
-            Event_Id = id;
+            Id = id;
             RoomNr = roomNr;
             duration = _duration;
             StartTime = startTime;
@@ -42,7 +42,7 @@ namespace SAMI_SIKON.Model
         /// <param name="testing"></param>
         public Event(bool testing) {
             Random r = new Random();
-            Event_Id = r.Next(1, 10000);
+            Id = r.Next(1, 10000);
             RoomNr = r.Next(1, 100);
             duration = r.Next(30, 120);
             bookedSeats = r.Next(0, 100);

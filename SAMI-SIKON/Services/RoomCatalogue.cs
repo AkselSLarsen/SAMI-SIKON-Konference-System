@@ -48,7 +48,7 @@ namespace SAMI_SIKON.Services {
         public override async Task<List<Room>> GetItemsWithAttribute(int attributeNr, object attribute) {
             try {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
-                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr, attribute), connection)) {
+                    using (SqlCommand command = new SqlCommand(SQLGetFromAttribute(attributeNr, attribute), connection)) {
 
                         await command.Connection.OpenAsync();
                         List<Room> rooms = new List<Room>();

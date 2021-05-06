@@ -86,7 +86,7 @@ namespace SAMI_SIKON.Services {
         /// <param name="attributeNr">The index number of the attribute. Must be a non-negative integer less than the length of the array contained by RelationalAttributes</param>
         /// <param name="value">The value the attribute should have for the element to be returned</param>
         /// <returns>An SQL statement in string format that retrieves all elements with the attribute of the given number equal to the given value</returns>
-        protected string SQLGetFromAtttribute(int attributeNr, object value) {
+        protected string SQLGetFromAttribute(int attributeNr, object value) {
             if(value is string) {
                 value = "'" + value + "'";
             }

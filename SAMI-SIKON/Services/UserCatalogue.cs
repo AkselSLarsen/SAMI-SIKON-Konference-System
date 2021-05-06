@@ -163,7 +163,7 @@ namespace SAMI_SIKON.Services {
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr, attribute), connection))
+                    using (SqlCommand command = new SqlCommand(SQLGetFromAttribute(attributeNr, attribute), connection))
                     {
 
                         await command.Connection.OpenAsync();

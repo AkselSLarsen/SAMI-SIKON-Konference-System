@@ -59,17 +59,6 @@ namespace SAMI_Testing {
             Assert.IsTrue(success);
         }
         [TestMethod]
-        public async Task UserCatalogueDeleteTest() {
-            UserCatalogue uc = new UserCatalogue();
-
-            List<IUser> users = await uc.GetItemsWithAttribute(0, "Test@Admin.org");
-            IUser inputUser = users[0];
-
-            IUser outputUser = await uc.DeleteItem(new int[] { inputUser.Id });
-
-            Assert.AreEqual(inputUser.Id, outputUser.Id);
-        }
-        [TestMethod]
         public async Task UserCatalogueFindTest() {
             UserCatalogue uc = new UserCatalogue();
 
@@ -90,6 +79,17 @@ namespace SAMI_Testing {
                 }
             }
             Assert.IsTrue(findsSameUser);
+        }
+        [TestMethod]
+        public async Task UserCatalogueDeleteTest() {
+            UserCatalogue uc = new UserCatalogue();
+
+            List<IUser> users = await uc.GetItemsWithAttribute(0, "Test@Admin.org");
+            IUser inputUser = users[0];
+
+            IUser outputUser = await uc.DeleteItem(new int[] { inputUser.Id });
+
+            Assert.AreEqual(inputUser.Id, outputUser.Id);
         }
         #endregion
         #region RoomCatalogue Testing
@@ -133,17 +133,6 @@ namespace SAMI_Testing {
             Assert.IsTrue(success);
         }
         [TestMethod]
-        public async Task RoomCatalogueDeleteTest() {
-            RoomCatalogue rc = new RoomCatalogue();
-
-            List<Room> rooms = await rc.GetItemsWithAttribute(0, "SS");
-            Room inputRoom = rooms[0];
-
-            Room outputRoom = await rc.DeleteItem(new int[] { inputRoom.Id });
-
-            Assert.AreEqual(inputRoom.Id, outputRoom.Id);
-        }
-        [TestMethod]
         public async Task RoomCatalogueFindTest() {
             RoomCatalogue rc = new RoomCatalogue();
 
@@ -164,6 +153,106 @@ namespace SAMI_Testing {
                 }
             }
             Assert.IsTrue(findsSameRoom);
+        }
+        [TestMethod]
+        public async Task RoomCatalogueDeleteTest() {
+            RoomCatalogue rc = new RoomCatalogue();
+
+            List<Room> rooms = await rc.GetItemsWithAttribute(0, "SS");
+            Room inputRoom = rooms[0];
+
+            Room outputRoom = await rc.DeleteItem(new int[] { inputRoom.Id });
+
+            Assert.AreEqual(inputRoom.Id, outputRoom.Id);
+        }
+        #endregion
+        #region EventCatalogue Testing
+        [TestMethod]
+        public async Task EventCatalogueInsertTest() {
+            EventCatalogue ec = new EventCatalogue();
+
+            List<Event> evts = await ec.GetAllItems();
+            int preNr = evts.Count;
+
+            //Create a room to attach the event to.
+            RoomCatalogue rc = new RoomCatalogue();
+            bool succes = await rc.CreateItem(new Room(0, "SSS"));
+            List<Room> rooms = await rc.GetItemsWithAttribute(0, "SSS");
+            Room room = rooms[0];
+            //And now we can continue
+
+            Event evt = new Event(0, room.Id, 60, DateTime.Now, "description", "name", 123);
+
+            await ec.CreateItem(evt);
+
+            evts = await ec.GetAllItems();
+            int postNr = evts.Count;
+
+            Assert.IsTrue(preNr == postNr - 1);
+        }
+        [TestMethod]
+        public async Task EventCatalogueReadTest() {
+            EventCatalogue ec = new EventCatalogue();
+
+            List<Event> evts = await ec.GetAllItems();
+
+            int id = evts[0].Id;
+            Event evt = await ec.GetItem(new int[] { id });
+
+            Assert.IsTrue(evt.Id == evts[0].Id);
+        }
+        [TestMethod]
+        public async Task EventCatalogueUpdateTest() {
+            EventCatalogue ec = new EventCatalogue();
+
+            List<Event> evts = await ec.GetItemsWithAttribute(0, "description");
+            Event preEvent = evts[0];
+
+            Event postEvent = new Event(0, preEvent.RoomNr, 60, DateTime.Now, "something", "name", 123);
+
+            bool success = await ec.UpdateItem(postEvent, new int[] { preEvent.Id });
+
+            Assert.IsTrue(success);
+        }
+        [TestMethod]
+        public async Task EventCatalogueFindTest() {
+            EventCatalogue ec = new EventCatalogue();
+
+            List<Event> evts = await ec.GetAllItems();
+
+            Event evt = evts[0];
+            List<Event> evtsWithKey = await ec.GetItemsWithKey(0, evt.Id);
+
+            string evtDescription = evt.Description[1..(evt.Description.Length - 1)];
+            List<Event> evtsWithAttributeLike = await ec.GetItemsWithAttributeLike(0, evtDescription);
+
+            bool findsSameEvent = false;
+            foreach (Event ewk in evtsWithKey) {
+                foreach (Event ewal in evtsWithAttributeLike) {
+                    if (ewk.Id == ewal.Id) {
+                        findsSameEvent = true;
+                    }
+                }
+            }
+            Assert.IsTrue(findsSameEvent);
+        }
+        [TestMethod]
+        public async Task EventCatalogueDeleteTest() {
+            EventCatalogue ec = new EventCatalogue();
+
+            List<Event> evts = await ec.GetItemsWithAttribute(0, "something");
+            Event inputEvent = evts[0];
+
+            Event outputEvent = await ec.DeleteItem(new int[] { inputEvent.Id });
+
+            //Clean up the room made in "EventCatalogueInsertTest()"
+            RoomCatalogue rc = new RoomCatalogue();
+            List<Room> rooms = await rc.GetItemsWithAttribute(0, "SSS");
+            Room room = rooms[rooms.Count-1];
+            _ = await rc.DeleteItem(new int[] { room.Id });
+            //And now we can continue
+
+            Assert.AreEqual(inputEvent.Id, outputEvent.Id);
         }
         #endregion
     }
