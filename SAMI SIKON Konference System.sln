@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SAMI-SIKON", "SAMI-SIKON\SAMI-SIKON.csproj", "{6BF89975-624E-4330-A4E5-754731EB4B30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAMI-Testing", "SAMI-SIKON\SAMI-Testing\SAMI-Testing.csproj", "{67813C35-A0A3-42E9-883F-5B0245E3C22C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SAMI-Testing", "SAMI-SIKON\SAMI-Testing\SAMI-Testing.csproj", "{67813C35-A0A3-42E9-883F-5B0245E3C22C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
