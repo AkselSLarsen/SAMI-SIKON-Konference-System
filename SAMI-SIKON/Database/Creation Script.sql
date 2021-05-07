@@ -5,7 +5,7 @@
 --CREATE TABLE _User (
 --	_User_Id INT IDENTITY(1,1),
 --	Email VARCHAR(120) NOT NULL,
---	Password CHAR(64) NOT NULL,
+--	_Password CHAR(64) NOT NULL,
 --	Salt CHAR(16) NOT NULL,
 --	Phone_Number VARCHAR(30),
 --	_Name VARCHAR(100),
@@ -28,9 +28,12 @@
 --Remove the "--" if your database lacks the "_Event" table
 --CREATE TABLE _Event (
 --	Event_Id INT IDENTITY (1,1),
---	Description VARCHAR(500) NOT NULL,
---	Name VARCHAR(100) NOT NULL,
---	Seats_Taken INT,
+--	_Description VARCHAR(500) NOT NULL,
+--	_Name VARCHAR(100) NOT NULL,
+
+	--	Seats_Taken INT,
+	--	The above line should be here according to the ER diagram, but it is calculateable according to the Seat table, and thus not neccersary.--	StartTime DateTime NOT NULL,
+
 --	StartTime DateTime NOT NULL,
 --	Duration INT,
 --	Room_Id INT NOT NULL,

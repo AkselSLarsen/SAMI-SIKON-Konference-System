@@ -13,7 +13,7 @@ namespace SAMI_SIKON.Services
         public EventCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes)
         {
         }
-        public EventCatalogue() : base("_Event", new string[] { "Event_Id" }, new string[] { "Description", "Name", "Seats_Taken", "StartTime", "Duration", "Room_Id" }) { }
+        public EventCatalogue() : base("_Event", new string[] { "Event_Id" }, new string[] { "_Description", "_Name", "Seats_Taken", "StartTime", "Duration", "Room_Id" }) { }
 
 
         public override async Task<List<Event>> GetAllItems()
