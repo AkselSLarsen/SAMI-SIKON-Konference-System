@@ -17,7 +17,7 @@ namespace SAMI_SIKON.Services
         public UserCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes) { }
 
         public UserCatalogue() : base("_User", new string[] { "_User_Id" }, new string[] { "Email", "Password", "Salt", "Phone_Number", "_Name", "Administrator" }) { }
-        public static IUser CurrentUser = null;
+        public static IUser CurrentUser = new Participant();
         public override async Task<bool> CreateItem(IUser user)
         {
             try
@@ -57,7 +57,7 @@ namespace SAMI_SIKON.Services
             return false;
         }
 
-        public IUser RegisterUser(int userId, string email, string password, string phoneNumber, string userName, bool isAdmin)
+        public IUser RegisterUser(string email, string password, string phoneNumber, string userName, bool isAdmin)
         {
             int saltSize = 16;
             IUser result = null;
@@ -70,7 +70,6 @@ namespace SAMI_SIKON.Services
                 result = new Participant();
             }
 
-            result.Id = userId;
             result.Email = email;
             result.Name = userName;
             result.PhoneNumber = phoneNumber;
