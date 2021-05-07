@@ -39,7 +39,7 @@ namespace SAMI_SIKON.Services
 
                             Event evnt = null;
                             
-                            evnt = new Event(event_Id, room_Id, duration, startTime, description, name, seats_Taken);
+                            evnt = new Event(true);
 
 
                             events.Add(evnt);
@@ -90,7 +90,7 @@ namespace SAMI_SIKON.Services
                             int room_Id = reader.GetInt32(6);
 
 
-                            evnt = new Event(event_Id, room_Id, duration, startTime, description, name, seats_Taken);
+                            evnt = new Event(true);
 
 
                             events.Add(evnt);
@@ -135,7 +135,7 @@ namespace SAMI_SIKON.Services
                             int room_Id = reader.GetInt32(6);
 
 
-                            evnt = new Event(event_Id, room_Id, duration, startTime, description, name, seats_Taken);
+                            evnt = new Event(true);
 
 
                             events.Add(evnt);
@@ -177,7 +177,7 @@ namespace SAMI_SIKON.Services
                             int duration = reader.GetInt32(5);
                             int room_Id = reader.GetInt32(6);
 
-                            evnt = new Event(event_Id, room_Id, duration, startTime, description, name, seats_Taken);
+                            evnt = new Event(true);
                         }
 
                         return evnt;
