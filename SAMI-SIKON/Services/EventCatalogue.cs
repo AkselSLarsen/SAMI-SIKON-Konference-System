@@ -10,10 +10,8 @@ namespace SAMI_SIKON.Services
 {
     public class EventCatalogue : Catalogue<Event>
     {
-        public EventCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes)
-        {
-        }
-        public EventCatalogue() : base("_Event", new string[] { "Event_Id" }, new string[] { "_Description", "_Name", "Seats_Taken", "StartTime", "Duration", "Room_Id" }) { }
+        public EventCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes){}
+        public EventCatalogue() : base("_Event", new string[] { "Event_Id" }, new string[] { "_Description", "_Name", "StartTime", "Duration", "Room_Id" }) { }
 
 
         public override async Task<List<Event>> GetAllItems()
@@ -32,14 +30,13 @@ namespace SAMI_SIKON.Services
                             int event_Id = reader.GetInt32(0);
                             string description = reader.GetString(1);
                             string name = reader.GetString(2);
-                            int seats_Taken = reader.GetInt32(3);
-                            DateTime startTime = reader.GetDateTime(4);
-                            int duration = reader.GetInt32(5);
-                            int room_Id = reader.GetInt32(6);
+                            DateTime startTime = reader.GetDateTime(3);
+                            int duration = reader.GetInt32(4);
+                            int room_Id = reader.GetInt32(5);
 
                             Event evnt = null;
-                            
-                            evnt = new Event(true);
+
+                            evnt = new Event(event_Id, room_Id, null, startTime, description, name, "", duration, new bool[] { true, false, true});
 
 
                             events.Add(evnt);
@@ -84,13 +81,12 @@ namespace SAMI_SIKON.Services
                             int event_Id = reader.GetInt32(0);
                             string description = reader.GetString(1);
                             string name = reader.GetString(2);
-                            int seats_Taken = reader.GetInt32(3);
-                            DateTime startTime = reader.GetDateTime(4);
-                            int duration = reader.GetInt32(5);
-                            int room_Id = reader.GetInt32(6);
+                            DateTime startTime = reader.GetDateTime(3);
+                            int duration = reader.GetInt32(4);
+                            int room_Id = reader.GetInt32(5);
 
 
-                            evnt = new Event(true);
+                            evnt = new Event(event_Id, room_Id, null, startTime, description, name, "", duration, new bool[] { true, false, true });
 
 
                             events.Add(evnt);
@@ -129,13 +125,12 @@ namespace SAMI_SIKON.Services
                             int event_Id = reader.GetInt32(0);
                             string description = reader.GetString(1);
                             string name = reader.GetString(2);
-                            int seats_Taken = reader.GetInt32(3);
-                            DateTime startTime = reader.GetDateTime(4);
-                            int duration = reader.GetInt32(5);
-                            int room_Id = reader.GetInt32(6);
+                            DateTime startTime = reader.GetDateTime(3);
+                            int duration = reader.GetInt32(4);
+                            int room_Id = reader.GetInt32(5);
 
 
-                            evnt = new Event(true);
+                            evnt = new Event(event_Id, room_Id, null, startTime, description, name, "", duration, new bool[] { true, false, true });
 
 
                             events.Add(evnt);
@@ -172,12 +167,11 @@ namespace SAMI_SIKON.Services
                             int event_Id = reader.GetInt32(0);
                             string description = reader.GetString(1);
                             string name = reader.GetString(2);
-                            int seats_Taken = reader.GetInt32(3);
-                            DateTime startTime = reader.GetDateTime(4);
-                            int duration = reader.GetInt32(5);
-                            int room_Id = reader.GetInt32(6);
+                            DateTime startTime = reader.GetDateTime(3);
+                            int duration = reader.GetInt32(4);
+                            int room_Id = reader.GetInt32(5);
 
-                            evnt = new Event(true);
+                            evnt = new Event(event_Id, room_Id, null, startTime, description, name, "", duration, new bool[] { true, false, true });
                         }
 
                         return evnt;
@@ -201,10 +195,9 @@ namespace SAMI_SIKON.Services
                     {
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", t.Description);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", t.Name);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", 0);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", t.StartTime);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", (t.StopTime - t.StartTime).Minutes);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", t.RoomNr);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", t.StartTime);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", (t.StopTime - t.StartTime).Minutes);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", t.RoomNr);
 
                         await command.Connection.OpenAsync();
 
@@ -241,10 +234,9 @@ namespace SAMI_SIKON.Services
                         //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", t.Id); // not used by a table with auto incrementation.
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", t.Description);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", t.Name);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", t.SeatsLeft);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", t.StartTime);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", (t.StopTime - t.StartTime).Minutes);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", t.RoomNr);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", t.StartTime);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", (t.StopTime - t.StartTime).Minutes);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", t.RoomNr);
                         command.Parameters.AddWithValue($"@To_Update_0", ids[0]);
 
                         await command.Connection.OpenAsync();

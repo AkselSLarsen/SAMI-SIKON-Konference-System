@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using SAMI_SIKON.Interfaces;
 using SAMI_SIKON.Model;
 using System;
 using System.Collections.Generic;
@@ -65,17 +66,21 @@ namespace SAMI_SIKON.Pages {
         [BindProperty]
         public int NrOfTracks { get; set; }
 
-        public IndexModel() {
+        [BindProperty]
+        public ICatalogue<Room> Rooms { get; set; }
+        [BindProperty]
+        public ICatalogue<IUser> Users { get; set; }
+        [BindProperty]
+        public ICatalogue<Event> Events { get; set; }
 
+        public IndexModel(ICatalogue<Room> rooms, ICatalogue<IUser> users, ICatalogue<Event> events) {
+            Rooms = rooms;
+            Users = users;
+            Events = events;
         }
 
-        public void OnGet() {
-            List<Event> events = new List<Event>();
-            for(int i=0; i<10; i++) {
-                events.Add(new Event(true));
-            }
-
-            EventTrackAssigner eta = new EventTrackAssigner(events);
+        public async Task OnGetAsync() {
+            EventTrackAssigner eta = new EventTrackAssigner(await Events.GetAllItems());
 
             Tracks = eta.Tracks;
         }

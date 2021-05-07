@@ -46,6 +46,8 @@ namespace SAMI_SIKON.Model
             _duration = duration;
             _seatsTaken = seatsTaken;
         }
+
+        [Obsolete]
         /// <summary>
         /// This is a testing constructor, please delete it after explaining all about what it was for in the report.
         /// </summary>
