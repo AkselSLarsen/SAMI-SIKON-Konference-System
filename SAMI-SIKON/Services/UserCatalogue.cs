@@ -13,7 +13,7 @@ namespace SAMI_SIKON.Services {
 
         public UserCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes) { }
 
-        public UserCatalogue() : base("_User", new string[] { "_User_Id" }, new string[] { "Email", "Password", "Salt", "Phone_Number", "_Name", "Administrator" }) { }
+        public UserCatalogue() : base("_User", new string[] { "_User_Id" }, new string[] { "Email", "_Password", "Salt", "Phone_Number", "_Name", "Administrator" }) { }
 
         public override async Task<bool> CreateItem(IUser user) {
             try {

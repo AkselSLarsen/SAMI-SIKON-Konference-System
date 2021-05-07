@@ -1,15 +1,12 @@
-﻿.overview {
-    
-}
-
-.event_track {
+﻿.event_track {
     border-right: 1px solid black;
     float: left;
     position: relative;
-    min-height: 60vh;
 }
 
 .overview_event {
     position: absolute;
     width: 100%;
+    border-bottom: 1px solid black; /*doesn't work :(*/
+    cursor: pointer; /*doesn't work :(*/
 }

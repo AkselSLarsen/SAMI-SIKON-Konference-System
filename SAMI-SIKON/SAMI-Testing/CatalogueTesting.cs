@@ -13,6 +13,13 @@ namespace SAMI_Testing {
 
         #region UserCatalogue Testing
         [TestMethod]
+        public void UserCatalogueTests() {
+            _ = UserCatalogueInsertTest();
+            _ = UserCatalogueReadTest();
+            _ = UserCatalogueUpdateTest();
+            _ = UserCatalogueFindTest();
+            _ = UserCatalogueDeleteTest();
+        }
         public async Task UserCatalogueInsertTest() {
             UserCatalogue uc = new UserCatalogue();
 
@@ -34,7 +41,6 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(preNr == postNr - 1);
         }
-        [TestMethod]
         public async Task UserCatalogueReadTest() {
             UserCatalogue uc = new UserCatalogue();
 
@@ -45,7 +51,6 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(user.Id == users[0].Id);
         }
-        [TestMethod]
         public async Task UserCatalogueUpdateTest() {
             UserCatalogue uc = new UserCatalogue();
 
@@ -58,7 +63,6 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(success);
         }
-        [TestMethod]
         public async Task UserCatalogueFindTest() {
             UserCatalogue uc = new UserCatalogue();
 
@@ -80,7 +84,6 @@ namespace SAMI_Testing {
             }
             Assert.IsTrue(findsSameUser);
         }
-        [TestMethod]
         public async Task UserCatalogueDeleteTest() {
             UserCatalogue uc = new UserCatalogue();
 
@@ -94,6 +97,13 @@ namespace SAMI_Testing {
         #endregion
         #region RoomCatalogue Testing
         [TestMethod]
+        public void RoomCatalogueTests() {
+            _ = RoomCatalogueInsertTest();
+            _ = RoomCatalogueReadTest();
+            _ = RoomCatalogueUpdateTest();
+            _ = RoomCatalogueFindTest();
+            _ = RoomCatalogueDeleteTest();
+        }
         public async Task RoomCatalogueInsertTest() {
             RoomCatalogue rc = new RoomCatalogue();
 
@@ -109,7 +119,6 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(preNr == postNr - 1);
         }
-        [TestMethod]
         public async Task RoomCatalogueReadTest() {
             RoomCatalogue rc = new RoomCatalogue();
 
@@ -119,7 +128,6 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(room.Id == rooms[0].Id);
         }
-        [TestMethod]
         public async Task RoomCatalogueUpdateTest() {
             RoomCatalogue rc = new RoomCatalogue();
 
@@ -132,7 +140,6 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(success);
         }
-        [TestMethod]
         public async Task RoomCatalogueFindTest() {
             RoomCatalogue rc = new RoomCatalogue();
 
@@ -154,7 +161,6 @@ namespace SAMI_Testing {
             }
             Assert.IsTrue(findsSameRoom);
         }
-        [TestMethod]
         public async Task RoomCatalogueDeleteTest() {
             RoomCatalogue rc = new RoomCatalogue();
 
@@ -168,6 +174,13 @@ namespace SAMI_Testing {
         #endregion
         #region EventCatalogue Testing
         [TestMethod]
+        public void EventCatalogueTests() {
+            _ = EventCatalogueInsertTest();
+            _ = EventCatalogueReadTest();
+            _ = EventCatalogueUpdateTest();
+            _ = EventCatalogueFindTest();
+            _ = EventCatalogueDeleteTest();
+        }
         public async Task EventCatalogueInsertTest() {
             EventCatalogue ec = new EventCatalogue();
 
@@ -181,7 +194,7 @@ namespace SAMI_Testing {
             Room room = rooms[0];
             //And now we can continue
 
-            Event evt = new Event(0, room.Id, 60, DateTime.Now, "description", "name", 123);
+            Event evt = new Event(0, room.Id, null, DateTime.Now, "description", "name", "theme", 60, new bool[] { false });
 
             await ec.CreateItem(evt);
 
@@ -190,7 +203,6 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(preNr == postNr - 1);
         }
-        [TestMethod]
         public async Task EventCatalogueReadTest() {
             EventCatalogue ec = new EventCatalogue();
 
@@ -201,20 +213,18 @@ namespace SAMI_Testing {
 
             Assert.IsTrue(evt.Id == evts[0].Id);
         }
-        [TestMethod]
         public async Task EventCatalogueUpdateTest() {
             EventCatalogue ec = new EventCatalogue();
 
             List<Event> evts = await ec.GetItemsWithAttribute(0, "description");
             Event preEvent = evts[0];
 
-            Event postEvent = new Event(0, preEvent.RoomNr, 60, DateTime.Now, "something", "name", 123);
+            Event postEvent = new Event(0, preEvent.RoomNr, null, DateTime.Now, "something", "name", "theme", 60, new bool[] { false });
 
             bool success = await ec.UpdateItem(postEvent, new int[] { preEvent.Id });
 
             Assert.IsTrue(success);
         }
-        [TestMethod]
         public async Task EventCatalogueFindTest() {
             EventCatalogue ec = new EventCatalogue();
 
@@ -236,7 +246,6 @@ namespace SAMI_Testing {
             }
             Assert.IsTrue(findsSameEvent);
         }
-        [TestMethod]
         public async Task EventCatalogueDeleteTest() {
             EventCatalogue ec = new EventCatalogue();
 
@@ -257,4 +266,3 @@ namespace SAMI_Testing {
         #endregion
     }
 }
-        
