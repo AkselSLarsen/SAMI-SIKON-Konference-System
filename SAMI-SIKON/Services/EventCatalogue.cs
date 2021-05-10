@@ -13,7 +13,7 @@ namespace SAMI_SIKON.Services
         public EventCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes)
         {
         }
-        public EventCatalogue() : base("_Event", new string[] { "Event_Id" }, new string[] { "Description", "Name", "Seats_Taken", "StartTime", "Duration", "Room_Id" }) { }
+                public EventCatalogue() : base("Event", new string[] { "Event_Id" }, new string[] { "Description", "Name", "Booked_Seats", "StartTime", "Duration", "Room_Id" }) { }
 
 
         public override async Task<List<Event>> GetAllItems()
@@ -71,8 +71,11 @@ namespace SAMI_SIKON.Services
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(SQLGetFromAttribute(attributeNr, attribute.ToString()), connection))
+                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr, attribute.ToString()), connection))
                     {
+
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
+
 
                         await command.Connection.OpenAsync();
                         List<Event> events = new List<Event>();
@@ -158,7 +161,7 @@ namespace SAMI_SIKON.Services
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(SQLGet, connection))
+                    using (SqlCommand command = new SqlCommand(SQLInsert, connection))
                     {
 
                         command.Parameters.AddWithValue($"@{_relationalKeys[0]}", ids[0]);
@@ -199,11 +202,12 @@ namespace SAMI_SIKON.Services
                 {
                     using (SqlCommand command = new SqlCommand(SQLInsert, connection))
                     {
+
+
+                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", t.Event_Id);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", t.Description);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", t.Name);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", 0);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", t.StartTime);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", (t.StopTime - t.StartTime).Minutes);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", t.RoomNr);
 
                         await command.Connection.OpenAsync();
@@ -220,11 +224,9 @@ namespace SAMI_SIKON.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                string s = e.StackTrace;
-                Console.WriteLine(s);
-                Console.Beep();
+
             }
             return false;
         }
@@ -238,12 +240,11 @@ namespace SAMI_SIKON.Services
                     using (SqlCommand command = new SqlCommand(SQLUpdate, connection))
                     {
 
-                        //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", t.Id); // not used by a table with auto incrementation.
+                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", t.Event_Id);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", t.Description);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", t.Name);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", t.SeatsLeft);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", t.StartTime);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", (t.StopTime - t.StartTime).Minutes);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", t.RoomNr);
                         command.Parameters.AddWithValue($"@To_Update_0", ids[0]);
 
@@ -261,11 +262,9 @@ namespace SAMI_SIKON.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                string s = e.StackTrace;
-                Console.WriteLine(s);
-                Console.Beep();
+
             }
             return false;
         }
