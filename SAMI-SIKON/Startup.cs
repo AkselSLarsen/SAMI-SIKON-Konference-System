@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SAMI_SIKON.Services;
 
 namespace SAMI_SIKON {
     public class Startup {
@@ -26,6 +27,7 @@ namespace SAMI_SIKON {
             services.AddRazorPages();
             services.AddTransient<ICatalogue<IUser>, UserCatalogue>();
             services.AddTransient<ICatalogue<Room>, RoomCatalogue>();
+            services.AddTransient<UserCatalogue>();
             services.AddTransient<ICatalogue<Event>, EventCatalogue>();
         }
 

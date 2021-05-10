@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using SAMI_SIKON.Services
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,11 +27,29 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
-
+                        
                         <!-- Please delete the 3 lines below when testing is done, thanks. -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Events/Event">Event</a>
                         </li>
+                    </ul>
+                    
+                </div>
+                <div>
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (UserCatalogue.CurrentUser == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/LoginPage">Login</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/LogoutRedirectToFrontPage">Logout</a>
+                            </li>
+                        }
+                        @*Logout bliver vist hvis man allerede er logget ind, men den kan ikke goere det endnu, jeg har en loesning men den er maske darlig*@
                     </ul>
                 </div>
             </div>
