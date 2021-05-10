@@ -13,13 +13,12 @@ namespace SAMI_SIKON.Pages.Login
     public class RegisterPageModel : PageModel
     {
         [BindProperty]
-        public Participant User { get; set; }
+        public IUser User { get; set; }
 
-        public UserCatalogue Users { get; }
+        
         public string CreationMessage;
-        public RegisterPageModel(UserCatalogue users)
+        public RegisterPageModel()
         {
-            Users = users;
             User=new Participant();
             CreationMessage = "";
         }
@@ -36,8 +35,8 @@ namespace SAMI_SIKON.Pages.Login
                 return Page();
             }
 
-            IUser newUser = Users.RegisterUser(User.Email, User.Password, User.PhoneNumber, User.Name, false);
-            bool userCreated = Users.CreateItem(newUser).Result;
+            
+            bool userCreated = User.Register();
             if (userCreated)
             {
                 CreationMessage = $"Success, User was created";

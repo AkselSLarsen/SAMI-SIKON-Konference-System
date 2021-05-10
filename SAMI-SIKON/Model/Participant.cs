@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SAMI_SIKON.Interfaces;
+using SAMI_SIKON.Services;
 
 namespace SAMI_SIKON.Model
 {
@@ -30,9 +31,6 @@ namespace SAMI_SIKON.Model
         public int Id { get; set; }
 
 
-        public void Login()
-        {
-            
-        }
+        
     }
 }

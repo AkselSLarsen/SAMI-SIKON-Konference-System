@@ -14,14 +14,13 @@ namespace SAMI_SIKON.Pages.Login
     public class LoginPageModel : PageModel
     {
         [BindProperty]
-        public Participant UserLogin { get; set; }
+        public IUser UserLogin { get; set; }
 
-        public UserCatalogue Users { get; set; }
+        
         public string errorMessage;
         //Har addet UserCatalogue som transient fordi den har nogen metoder som Catalogue og ICatalogue ikke har, kan godt vaere at de metoder skal flyttes et andet sted hen
-        public LoginPageModel(UserCatalogue users)
+        public LoginPageModel()
         {
-            Users = users;
             errorMessage = "";
             UserLogin=new Participant();
         }
@@ -32,7 +31,8 @@ namespace SAMI_SIKON.Pages.Login
 
         public IActionResult OnPost()
         {
-            bool loginCheck = Users.Login(UserLogin.Email, UserLogin.Password);
+
+            bool loginCheck = UserLogin.Login();
             if (loginCheck)
             {
                 return RedirectToPage("Index");

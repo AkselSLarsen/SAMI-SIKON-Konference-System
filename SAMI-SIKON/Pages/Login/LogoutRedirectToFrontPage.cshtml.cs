@@ -12,7 +12,7 @@ namespace SAMI_SIKON.Pages.Login
     {
         public IActionResult OnGet()
         {
-            UserCatalogue.CurrentUser = null;
+            UserCatalogue.Logout();
             return RedirectToPage("/Index");
         }
 

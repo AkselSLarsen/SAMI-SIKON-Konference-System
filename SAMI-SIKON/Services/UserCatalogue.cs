@@ -57,7 +57,7 @@ namespace SAMI_SIKON.Services
             return false;
         }
 
-        public IUser RegisterUser(string email, string password, string phoneNumber, string userName, bool isAdmin)
+        public async Task<bool> RegisterUser(string email, string password, string phoneNumber, string userName, bool isAdmin)
         {
             int saltSize = 16;
             IUser result = null;
@@ -76,7 +76,7 @@ namespace SAMI_SIKON.Services
             string salt = PasswordHasher.SaltMaker(saltSize);
             result.Salt = salt;
             result.Password = PasswordHasher.HashPasswordAndSalt(password, result.Salt, 1000, 48);
-            return result;
+            return await CreateItem(result);
         }
 
 
