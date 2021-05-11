@@ -8,7 +8,7 @@ namespace SAMI_SIKON.Model
 {
     public class Event
     {
-        public int Event_Id;
+        public int Id;
         public int RoomNr;
         private int duration;
         private int bookedSeats;
@@ -24,7 +24,7 @@ namespace SAMI_SIKON.Model
 
         public Event(int id, int roomNr, int _duration, DateTime startTime, string description, string name, int seatsTaken)
         {
-            Event_Id = id;
+            Id = id;
             RoomNr = roomNr;
             duration = _duration;
             StartTime = startTime;
