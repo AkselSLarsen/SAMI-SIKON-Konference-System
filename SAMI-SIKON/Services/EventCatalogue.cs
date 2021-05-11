@@ -71,7 +71,7 @@ namespace SAMI_SIKON.Services
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(SQLGetFromAttribute(attributeNr, attribute.ToString()), connection))
+                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr, attribute.ToString()), connection))
                     {
 
                         command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
@@ -204,7 +204,7 @@ namespace SAMI_SIKON.Services
                     {
 
 
-                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", t.Id);
+                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", t.Event_Id);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", t.Description);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", t.Name);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", t.StartTime);
@@ -240,7 +240,7 @@ namespace SAMI_SIKON.Services
                     using (SqlCommand command = new SqlCommand(SQLUpdate, connection))
                     {
 
-                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", t.Id);
+                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", t.Event_Id);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", t.Description);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", t.Name);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", t.SeatsLeft);

@@ -21,8 +21,8 @@ namespace SAMI_SIKON.Pages.Events {
         }
 
         public async Task OnGetAsync(int id) {
-            Event evt = await EventCatalogue.GetItem(new int[] { id });
-            //Event evt = new Event(1, 1, new System.Collections.Generic.List<Participant>(), DateTime.Now, "Lorem Ipsum", "Event Name Here", "Theme", 30, new bool[] { false, false, true});
+            //Event evt = await EventCatalogue.GetItem(new int[] { id });
+            Event evt = new Event(1, 1, new System.Collections.Generic.List<Participant>(), DateTime.Now, "Lorem Ipsum", "Event Name Here", "Theme", 30, new bool[] { false, false, true});
 
             Name = evt.Name;
             Description = evt.Description;
