@@ -22,7 +22,7 @@ namespace SAMI_SIKON.Pages.Login
         public LoginPageModel()
         {
             errorMessage = "";
-            UserLogin=new Participant();
+            UserLogin = new Participant(0, "", "", "", "", "", new List<Booking>());
         }
 
         public void OnGet()

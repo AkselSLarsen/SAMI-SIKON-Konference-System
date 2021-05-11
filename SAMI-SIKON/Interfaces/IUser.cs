@@ -16,6 +16,7 @@ namespace SAMI_SIKON.Interfaces
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public int Id { get; set; }
+        public List<Booking> Bookings { get; }
 
 
         public virtual bool Login()

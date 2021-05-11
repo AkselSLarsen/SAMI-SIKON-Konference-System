@@ -3,16 +3,18 @@
 -- Remove all data from the tables.
 DELETE FROM Booking;
 DELETE FROM Seat;
+DELETE FROM Speaker;
 DELETE FROM _Event;
 DELETE FROM Room;
 DELETE FROM _User;
 
--- Delete the tables themselves in case of them being named incorrectly.
-DROP TABLE Booking;
-DROP TABLE Seat;
-DROP TABLE _Event;
-DROP TABLE Room;
-DROP TABLE _User;
+-- Delete the tables themselves in case of them having been created incorrectly.
+DROP TABLE IF EXISTS Booking;
+DROP TABLE IF EXISTS Seat;
+DROP TABLE IF EXISTS Speaker;
+DROP TABLE IF EXISTS _Event;
+DROP TABLE IF EXISTS Room;
+DROP TABLE IF EXISTS _User;
 
 -- Recreate the tables.
 CREATE TABLE _User (
@@ -53,13 +55,22 @@ CREATE TABLE _Event (
 	FOREIGN KEY (Room_Id) REFERENCES Room(Room_Id)
 );
 
+CREATE TABLE Speaker (
+	Event_Id INT NOT NULL,
+	_User_Id INT NOT NULL,
+
+	PRIMARY KEY (Event_Id, _User_Id),
+	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id) ON DELETE CASCADE,
+	FOREIGN KEY (_User_Id) REFERENCES _User(_User_Id) ON DELETE CASCADE
+);
+
 CREATE TABLE Seat (
 	Seat_Id INT NOT NULL,
 	Event_Id INT NOT NULL,
 	Reserved BIT NOT NULL,
 	
 	PRIMARY KEY (Seat_Id, Event_Id),
-	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id)
+	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id) ON DELETE CASCADE
 );
 
 CREATE Table Booking (
@@ -70,6 +81,6 @@ CREATE Table Booking (
 	Locked BIT NOT NULL,
 	PRIMARY KEY (Booking_Id),
 	FOREIGN KEY (Seat_Id, Event_Id) REFERENCES Seat(Seat_Id, Event_Id),
-	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id),
-	FOREIGN KEY (_User_Id) REFERENCES _User(_User_Id)
+	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id) ON DELETE CASCADE,
+	FOREIGN KEY (_User_Id) REFERENCES _User(_User_Id) ON DELETE CASCADE
 );

@@ -29,9 +29,9 @@ namespace SAMI_SIKON.Model
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public int Id { get; set; }
+        public List<Booking> Bookings { get { return new List<Booking>(); } }
 
 
-        
 
     }
 }

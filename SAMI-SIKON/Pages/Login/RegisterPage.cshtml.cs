@@ -19,7 +19,7 @@ namespace SAMI_SIKON.Pages.Login
         public string CreationMessage;
         public RegisterPageModel()
         {
-            User=new Participant();
+            User = new Participant(0, "", "", "", "", "", new List<Booking>());
             CreationMessage = "";
         }
 
