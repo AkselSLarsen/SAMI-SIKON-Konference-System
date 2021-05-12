@@ -5,13 +5,14 @@
 --VALUES ('Email', 'Password', 'Salt', 'Phone_Number', '_Name', true/false);
 
 INSERT INTO _User (Email, _Password, Salt, Phone_Number, _Name, Administrator)
-VALUES ('Mikkel@SAMI.dk', 'p455w0rd', '54l7', '12345678', 'Mikkel', 0);
-
+VALUES ('Mikkel@SAMI.dk', 'XOVSzP+xO++xBqbtsE1nuMwJeDhfUQAvdGhNPrcLHCXkgz5bUIWMabqxz9jKbMOO', '54l754l754l754l754l754l7', '12345678', 'Mikkel', 0);
+--Password = p455w0rd
 INSERT INTO _User (Email, _Password, Salt, Phone_Number, _Name, Administrator)
-VALUES ('Sebastian@SAMI.dk', '3ncryp7', 'Salt', 'Something', 'Sebastian', 1);
-
+VALUES ('Sebastian@SAMI.dk', 'gkTxpWIW4A20Kzgk/GYn7JNh2TH+CV1r7QFtCNGpiXVnHpfaZ80f0L0kx1+i+48b', 'SaltSaltSaltSaltSaltSalt', 'Something', 'Sebastian', 1);
+--Password = 3ncryp7
 INSERT INTO _User (Email, _Password, Salt, Phone_Number, _Name, Administrator)
-VALUES ('Aksel@SAMI.dk', '1234', '4321', 'Money?', 'Aksel', 0);
+VALUES ('Aksel@SAMI.dk', 'ijtJI+CUNzeMMMqs5usz2RkMSg7tuCXxOoA4pFEKtrtI4iI8itRIrdyuL3MRQfRe', '432143214321432143214321', 'Money?', 'Aksel', 0);
+--Password = 1234
 
 --___________________________________________________________________________________________________
 --___________________________________________________________________________________________________

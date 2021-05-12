@@ -35,6 +35,9 @@
                         @if (UserCatalogue.CurrentUser == null)
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/RegisterPage">Register</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Login/LoginPage">Login</a>
                             </li>
                         }
@@ -44,7 +47,6 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Login/LogoutRedirectToFrontPage">Logout</a>
                             </li>
                         }
-                        @*Logout bliver vist hvis man allerede er logget ind, men den kan ikke goere det endnu, jeg har en loesning men den er maske darlig*@
                     </ul>
                 </div>
             </div>
