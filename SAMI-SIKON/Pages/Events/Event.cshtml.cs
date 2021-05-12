@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SAMI_SIKON.Interfaces;
 using SAMI_SIKON.Model;
@@ -36,11 +37,20 @@ namespace SAMI_SIKON.Pages.Events {
             Seats = evt.SeatsLeft;
         }
 
-        public void OnPostBook() {
-            //Booking booking = new Booking(EventNumber, 0);
+        public IActionResult OnPostBook() {
+            if(UserCatalogue.CurrentUser == null) {
+                return Redirect("~/Login/LoginPage");
+            }
 
-            //UserCatalogue.CurrentUser.Bookings.Add(booking);
-            //Users.UpdateItem(UserCatalogue.CurrentUser, new int[] { UserCatalogue.CurrentUser.Id });
+            Booking booking = new Booking(0, EventNumber, 0);
+
+            UserCatalogue.CurrentUser.Bookings.Add(booking);
+            Users.UpdateItem(UserCatalogue.CurrentUser, new int[] { UserCatalogue.CurrentUser.Id });
+            return Page();
+        }
+
+        public IActionResult OnPostChooce() {
+            return Redirect($"~/Rooms?id={EventNumber}");
         }
     }
 }

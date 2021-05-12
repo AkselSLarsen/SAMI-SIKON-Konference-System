@@ -1,4 +1,5 @@
-﻿using SAMI_SIKON.Services;
+﻿using SAMI_SIKON.Interfaces;
+using SAMI_SIKON.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,19 @@ namespace SAMI_SIKON.Model {
 
         public async Task<Event> FindEvent() {
             return await new EventCatalogue().GetItem(new int[] { Event_Id });
+        }
+
+        public async Task<IUser> FindUser() {
+            List<IUser> users = await new UserCatalogue().GetAllItems();
+            IUser re = null;
+            foreach(IUser user in users) {
+                foreach(Booking b in user.Bookings) {
+                    if(b.Id == this.Id) {
+                        re = user;
+                    }
+                }
+            }
+            return re;
         }
     }
 }

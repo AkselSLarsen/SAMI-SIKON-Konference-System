@@ -5,13 +5,21 @@
     ViewData["Title"] = "Overview";
 }
 
+<div>
+
+</div>
+
 <div style="height:100vh;">
 
-    <div id="time_column">
-
+    <div class="time_column" style="float:left;position:relative;">
+        @foreach (int i in Model.GetHourIndicators()) {
+            <p class="border border-info btn time_indicator" style="position:absolute;Top:@Model.GetTimeIndicatorOffset(i)">@i:00</p>
+        }
     </div>
+
+
     @for (int i = 0; i < Model.NrOfTracks; i++) {
-        <div class="event_track" style="height:100vh;width:@Model.TrackWidth();">
+        <div class="event_track" style="height:100vh;float:right;width:@Model.TrackWidth();">
 
             @foreach (Event evt in Model.Tracks[i]) {
 

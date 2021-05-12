@@ -6,7 +6,7 @@
 --	_User_Id INT IDENTITY(1,1),
 --	Email VARCHAR(120) NOT NULL,
 --	_Password CHAR(64) NOT NULL,
---	Salt CHAR(16) NOT NULL,
+--	Salt CHAR(24) NOT NULL,
 --	Phone_Number VARCHAR(30),
 --	_Name VARCHAR(100),
 --	Administrator BIT NOT NULL,

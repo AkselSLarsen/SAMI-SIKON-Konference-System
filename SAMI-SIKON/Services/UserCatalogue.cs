@@ -12,7 +12,7 @@ namespace SAMI_SIKON.Services {
         public UserCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes) { }
 
         public UserCatalogue() : base("_User", new string[] { "_User_Id" }, new string[] { "Email", "_Password", "Salt", "Phone_Number", "_Name", "Administrator" }) { }
-        public static IUser CurrentUser = new Participant(-1, "Test@Admin.dk", "1234", "salt", "12345678", "Tester", new List<Booking>());
+        public static IUser CurrentUser = null;
         public override async Task<bool> CreateItem(IUser user) {
             try {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
