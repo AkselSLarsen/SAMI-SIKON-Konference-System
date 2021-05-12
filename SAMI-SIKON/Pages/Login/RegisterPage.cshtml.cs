@@ -31,7 +31,7 @@ namespace SAMI_SIKON.Pages.Login
         {
             if (!ModelState.IsValid)
             {
-                //change errorMessage to something depending on what is wrong with the model
+                //The modelstate should almost always be valid since the only things to input are string, which means you would only get an error if they're too long i think.
                 return Page();
             }
 

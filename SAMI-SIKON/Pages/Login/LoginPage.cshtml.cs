@@ -13,16 +13,16 @@ namespace SAMI_SIKON.Pages.Login
 {
     public class LoginPageModel : PageModel
     {
-        [BindProperty]
-        public IUser UserLogin { get; set; }
-
         
+        [BindProperty]
+        public string UserEmail { get; set; }
+        [BindProperty]
+        public string UserPassword { get; set; }
         public string errorMessage;
-        //Har addet UserCatalogue som transient fordi den har nogen metoder som Catalogue og ICatalogue ikke har, kan godt vaere at de metoder skal flyttes et andet sted hen
+        
         public LoginPageModel()
         {
             errorMessage = "";
-            UserLogin = new Participant(0, "", "", "", "", "", new List<Booking>());
         }
 
         public void OnGet()
@@ -31,11 +31,11 @@ namespace SAMI_SIKON.Pages.Login
 
         public IActionResult OnPost()
         {
-
+            IUser UserLogin = new Participant(0, UserEmail, UserPassword, "", "","",new List<Booking>());
             bool loginCheck = UserLogin.Login();
             if (loginCheck)
             {
-                return RedirectToPage("Index");
+                return Redirect("~/");
             }
             else
             {

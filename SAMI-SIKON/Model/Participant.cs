@@ -1,5 +1,6 @@
 ﻿using SAMI_SIKON.Interfaces;
 using System.Collections.Generic;
+using SAMI_SIKON.Services;
 
 namespace SAMI_SIKON.Model {
     public class Participant : IUser {
@@ -22,6 +23,10 @@ namespace SAMI_SIKON.Model {
         public int Id { get; set; }
         public List<Booking> Bookings { get; private set; }
 
-
+        public bool Login()
+        {
+            UserCatalogue users = new UserCatalogue();
+            return users.Login(Email, Password);
+        }
     }
 }
