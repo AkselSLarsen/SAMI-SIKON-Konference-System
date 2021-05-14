@@ -21,11 +21,15 @@ namespace SAMI_SIKON.Pages {
                     foreach (List<Event> track in Tracks) {
                         foreach (Event evt in track) {
                             if (d > evt.StartTime.TimeOfDay.TotalMinutes) {
-                                d = (int)evt.StartTime.TimeOfDay.TotalMinutes;
+                                d = evt.StartTime.TimeOfDay.TotalMinutes;
                             }
                         }
                     }
-                    _viewStart = d;
+                    if (d == int.MaxValue) {
+                        _viewStart = 0;
+                    } else {
+                        _viewStart = d;
+                    }
                 }
                 return _viewStart;
             }
@@ -37,11 +41,15 @@ namespace SAMI_SIKON.Pages {
                     foreach (List<Event> track in Tracks) {
                         foreach (Event evt in track) {
                             if (d < evt.StopTime.TimeOfDay.TotalMinutes) {
-                                d = (int)evt.StopTime.TimeOfDay.TotalMinutes;
+                                d = evt.StopTime.TimeOfDay.TotalMinutes;
                             }
                         }
                     }
-                    _viewStop = d;
+                    if(d == int.MinValue) {
+                        _viewStop = 0;
+                    } else {
+                        _viewStop = d;
+                    }
                 }
                 return _viewStop;
             }
@@ -58,6 +66,8 @@ namespace SAMI_SIKON.Pages {
             }
         }
 
+        public DateTime Date { get; set; }
+
         [BindProperty]
         public List<List<Event>> Tracks {
             get { return _tracks; }
@@ -66,23 +76,35 @@ namespace SAMI_SIKON.Pages {
         [BindProperty]
         public int NrOfTracks { get; set; }
 
-        [BindProperty]
-        public ICatalogue<Room> Rooms { get; set; }
+        //[BindProperty]
+        //public ICatalogue<Room> Rooms { get; set; }
         [BindProperty]
         public ICatalogue<IUser> Users { get; set; }
         [BindProperty]
         public ICatalogue<Event> Events { get; set; }
 
         public IndexModel(ICatalogue<Room> rooms, ICatalogue<IUser> users, ICatalogue<Event> events) {
-            Rooms = rooms;
+            //Rooms = rooms;
             Users = users;
             Events = events;
         }
 
-        public async Task OnGetAsync() {
-            EventTrackAssigner eta = new EventTrackAssigner(await Events.GetAllItems());
+        public async Task OnGetAsync(int year=-1, int month=-1, int day=-1) {
+            if(year == -1 || month == -1 || day == -1) {
+                Date = await GetClosestDate();
+            } else {
+                Date = new DateTime(year, month, day);
+            }
+            List<Event> evts = await GetEventsWithDate();
+            EventTrackAssigner eta = new EventTrackAssigner(evts);
 
             Tracks = eta.Tracks;
+        }
+
+        public async Task<IActionResult> OnPostFirstAsync() {
+            DateTime d = await getFirstDate();
+            
+            return Redirect($"~/?year={d.Year}&month={d.Month}&day={d.Day}");
         }
 
         public string TrackWidth() {
@@ -148,6 +170,62 @@ namespace SAMI_SIKON.Pages {
         public string GetTimeIndicatorOffset(int i) {
             double offset = (i - (ViewStart / 60)) * 60;
             return string.Format("{0:N2}", offset * TimeScale).Replace(',', '.') + "vh";
+        }
+
+        private async Task<List<DateTime>> GetDates() {
+            List<Event> evts = await Events.GetAllItems();
+            List<DateTime> dates = new List<DateTime>();
+
+            foreach (Event evt in evts) {
+                dates.Add(evt.StartTime.Date);
+            }
+            return dates;
+        }
+
+        private async Task<DateTime> GetClosestDate() {
+            List<DateTime> dates = await GetDates();
+            DateTime re = dates[0];
+            DateTime now = DateTime.Now;
+            foreach(DateTime date in dates) {
+                if ((date - now).Duration().TotalMinutes < (re - now).Duration().TotalMinutes) {
+                    re = date;
+                }
+            }
+            return re;
+        }
+
+        private async Task<DateTime> getFirstDate() {
+            List<DateTime> dates = await GetDates();
+            DateTime re = dates[0];
+            foreach (DateTime date in dates) {
+                if (re.CompareTo(date) > 0) {
+                    re = date;
+                }
+            }
+            return re;
+        }
+
+        private async Task<DateTime> getLastDate() {
+            List<DateTime> dates = await GetDates();
+            DateTime re = dates[0];
+            foreach (DateTime date in dates) {
+                if (re.CompareTo(date) < 0) {
+                    re = date;
+                }
+            }
+            return re;
+        }
+
+        private async Task<List<Event>> GetEventsWithDate() {
+            List<Event> evts = await Events.GetAllItems();
+            List<Event> re = new List<Event>();
+
+            foreach (Event evt in evts) {
+                if(evt.StartTime.Date.CompareTo(Date) == 0) {
+                    re.Add(evt);
+                }
+            }
+            return re;
         }
     }
 }

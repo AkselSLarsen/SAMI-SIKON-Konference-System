@@ -5,8 +5,40 @@
     ViewData["Title"] = "Overview";
 }
 
-<div>
+<div class="day_selector">
+    <div class="border border-dark" style="margin-top:1vh;overflow:hidden;">
 
+        <form method="post" asp-page-handler="First">
+            <div style="text-align:center;width:20%;float:left;">
+                <input class="border border-primary btn" type="submit" value="First day" />
+            </div>
+        </form>
+
+        <form method="post" asp-page-handler="Previous">
+            <div style="text-align:center;width:20%;float:left;">
+                <input class="border border-primary btn" type="submit" value="Previous day" />
+            </div>
+        </form>
+
+        <form method="post" asp-page-handler="Today">
+            <div style="text-align:center;width:20%;float:left;">
+                <input class="border border-primary btn" type="submit" value="Today" />
+            </div>
+        </form>
+
+        <form method="post" asp-page-handler="Next">
+            <div style="text-align:center;width:20%;float:left;">
+                <input class="border border-primary btn" type="submit" value="Next day" />
+            </div>
+        </form>
+
+        <form method="post" asp-page-handler="Last">
+            <div style="text-align:center;width:20%;float:left;">
+                <input class="border border-primary btn" type="submit" value="Last day" />
+            </div>
+        </form>
+
+    </div>
 </div>
 
 <div style="height:100vh;">
@@ -23,11 +55,11 @@
 
             @foreach (Event evt in Model.Tracks[i]) {
 
-            <a asp-page="/Events/Event" asp-route-id="@evt.Id">
-                <div class="overview_event btn-block" style="cursor:pointer;border-bottom:1px solid black;background-color:@Model.ThemeToColor(evt);top:@Model.GetOffset(evt);height:@Model.GetDuration(evt);">
-                    <p>@evt.Name<br>From: @Model.GetStartTime(evt) To: @Model.GetStopTime(evt)</p>
-                </div>
-            </a>
+                <a asp-page="/Events/Event" asp-route-id="@evt.Id">
+                    <div class="overview_event btn-block" style="cursor:pointer;border-bottom:1px solid black;background-color:@Model.ThemeToColor(evt);top:@Model.GetOffset(evt);height:@Model.GetDuration(evt);">
+                        <p>@evt.Name<br>From: @Model.GetStartTime(evt) To: @Model.GetStopTime(evt)</p>
+                    </div>
+                </a>
 
             }
 
