@@ -1,28 +1,46 @@
-﻿using System;
+﻿using SAMI_SIKON.Interfaces;
+using SAMI_SIKON.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SAMI_SIKON.Model {
     public class Booking {
-        private int _event;
+        public int Id;
+        public int Event_Id;
         public int Seat;
         public bool Locked;
 
-        public Booking(int eventNr, int seatNr) {
-            _event = eventNr;
+        public Booking(int id, int eventNr, int seatNr) {
+            Id = id;
+            Event_Id = eventNr;
             Seat = seatNr;
             Locked = false;
         }
 
-        public Booking(int eventNr, int seatNr, bool locked) {
-            _event = eventNr;
+        public Booking(int id, int eventNr, int seatNr, bool locked) {
+            Id = id;
+            Event_Id = eventNr;
             Seat = seatNr;
             Locked = locked;
         }
 
-        //public Event FindEvent(EventCatalogue evtctlg) {
+        public async Task<Event> FindEvent() {
+            return await new EventCatalogue().GetItem(new int[] { Event_Id });
+        }
 
-        //}
+        public async Task<IUser> FindUser() {
+            List<IUser> users = await new UserCatalogue().GetAllItems();
+            IUser re = null;
+            foreach(IUser user in users) {
+                foreach(Booking b in user.Bookings) {
+                    if(b.Id == this.Id) {
+                        re = user;
+                    }
+                }
+            }
+            return re;
+        }
     }
 }

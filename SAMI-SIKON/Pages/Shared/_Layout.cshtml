@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using SAMI_SIKON.Services
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,6 +27,26 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
+                    </ul>
+                    
+                </div>
+                <div>
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (UserCatalogue.CurrentUser == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/RegisterPage">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/LoginPage">Login</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/LogoutRedirectToFrontPage">Logout</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

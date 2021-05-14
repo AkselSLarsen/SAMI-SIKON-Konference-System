@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SAMI_SIKON.Interfaces;
+using SAMI_SIKON.Services;
 
 namespace SAMI_SIKON.Model
 {
@@ -28,12 +29,9 @@ namespace SAMI_SIKON.Model
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public int Id { get; set; }
+        public List<Booking> Bookings { get { return new List<Booking>(); } }
 
-        
 
-        public void Login()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

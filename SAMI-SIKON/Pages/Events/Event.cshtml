@@ -3,11 +3,10 @@
 @{
 }
 
-<div style="background-color:beige;">
-    <h2 class="offset-1">@Model.Name</h2>
-</div>
-
 <div class="col-6" style="float:left;margin:auto;">
+    <div style="background-color:beige;">
+        <h2 class="text-sm-center">@Model.Name</h2>
+    </div>
     <p>@Model.Description</p>
 </div>
 
@@ -20,13 +19,17 @@
             <p class="border border-info btn" style="margin-top:1em;">Seats Left: @Model.Seats</p>
         </div>
 
-        <div style="text-align:center;width:33%;float:left;">
-            <input class="border border-primary btn" style="margin-top:1em;" type="button" value="Book Seat" />
-        </div>
+        <form method="post" asp-page-handler="Book">
+            <div style="text-align:center;width:33%;float:left;">
+                <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Book Seat" />
+            </div>
+        </form>
 
-        <div style="text-align:center;width:33%;float:right;">
-            <input class="border border-secondary btn" style="margin-top:1em;" type="button" value="Chooce seat" />
-        </div>
+        <form method="post" asp-page-handler="Chooce">
+            <div style="text-align:center;width:33%;float:right;">
+                <input class="border border-secondary btn" style="margin-top:1em;" type="submit" value="Chooce Seat" />
+            </div>
+        </form>
 
     </div>
 

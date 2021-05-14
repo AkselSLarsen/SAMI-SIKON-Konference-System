@@ -6,7 +6,7 @@
 --	_User_Id INT IDENTITY(1,1),
 --	Email VARCHAR(120) NOT NULL,
 --	_Password CHAR(64) NOT NULL,
---	Salt CHAR(16) NOT NULL,
+--	Salt CHAR(24) NOT NULL,
 --	Phone_Number VARCHAR(30),
 --	_Name VARCHAR(100),
 --	Administrator BIT NOT NULL,
@@ -42,6 +42,16 @@
 --	FOREIGN KEY (Room_Id) REFERENCES Room(Room_Id)
 --);
 
+--Remove the "--" if your database lacks the "Speaker" table
+--CREATE TABLE Speaker (
+--	Event_Id INT NOT NULL,
+--	_User_Id INT NOT NULL,
+
+--	PRIMARY KEY (Event_Id, _User_Id),
+--	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id) ON DELETE CASCADE,
+--	FOREIGN KEY (_User_Id) REFERENCES _User(_User_Id) ON DELETE CASCADE
+--);
+
 --Remove the "--" if your database lacks the "Seat" table
 --CREATE TABLE Seat (
 --	Seat_Id INT NOT NULL,
@@ -49,7 +59,7 @@
 --	Reserved BIT NOT NULL,
 	
 --	PRIMARY KEY (Seat_Id, Event_Id),
---	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id)
+--	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id) ON DELETE CASCADE
 --);
 
 --Remove the "--" if your database lacks the "Booking" table
@@ -61,6 +71,6 @@
 --	Locked BIT NOT NULL,
 --	PRIMARY KEY (Booking_Id),
 --	FOREIGN KEY (Seat_Id, Event_Id) REFERENCES Seat(Seat_Id, Event_Id),
---	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id),
---	FOREIGN KEY (_User_Id) REFERENCES _User(_User_Id)
+--	FOREIGN KEY (Event_Id) REFERENCES _Event(Event_Id) ON DELETE CASCADE,
+--	FOREIGN KEY (_User_Id) REFERENCES _User(_User_Id) ON DELETE CASCADE
 --);

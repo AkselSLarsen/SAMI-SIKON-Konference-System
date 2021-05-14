@@ -19,7 +19,7 @@ namespace SAMI_SIKON.Model
             Layout = LayoutFromString(layout);
         }
 
-        public Room(int id,  List<List<char>> layout) {
+        public Room(int id, List<List<char>> layout) {
             Id = id;
             Layout = layout;
         }

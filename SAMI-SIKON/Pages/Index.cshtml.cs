@@ -86,7 +86,7 @@ namespace SAMI_SIKON.Pages {
         }
 
         public string TrackWidth() {
-            return (90 / NrOfTracks) + "%";
+            return (94 / NrOfTracks) + "%";
         }
 
         public string ThemeToColor(Event evt) {
@@ -132,6 +132,22 @@ namespace SAMI_SIKON.Pages {
             if (ts.Minutes < 10) { re += "0"; }
             re += ts.Minutes;
             return re;
+        }
+
+        public int[] GetHourIndicators() {
+            int startHour = (int)(ViewStart / 60);
+            int stopHour = (int)(ViewStop / 60);
+
+            int[] re = new int[(stopHour-startHour)+1];
+            for(int i=startHour; i<=stopHour; i++) {
+                re[i - startHour] = i;
+            }
+            return re;
+        }
+
+        public string GetTimeIndicatorOffset(int i) {
+            double offset = (i - (ViewStart / 60)) * 60;
+            return string.Format("{0:N2}", offset * TimeScale).Replace(',', '.') + "vh";
         }
     }
 }

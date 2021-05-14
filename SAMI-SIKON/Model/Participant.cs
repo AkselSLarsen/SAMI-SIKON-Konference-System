@@ -1,25 +1,18 @@
-﻿using System;
+﻿using SAMI_SIKON.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SAMI_SIKON.Interfaces;
+using SAMI_SIKON.Services;
 
-namespace SAMI_SIKON.Model
-{
-    public class Participant : IUser
-    {
+namespace SAMI_SIKON.Model {
+    public class Participant : IUser {
 
-        public Participant() {
-
-        }
-
-        public Participant(int id, string email, string password, string salt, string phoneNumber, string name) {
+        public Participant(int id, string email, string password, string salt, string phoneNumber, string name, List<Booking> bookings) {
             Id = id;
             Email = email;
             Password = password;
             Salt = salt;
             PhoneNumber = phoneNumber;
             Name = name;
+            Bookings = bookings;
         }
 
         public string Email { get; set; }
@@ -28,11 +21,12 @@ namespace SAMI_SIKON.Model
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public int Id { get; set; }
+        public List<Booking> Bookings { get; private set; }
 
-
-        public void Login()
+        public bool Login()
         {
-            throw new NotImplementedException();
+            UserCatalogue users = new UserCatalogue();
+            return users.Login(Email, Password);
         }
     }
 }

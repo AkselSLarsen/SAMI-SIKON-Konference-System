@@ -1,7 +1,18 @@
 ﻿.event_track {
     border-right: 1px solid black;
-    float: left;
+    float: right; /*doesn't work :(*/
     position: relative;
+}
+
+.time_column {
+    float: left; /*doesn't work :(*/
+    width: 5%;
+    position: relative; /*doesn't work :(*/
+}
+
+.time_indicator {
+    position: absolute; /*doesn't work :(*/
+    margin-top: 1em;
 }
 
 .overview_event {
