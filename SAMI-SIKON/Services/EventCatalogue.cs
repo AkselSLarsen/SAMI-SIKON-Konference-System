@@ -71,7 +71,7 @@ namespace SAMI_SIKON.Services
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(SQLGetFromAtttribute(attributeNr, attribute.ToString()), connection))
+                    using (SqlCommand command = new SqlCommand(SQLGetFromAttribute(attributeNr, attribute.ToString()), connection))
                     {
 
                         command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);

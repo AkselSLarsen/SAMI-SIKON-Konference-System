@@ -1,4 +1,71 @@
 ﻿@page
 @model SAMI_SIKON.Pages.Events.EventOverviewModel
 @{
+    ViewData["Title"] = "EventOverview";
 }
+
+
+<form>
+    <p>
+        Search: <input type="text" asp-for="FilterCriteria" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Theme
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Speaker
+        </th>
+        <th>
+            Start Time
+        </th>
+        <th>
+            End Time
+        </th>
+        <th>
+            Event Number
+        </th>
+        <th>
+            Room Number
+        </th>
+
+
+
+    </tr>
+    </thead>
+    <tbody>
+        @if (Model.Events.Count != 0)
+        {
+            @foreach (var item in Model.Events)
+            {
+                <tr>
+                    <td>
+                        @item.RoomNr
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+
+                        <p>
+                            <a asp-page="/Rooms/DeleteRoom" asp-route-roomNumber="@item.RoomNr" asp-route-hotelNumber="@item.HotelNr">Delete</a>
+                        </p>
+                    </td>
+                </tr>
+            }
+        }
+</table>
