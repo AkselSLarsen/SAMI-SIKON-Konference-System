@@ -18,11 +18,11 @@ namespace SAMI_SIKON.Pages.Login
         public string UserEmail { get; set; }
         [BindProperty]
         public string UserPassword { get; set; }
-        public string errorMessage;
+        public string ErrorMessage; 
         
         public LoginPageModel()
         {
-            errorMessage = "";
+            ErrorMessage = "";
         }
 
         public void OnGet()
@@ -39,7 +39,7 @@ namespace SAMI_SIKON.Pages.Login
             }
             else
             {
-                errorMessage = "Incorrect e-mail or password";
+                ErrorMessage = "Incorrect e-mail or password";
                 return Page();
             }
             

@@ -23,5 +23,6 @@ namespace SAMI_SIKON.Pages.Login
         //  This is an alert box.
         //</div>
         //Something like this that shows up if you get redirected from here maybe
+        //not sure how to redirect from the OnGet method to a different page with a "message" to display the alert
     }
 }

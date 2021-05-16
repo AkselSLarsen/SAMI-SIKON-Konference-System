@@ -1,0 +1,35 @@
+﻿@page
+@model SAMI_SIKON.Pages.Login.UserPageModel
+@{
+}
+
+
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="@Model.UserPassword" class="custom-control-label"></label>
+        <input asp-for="@Model.UserPassword" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.NewPassword1" class="custom-control-label"></label>
+        <input type="password" asp-for="@Model.NewPassword1" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.NewPassword2" class="custom-control-label"></label>
+        <input type="password" asp-for="@Model.NewPassword2" class="form-control" />
+    </div>
+    <input type="submit" value="Update Password" class="btn btn-primary" />
+</form>
+
+@if (Model.ErrorMessage != "")
+{
+    <div class="alert alert-danger">
+        @Model.ErrorMessage
+    </div>
+}
+@if (Model.SuccessMessage != "")
+{
+    <div class="alert alert-success">
+        @Model.ErrorMessage
+    </div>
+}

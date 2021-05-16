@@ -286,6 +286,17 @@ namespace SAMI_SIKON.Services {
             return false;
         }
 
+        public async Task<bool> UpdatePassword(IUser user, string password)
+        {
+            int saltSize = 16;
+            
+
+            string salt = PasswordHasher.SaltMaker(saltSize);
+            user.Salt = salt;
+            user.Password = PasswordHasher.HashPasswordAndSalt(password, user.Salt, 1000, 48);
+            return await UpdateItem(user, new int[] {user.Id});
+        }
+
         public bool ValidateUser(string email, string password) {
             IUser user = GetItemsWithAttribute(0, email).Result[0];
             string prePwd = PasswordHasher.HashPasswordAndSalt(password, user.Salt, 1000, 48);
