@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SAMI_SIKON.Interfaces;
 using SAMI_SIKON.Model;
+using SAMI_SIKON.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,9 @@ namespace SAMI_SIKON.Pages {
         private List<List<Event>> _tracks;
         private double _viewStart = -1;
         private double _viewStop = -1;
+        private int _year = -1;
+        private int _month = -1;
+        private int _day = -1;
 
         private double ViewStart {
             get {
@@ -21,11 +25,15 @@ namespace SAMI_SIKON.Pages {
                     foreach (List<Event> track in Tracks) {
                         foreach (Event evt in track) {
                             if (d > evt.StartTime.TimeOfDay.TotalMinutes) {
-                                d = (int)evt.StartTime.TimeOfDay.TotalMinutes;
+                                d = evt.StartTime.TimeOfDay.TotalMinutes;
                             }
                         }
                     }
-                    _viewStart = d;
+                    if (d == int.MaxValue) {
+                        _viewStart = 0;
+                    } else {
+                        _viewStart = d;
+                    }
                 }
                 return _viewStart;
             }
@@ -37,11 +45,15 @@ namespace SAMI_SIKON.Pages {
                     foreach (List<Event> track in Tracks) {
                         foreach (Event evt in track) {
                             if (d < evt.StopTime.TimeOfDay.TotalMinutes) {
-                                d = (int)evt.StopTime.TimeOfDay.TotalMinutes;
+                                d = evt.StopTime.TimeOfDay.TotalMinutes;
                             }
                         }
                     }
-                    _viewStop = d;
+                    if(d == int.MinValue) {
+                        _viewStop = 0;
+                    } else {
+                        _viewStop = d;
+                    }
                 }
                 return _viewStop;
             }
@@ -58,6 +70,25 @@ namespace SAMI_SIKON.Pages {
             }
         }
 
+
+        [FromQuery(Name = "year")]
+        public int Year {
+            get { return _year; }
+            set { _year = value; }
+        }
+        [FromQuery(Name = "month")]
+        public int Month {
+            get { return _month; }
+            set { _month = value; }
+        }
+        [FromQuery(Name = "day")]
+        public int Day {
+            get { return _day; }
+            set { _day = value; }
+        }
+        [BindProperty]
+        public DateTime Date { get; set; }
+
         [BindProperty]
         public List<List<Event>> Tracks {
             get { return _tracks; }
@@ -67,22 +98,57 @@ namespace SAMI_SIKON.Pages {
         public int NrOfTracks { get; set; }
 
         [BindProperty]
-        public ICatalogue<Room> Rooms { get; set; }
+        public RoomCatalogue Rooms { get; set; }
         [BindProperty]
-        public ICatalogue<IUser> Users { get; set; }
+        public UserCatalogue Users { get; set; }
         [BindProperty]
-        public ICatalogue<Event> Events { get; set; }
+        public EventCatalogue Events { get; set; }
 
         public IndexModel(ICatalogue<Room> rooms, ICatalogue<IUser> users, ICatalogue<Event> events) {
-            Rooms = rooms;
-            Users = users;
-            Events = events;
+            Rooms = (RoomCatalogue)rooms;
+            Users = (UserCatalogue)users;
+            Events = (EventCatalogue)events;
         }
 
         public async Task OnGetAsync() {
-            EventTrackAssigner eta = new EventTrackAssigner(await Events.GetAllItems());
+            if(Year == -1 || Month == -1 || Day == -1) {
+                Date = await GetClosestDate();
+            } else {
+                Date = new DateTime(Year, Month, Day);
+            }
+            List<Event> evts = await GetEventsWithDate();
+            EventTrackAssigner eta = new EventTrackAssigner(evts);
 
             Tracks = eta.Tracks;
+        }
+
+        public async Task<IActionResult> OnPostFirstAsync() {
+            Date = await getFirstDate();
+
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
+        }
+
+        public IActionResult OnPostPrevious() {
+            Date = Date.AddDays(-1);
+
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
+        }
+
+        public IActionResult OnPostToday() {
+            Date = DateTime.Today;
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
+        }
+
+        public IActionResult OnPostNext() {
+            Date = Date.AddDays(1);
+
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
+        }
+
+        public async Task<IActionResult> OnPostLastAsync() {
+            Date = await getLastDate();
+
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
         }
 
         public string TrackWidth() {
@@ -148,6 +214,62 @@ namespace SAMI_SIKON.Pages {
         public string GetTimeIndicatorOffset(int i) {
             double offset = (i - (ViewStart / 60)) * 60;
             return string.Format("{0:N2}", offset * TimeScale).Replace(',', '.') + "vh";
+        }
+
+        private async Task<List<DateTime>> GetDates() {
+            List<Event> evts = await Events.GetAllItems();
+            List<DateTime> dates = new List<DateTime>();
+
+            foreach (Event evt in evts) {
+                dates.Add(evt.StartTime.Date);
+            }
+            return dates;
+        }
+
+        private async Task<DateTime> GetClosestDate() {
+            List<DateTime> dates = await GetDates();
+            DateTime re = dates[0];
+            DateTime now = DateTime.Now;
+            foreach(DateTime date in dates) {
+                if ((date - now).Duration().TotalMinutes < (re - now).Duration().TotalMinutes) {
+                    re = date;
+                }
+            }
+            return re;
+        }
+
+        private async Task<DateTime> getFirstDate() {
+            List<DateTime> dates = await GetDates();
+            DateTime re = dates[0];
+            foreach (DateTime date in dates) {
+                if (re.CompareTo(date) > 0) {
+                    re = date;
+                }
+            }
+            return re;
+        }
+
+        private async Task<DateTime> getLastDate() {
+            List<DateTime> dates = await GetDates();
+            DateTime re = dates[0];
+            foreach (DateTime date in dates) {
+                if (re.CompareTo(date) < 0) {
+                    re = date;
+                }
+            }
+            return re;
+        }
+
+        private async Task<List<Event>> GetEventsWithDate() {
+            List<Event> evts = await Events.GetAllItems();
+            List<Event> re = new List<Event>();
+
+            foreach (Event evt in evts) {
+                if(evt.StartTime.Date.CompareTo(Date) == 0) {
+                    re.Add(evt);
+                }
+            }
+            return re;
         }
     }
 }

@@ -255,7 +255,7 @@ namespace SAMI_SIKON.Services {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
                     using (SqlCommand command = new SqlCommand(SQLUpdate, connection)) {
 
-                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", user.Id);
+                        //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", user.Id); // Not used
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", user.Email);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", user.Password);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", user.Salt);
@@ -270,11 +270,10 @@ namespace SAMI_SIKON.Services {
                         if (i == 0) {
                             return false;
                         } else {
-                            int user_Id = await GetHighstId();
                             bool re = true;
-                            await DeleteBookings(user_Id);
+                            await DeleteBookings(ids[0]);
                             foreach (Booking b in user.Bookings) {
-                                if (!await CreateBooking(b.Id, b.Seat, b.Event_Id, user_Id, b.Locked)) {
+                                if (!await CreateBooking(b.Id, b.Seat, b.Event_Id, ids[0], b.Locked)) {
                                     re = false;
                                 }
                             }
@@ -361,14 +360,14 @@ namespace SAMI_SIKON.Services {
         }
 
 
-        private static string SQLInsertBooking = "INSERT INTO Booking (Booking_Id, Seat_Id, Event_Id, _User_Id, Locked) VALUES (@Booking_Id, @Seat_Id, @Event_Id, @_User_Id, @Locked);";
+        private static string SQLInsertBooking = "INSERT INTO Booking (Seat_Id, Event_Id, _User_Id, Locked) VALUES (@Seat_Id, @Event_Id, @_User_Id, @Locked);";
 
         private async Task<bool> CreateBooking(int Booking_Id, int Seat_Id, int Event_Id, int _User_Id, bool Locked) {
             try {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
                     using (SqlCommand command = new SqlCommand(SQLInsertBooking, connection)) {
 
-                        command.Parameters.AddWithValue("@Booking_Id", Booking_Id);
+                        //command.Parameters.AddWithValue("@Booking_Id", Booking_Id); // not used
                         command.Parameters.AddWithValue("@Seat_Id", Seat_Id);
                         command.Parameters.AddWithValue("@Event_Id", Event_Id);
                         command.Parameters.AddWithValue("@_User_Id", _User_Id);
