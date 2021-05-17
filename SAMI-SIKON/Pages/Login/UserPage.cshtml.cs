@@ -31,7 +31,7 @@ namespace SAMI_SIKON.Pages.Login
         public IActionResult OnPost()
         {
             IUser UserLogin = UserCatalogue.CurrentUser;
-            
+            UserLogin.Password = UserPassword;
             bool loginCheck = UserLogin.Login();
             if (!loginCheck)
             {

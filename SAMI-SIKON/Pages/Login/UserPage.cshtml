@@ -8,7 +8,7 @@
 <form method="post">
     <div class="form-group">
         <label asp-for="@Model.UserPassword" class="custom-control-label"></label>
-        <input asp-for="@Model.UserPassword" class="form-control" />
+        <input type="password" asp-for="@Model.UserPassword" class="form-control" />
     </div>
     <div class="form-group">
         <label asp-for="@Model.NewPassword1" class="custom-control-label"></label>
@@ -21,15 +21,15 @@
     <input type="submit" value="Update Password" class="btn btn-primary" />
 </form>
 
-@if (Model.ErrorMessage != "")
+@if (Model.ErrorMessage.StartsWith("Incorrect") | Model.ErrorMessage.StartsWith("New Password") | Model.ErrorMessage.StartsWith("Password not"))
 {
     <div class="alert alert-danger">
         @Model.ErrorMessage
     </div>
 }
-@if (Model.SuccessMessage != "")
+@if (Model.SuccessMessage.StartsWith("Password"))
 {
     <div class="alert alert-success">
-        @Model.ErrorMessage
+        @Model.SuccessMessage
     </div>
 }
