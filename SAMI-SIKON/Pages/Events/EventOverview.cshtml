@@ -1,4 +1,115 @@
 ﻿@page
+@using System.Diagnostics.Eventing.Reader
 @model SAMI_SIKON.Pages.Events.EventOverviewModel
 @{
+    ViewData["Title"] = "EventOverview";
 }
+
+
+<form>
+    <p>
+        Search: <input type="text" asp-for="FilterCriteria" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Theme
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Speaker
+        </th>
+        <th>
+            Start Time
+        </th>
+        <th>
+            End Time
+        </th>
+        <th>
+            Event Number
+        </th>
+        <th>
+            Room Number
+        </th>
+
+
+
+    </tr>
+    </thead>
+    <tbody>
+        @if (Model.Events.Count != 0)
+        {
+            @foreach (var item in Model.Events)
+            {
+                <tr>
+                    <th>
+                        @item.Theme
+                    </th>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.Speakers
+                    </td>
+                    <td>
+                        @item.StartTime
+                    </td>
+                    <td>
+                        @item.StopTime
+                    </td>
+                    <td>
+                        @item.Id
+                    </td>
+                    <td>
+                        @item.RoomNr
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <th>
+                    Theme
+                </th>
+                <td>
+                    Name
+                </td>
+                <td>
+                    Description
+                </td>
+                <td>
+                    .Speakers
+                </td>
+                <td>
+                    StartTime
+                </td>
+                <td>
+                    StopTime
+                </td>
+                <td>
+                    Id
+                </td>
+                <td>
+                    RoomNr
+                </td>
+                <td>
+                </td>
+            </tr>
+        }
+        
+</table>
