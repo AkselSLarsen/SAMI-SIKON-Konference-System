@@ -104,7 +104,7 @@ namespace SAMI_Testing {
             List<Room> rooms = await rc.GetAllItems();
             int preNr = rooms.Count;
 
-            Room room = new Room(1, "S");
+            Room room = new Room(1, "S", "single");
 
             await rc.CreateItem(room);
 
@@ -128,7 +128,7 @@ namespace SAMI_Testing {
             List<Room> rooms = await rc.GetItemsWithAttribute(0, "S");
             Room preRoom = rooms[0];
 
-            Room postRoom = new Room(2, "SS");
+            Room postRoom = new Room(2, "SS", "double");
 
             bool success = await rc.UpdateItem(postRoom, new int[] { preRoom.Id });
 
@@ -183,14 +183,30 @@ namespace SAMI_Testing {
 
             //Create a room to attach the event to.
             RoomCatalogue rc = new RoomCatalogue();
-            bool succes = await rc.CreateItem(new Room(0, "SSS"));
+            bool successR = await rc.CreateItem(new Room(0, "SSS", "triple"));
             List<Room> rooms = await rc.GetItemsWithAttribute(0, "SSS");
             Room room = rooms[0];
+            //And a user to become a speaker
+            UserCatalogue uc = new UserCatalogue();
+            bool successU = await uc.CreateItem(new Participant(0, "Test@Testing.biz", "password", "salt", "0000", "Tester", new List<Booking>()));
+            List<IUser> users = await uc.GetItemsWithAttribute(0, "Test@Testing.biz");
+            IUser user = users[0];
             //And now we can continue
 
-            Event evt = new Event(0, room.Id, new List<int>(), DateTime.Now, "description", "name", 60, new bool[] { false });
+            List<int> uIds = new List<int>();
+            uIds.Add(user.Id);
+            Event evt = new Event(0, room.Id, uIds, DateTime.Now, "description", "name", 60, new int[] { 1 });
+            bool success = await ec.CreateItem(evt);
 
-            await ec.CreateItem(evt);
+            //Add a booking
+            List<Event> es = await ec.GetItemsWithAttribute(0, "description");
+            Event eve = es[0];
+
+            List<Booking> bookings = new List<Booking>();
+            bookings.Add(new Booking(0, eve.Id, 1));
+            IUser u = new Participant(0, user.Email, user.Password, user.Salt, user.PhoneNumber, user.Name, bookings);
+            await uc.UpdateItem(u, new int[] { (await uc.GetItemsWithAttribute(0, "Test@Testing.biz"))[0].Id });
+            //and done
 
             evts = await ec.GetAllItems();
             int postNr = evts.Count;
@@ -213,11 +229,16 @@ namespace SAMI_Testing {
             List<Event> evts = await ec.GetItemsWithAttribute(0, "description");
             Event preEvent = evts[0];
 
-            Event postEvent = new Event(0, preEvent.RoomNr, new List<int>(), DateTime.Now, "something", "name", 60, new bool[] { false });
+            Event postEvent = new Event(0, preEvent.RoomNr, preEvent.Speakers, DateTime.Now, "something", "name", 60, preEvent.SeatsTaken());
 
             bool success = await ec.UpdateItem(postEvent, new int[] { preEvent.Id });
 
-            return success;
+            postEvent = await ec.GetItem(new int[] { preEvent.Id });
+            if(postEvent.Speakers.Count > 0 && postEvent.SeatsTaken().Length > 0) {
+                return success;
+            } else {
+                return false;
+            }
         }
         public async Task<bool> EventCatalogueFindTest() {
             EventCatalogue ec = new EventCatalogue();
@@ -253,6 +274,11 @@ namespace SAMI_Testing {
             List<Room> rooms = await rc.GetItemsWithAttribute(0, "SSS");
             Room room = rooms[rooms.Count-1];
             _ = await rc.DeleteItem(new int[] { room.Id });
+            //And the user that acted as speaker
+            UserCatalogue uc = new UserCatalogue();
+            List<IUser> users = await uc.GetItemsWithAttribute(0, "Test@Testing.biz");
+            IUser user = users[users.Count - 1];
+            _ = await uc.DeleteItem(new int[] { user.Id });
             //And now we can continue
 
             return inputEvent.Id == outputEvent.Id;

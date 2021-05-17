@@ -36,7 +36,7 @@ namespace SAMI_SIKON.Services
                             int duration = reader.GetInt32(4);
                             int room_Id = reader.GetInt32(5);
 
-                            Event evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetSeatsReserved(event_Id));
+                            Event evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetTakenSeats(event_Id));
 
                             events.Add(evt);
                         }
@@ -82,7 +82,7 @@ namespace SAMI_SIKON.Services
                             int duration = reader.GetInt32(4);
                             int room_Id = reader.GetInt32(5);
 
-                            Event evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetSeatsReserved(event_Id));
+                            Event evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetTakenSeats(event_Id));
 
 
                             events.Add(evt);
@@ -123,7 +123,7 @@ namespace SAMI_SIKON.Services
                             int duration = reader.GetInt32(4);
                             int room_Id = reader.GetInt32(5);
 
-                            Event evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetSeatsReserved(event_Id));
+                            Event evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetTakenSeats(event_Id));
 
 
                             events.Add(evt);
@@ -164,7 +164,7 @@ namespace SAMI_SIKON.Services
                             int duration = reader.GetInt32(4);
                             int room_Id = reader.GetInt32(5);
 
-                            evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetSeatsReserved(event_Id));
+                            evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetTakenSeats(event_Id));
                         }
 
                         return evt;
@@ -209,11 +209,6 @@ namespace SAMI_SIKON.Services
                                     re = false;
                                 }
                             }
-                            for(int j=0; j<evt.FindRoom().Result.Seats; j++) {
-                                if (!await CreateSeat(j, evt_Id, false)) {
-                                    re = false;
-                                }
-                            }
                             return re;
                         }
                     }
@@ -226,7 +221,6 @@ namespace SAMI_SIKON.Services
             return false;
         }
 
-        #warning Currently updating an event with bookings will cause problems, please fix!!!
         public override async Task<bool> UpdateItem(Event evt, int[] ids)
         {
             try
@@ -235,17 +229,13 @@ namespace SAMI_SIKON.Services
                 {
                     using (SqlCommand command = new SqlCommand(SQLUpdate, connection))
                     {
-                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", evt.Id); //not used
+                        //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", evt.Id); //not used
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", evt.Description);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", evt.Name);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", evt.StartTime);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", evt.StopTime.TimeOfDay.Minutes - evt.StartTime.TimeOfDay.Minutes);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", evt.RoomNr);
                         command.Parameters.AddWithValue($"@To_Update_0", ids[0]);
-
-                        //check if RoomNr has changed so we can delete all the seats and add new ones.
-                        Event oldEvent = await GetItem(new int[] { ids[0] });
-                        bool RoomNrChanged = evt.RoomNr != oldEvent.RoomNr;
 
                         await command.Connection.OpenAsync();
 
@@ -262,14 +252,6 @@ namespace SAMI_SIKON.Services
                             foreach (int participant in evt.Speakers) {
                                 if (!await CreateSpeaker(evt_Id, participant)) {
                                     re = false;
-                                }
-                            }
-                            if(RoomNrChanged) {
-                                await DeleteSeats(evt_Id);
-                                for (int j = 0; j < evt.FindRoom().Result.Seats; j++) {
-                                    if (!await CreateSeat(j, evt_Id, false)) {
-                                        re = false;
-                                    }
                                 }
                             }
                             return re;
@@ -299,7 +281,7 @@ namespace SAMI_SIKON.Services
                         Event result = await GetItem(ids);
                         int i = await command.ExecuteNonQueryAsync();
 
-                        //Deletion of seats and speakers is automatic as the database has cascade deletion for Event_Id on both.
+                        //Deletion of bookings and speakers is automatic as the database has cascade deletion for Event_Id on both.
 
                         return result;
                     }
@@ -396,21 +378,23 @@ namespace SAMI_SIKON.Services
         }
 
 
-        private static string SQLGetSeatsReserved = "SELECT * FROM Seat WHERE Event_Id = @Event_Id";
+        private static string SQLGetTakenSeats = "SELECT * FROM Booking WHERE Event_Id = @Event_Id";
 
-        private async Task<bool[]> GetSeatsReserved(int Event_Id) {
+        private async Task<int[]> GetTakenSeats(int Event_Id) {
             try {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
-                    using (SqlCommand command = new SqlCommand(SQLGetSeatsReserved, connection)) {
+                    using (SqlCommand command = new SqlCommand(SQLGetTakenSeats, connection)) {
 
                         command.Parameters.AddWithValue("@Event_Id", Event_Id);
 
                         await command.Connection.OpenAsync();
-                        List<bool> seatsTaken = new List<bool>();
+                        List<int> seatsTaken = new List<int>();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
                         while (reader.Read()) {
-                            bool b = reader.GetBoolean(2);
-                            seatsTaken.Add(b);
+                            int? seat_Nr = reader.GetInt32(1);
+                            if (seat_Nr != null) {
+                                seatsTaken.Add((int)seat_Nr);
+                            }
                         }
 
                         return seatsTaken.ToArray();
@@ -422,59 +406,7 @@ namespace SAMI_SIKON.Services
                 Console.WriteLine(s);
                 Console.Beep();
             }
-            return new bool[0];
-        }
-
-
-        public static string SQLInsertSeat = "INSERT INTO Seat (Seat_Id, Event_Id, Reserved) VALUES (@Seat_Id, @Event_Id, @Reserved);";
-
-        public async Task<bool> CreateSeat(int Seat_Id, int Event_Id, bool Reserved) {
-            try {
-                using (SqlConnection connection = new SqlConnection(connectionString)) {
-                    using (SqlCommand command = new SqlCommand(SQLInsertSeat, connection)) {
-
-                        command.Parameters.AddWithValue("@Seat_Id", Seat_Id);
-                        command.Parameters.AddWithValue("@Event_Id", Event_Id);
-                        command.Parameters.AddWithValue("@Reserved", Reserved);
-
-                        await command.Connection.OpenAsync();
-
-                        int i = await command.ExecuteNonQueryAsync();
-                        if (i != 1) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                string s = e.StackTrace;
-                Console.WriteLine(s);
-                Console.Beep();
-            }
-            return false;
-        }
-
-
-        private static string SQLDeleteSeats = "DELETE FROM Seat WHERE Event_Id = @Event_Id;";
-
-        private async Task DeleteSeats(int Event_Id) {
-            try {
-                using (SqlConnection connection = new SqlConnection(connectionString)) {
-                    using (SqlCommand command = new SqlCommand(SQLDeleteSeats, connection)) {
-
-                        command.Parameters.AddWithValue("@Event_Id", Event_Id);
-
-                        await command.Connection.OpenAsync();
-                        await command.ExecuteNonQueryAsync();
-                    }
-                }
-
-            } catch (Exception e) {
-                string s = e.StackTrace;
-                Console.WriteLine(s);
-                Console.Beep();
-            }
+            return new int[0];
         }
 
         private async Task<int> GetHighstId() {

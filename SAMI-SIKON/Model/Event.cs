@@ -18,7 +18,7 @@ namespace SAMI_SIKON.Model
         public string Theme; //don't know if we're keeping this or not.
 
         private int _duration;
-        private bool[] _seatsTaken;
+        private int[] _seatsTaken;
 
         private int bookedSeats { get { return SeatsTaken().Length; } }
 
@@ -33,7 +33,7 @@ namespace SAMI_SIKON.Model
             }
         }
 
-        public Event(int id, int roomNr, List<int> speakers, DateTime startTime, string description, string name, int duration, bool[] seatsTaken) {
+        public Event(int id, int roomNr, List<int> speakers, DateTime startTime, string description, string name, int duration, int[] seatsTaken) {
             Id = id;
             RoomNr = roomNr;
             Speakers = speakers;
@@ -60,17 +60,16 @@ namespace SAMI_SIKON.Model
         }
 
         public bool SeatTaken(int i) {
-            return _seatsTaken[i];
+            foreach(int j in _seatsTaken) {
+                if(i == j) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public int[] SeatsTaken() {
-            List<int> ints = new List<int>();
-            for (int i = 0; i < _seatsTaken.Length; i++) {
-                if (_seatsTaken[i]) {
-                    ints.Add(i);
-                }
-            }
-            return ints.ToArray();
+            return _seatsTaken;
         }
 
         public async Task<Room> FindRoom() {

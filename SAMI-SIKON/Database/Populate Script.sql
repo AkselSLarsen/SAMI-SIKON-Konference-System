@@ -18,21 +18,21 @@ VALUES ('Aksel@SAMI.dk', 'ijtJI+CUNzeMMMqs5usz2RkMSg7tuCXxOoA4pFEKtrtI4iI8itRIrd
 --___________________________________________________________________________________________________
 
 --Template of Room table
---INSERT INTO Room (Layout)
---VALUES ('Layout');
+--INSERT INTO Room (Layout, _Name)
+--VALUES ('Layout', '_Name');
 
-INSERT INTO Room (Layout)
-VALUES ('SSSSS;SSSSS;SSSSS;SSSSS;SSSSS');
+INSERT INTO Room (Layout, _Name)
+VALUES ('SSSSS;SSSSS;SSSSS;SSSSS;SSSSS', 'Large Square');
 
-INSERT INTO Room (Layout)
-VALUES ('SS;SS');
+INSERT INTO Room (Layout, _Name)
+VALUES ('SS;SS', 'Little Square');
 
 --___________________________________________________________________________________________________
 --___________________________________________________________________________________________________
 
 --Template of _Event table
---INSERT INTO _Event (_Description, _Name, StartTime, Duration, Room_Id)
---VALUES ('_Description', '_Name', 'YYYYMMDD hh:mm:ss', DurationInMinutesAsInt, IdOfRoom);
+--INSERT INTO _Event (_Description, _Name, StartTime, Duration, Picture, Room_Id)
+--VALUES ('_Description', '_Name', 'YYYYMMDD hh:mm:ss', DurationInMinutesAsInt, Picture, IdOfRoom);
 
 INSERT INTO _Event (_Description, _Name, StartTime, Duration, Room_Id)
 VALUES ('To be written', 'Postponing', '20210507 12:00:00', 30, 1);
@@ -55,13 +55,6 @@ VALUES ('Run out of stuff to write', 'Cranial Meltdown', '20210507 12:00:00', 90
 --Template of Speaker table
 --INSERT INTO Speaker (Event_Id, _User_Id)
 --VALUES (IdOfEvent, IdOfUser);
-
---___________________________________________________________________________________________________
---___________________________________________________________________________________________________
-
---Template of Seat table
---INSERT INTO Seat (Seat_Id, Event_Id, Reserved)
---VALUES (IdOfSeat, IdOfEvent, true/false);
 
 --___________________________________________________________________________________________________
 --___________________________________________________________________________________________________

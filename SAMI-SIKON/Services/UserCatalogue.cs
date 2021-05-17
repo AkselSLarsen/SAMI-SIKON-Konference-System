@@ -34,7 +34,7 @@ namespace SAMI_SIKON.Services {
                             int user_Id = await GetHighstId();
                             bool re = true;
                             foreach (Booking b in user.Bookings) {
-                                if (!await CreateBooking(b.Id, b.Seat, b.Event_Id, user_Id, b.Locked)) {
+                                if (!await CreateBooking(b.Id, b.Seat_Nr, b.Event_Id, user_Id, b.Locked)) {
                                     re = false;
                                 }
                             }
@@ -269,7 +269,7 @@ namespace SAMI_SIKON.Services {
                             bool re = true;
                             await DeleteBookings(ids[0]);
                             foreach (Booking b in user.Bookings) {
-                                if (!await CreateBooking(b.Id, b.Seat, b.Event_Id, ids[0], b.Locked)) {
+                                if (!await CreateBooking(b.Id, b.Seat_Nr, b.Event_Id, ids[0], b.Locked)) {
                                     re = false;
                                 }
                             }
@@ -309,7 +309,6 @@ namespace SAMI_SIKON.Services {
         }
 
 
-
         #region private methods
         private static string SQLGetBookingsForUser = "SELECT * FROM Booking WHERE _User_Id = @_User_Id";
 
@@ -326,11 +325,11 @@ namespace SAMI_SIKON.Services {
                         while (reader.Read()) {
 
                             int booking_Id = reader.GetInt32(0);
-                            int seat_Id = reader.GetInt32(1);
+                            int seat_Nr = reader.GetInt32(1);
                             int event_Id = reader.GetInt32(2);
                             bool locked = reader.GetBoolean(4);
 
-                            bookings.Add(new Booking(booking_Id, event_Id, seat_Id, locked));
+                            bookings.Add(new Booking(booking_Id, event_Id, seat_Nr, locked));
                         }
 
                         return bookings;
@@ -345,15 +344,15 @@ namespace SAMI_SIKON.Services {
         }
 
 
-        private static string SQLInsertBooking = "INSERT INTO Booking (Seat_Id, Event_Id, _User_Id, Locked) VALUES (@Seat_Id, @Event_Id, @_User_Id, @Locked);";
+        private static string SQLInsertBooking = "INSERT INTO Booking (Seat_Nr, Event_Id, _User_Id, Locked) VALUES (@Seat_Nr, @Event_Id, @_User_Id, @Locked);";
 
-        private async Task<bool> CreateBooking(int Booking_Id, int Seat_Id, int Event_Id, int _User_Id, bool Locked) {
+        private async Task<bool> CreateBooking(int Booking_Id, int? Seat_Nr, int Event_Id, int _User_Id, bool Locked) {
             try {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
                     using (SqlCommand command = new SqlCommand(SQLInsertBooking, connection)) {
 
                         //command.Parameters.AddWithValue("@Booking_Id", Booking_Id); // not used
-                        command.Parameters.AddWithValue("@Seat_Id", Seat_Id);
+                        command.Parameters.AddWithValue("@Seat_Nr", Seat_Nr);
                         command.Parameters.AddWithValue("@Event_Id", Event_Id);
                         command.Parameters.AddWithValue("@_User_Id", _User_Id);
                         command.Parameters.AddWithValue("@Locked", Locked);

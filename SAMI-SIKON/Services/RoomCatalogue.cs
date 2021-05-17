@@ -10,7 +10,7 @@ namespace SAMI_SIKON.Services {
 
         public RoomCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes) { }
 
-        public RoomCatalogue() : base("Room", new string[] { "Room_Id" }, new string[] { "Layout" }) { }
+        public RoomCatalogue() : base("Room", new string[] { "Room_Id" }, new string[] { "Layout", "_Name" }) { }
 
         public override async Task<List<Room>> GetAllItems() {
             try {
@@ -21,9 +21,10 @@ namespace SAMI_SIKON.Services {
                         SqlDataReader reader = await command.ExecuteReaderAsync();
                         while (reader.Read()) {
                             int room_Id = reader.GetInt32(0);
-                            string room_layout = reader.GetString(1);
+                            string room_Layout = reader.GetString(1);
+                            string room_Name = reader.GetString(2);
 
-                            Room room = new Room(room_Id, room_layout);
+                            Room room = new Room(room_Id, room_Layout, room_Name);
 
                             rooms.Add(room);
                         }
@@ -56,8 +57,10 @@ namespace SAMI_SIKON.Services {
                         while (reader.Read()) {
                             int room_Id = reader.GetInt32(0);
                             string room_Layout = reader.GetString(1);
+                            string room_Name = reader.GetString(2);
 
-                            Room room = new Room(room_Id, room_Layout);
+                            Room room = new Room(room_Id, room_Layout, room_Name);
+
                             rooms.Add(room);
                         }
 
@@ -83,8 +86,10 @@ namespace SAMI_SIKON.Services {
                         while (reader.Read()) {
                             int room_Id = reader.GetInt32(0);
                             string room_Layout = reader.GetString(1);
+                            string room_Name = reader.GetString(2);
 
-                            Room room = new Room(room_Id, room_Layout);
+                            Room room = new Room(room_Id, room_Layout, room_Name);
+
                             rooms.Add(room);
                         }
 
@@ -106,14 +111,14 @@ namespace SAMI_SIKON.Services {
 
                         command.Parameters.AddWithValue($"@{_relationalKeys[0]}", ids[0]);
 
-
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
                         while (reader.Read()) {
                             int room_Id = reader.GetInt32(0);
                             string room_Layout = reader.GetString(1);
-                            
-                            return new Room(room_Id, room_Layout);
+                            string room_Name = reader.GetString(2);
+
+                            return new Room(room_Id, room_Layout, room_Name);
                         }
                     }
                 }
@@ -131,6 +136,7 @@ namespace SAMI_SIKON.Services {
                     using (SqlCommand command = new SqlCommand(SQLInsert, connection)) {
                         //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", room.Id); //not needed
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", room.GetLayoutAsString());
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", room.Name);
 
                         await command.Connection.OpenAsync();
 
@@ -155,8 +161,9 @@ namespace SAMI_SIKON.Services {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
                     using (SqlCommand command = new SqlCommand(SQLUpdate, connection)) {
 
-                        command.Parameters.AddWithValue($"@{_relationalKeys[0]}", room.Id);
+                        // command.Parameters.AddWithValue($"@{_relationalKeys[0]}", room.Id); // doesn't work
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", room.GetLayoutAsString());
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", room.Name);
                         command.Parameters.AddWithValue($"@To_Update_0", ids[0]);
 
                         await command.Connection.OpenAsync();

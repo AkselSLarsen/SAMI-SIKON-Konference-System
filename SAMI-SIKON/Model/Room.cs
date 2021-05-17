@@ -11,17 +11,28 @@ namespace SAMI_SIKON.Model
         private static char EndLineSymbol = ';';
 
         public int Id;
-        public int Seats;
         private List<List<char>> _layout;
+        public string Name;
 
-        public Room(int id, string layout) {
-            Id = id;
-            Layout = LayoutFromString(layout);
+        public int Seats {
+            get {
+                return 0;
+            }
+            set {
+                
+            }
         }
 
-        public Room(int id, List<List<char>> layout) {
+        public Room(int id, string layout, string name) {
+            Id = id;
+            Layout = LayoutFromString(layout);
+            Name = name;
+        }
+
+        public Room(int id, List<List<char>> layout, string name) {
             Id = id;
             Layout = layout;
+            Name = name;
         }
 
         public List<List<char>> Layout {

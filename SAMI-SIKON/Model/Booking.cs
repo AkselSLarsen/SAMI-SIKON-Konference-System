@@ -9,20 +9,20 @@ namespace SAMI_SIKON.Model {
     public class Booking {
         public int Id;
         public int Event_Id;
-        public int Seat;
+        public int? Seat_Nr;
         public bool Locked;
 
-        public Booking(int id, int eventNr, int seatNr) {
+        public Booking(int id, int eventNr, int? seatNr) {
             Id = id;
             Event_Id = eventNr;
-            Seat = seatNr;
+            Seat_Nr = seatNr;
             Locked = false;
         }
 
         public Booking(int id, int eventNr, int seatNr, bool locked) {
             Id = id;
             Event_Id = eventNr;
-            Seat = seatNr;
+            Seat_Nr = seatNr;
             Locked = locked;
         }
 
