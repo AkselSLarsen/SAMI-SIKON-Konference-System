@@ -2,6 +2,8 @@
 @model SAMI_SIKON.Pages.Login.LoginPageModel
 @{
 }
+<h2>Login</h2>
+
 <form method="post">
     <div class="form-group">
         <label asp-for="@Model.UserEmail" class="custom-control-label"></label>
@@ -13,9 +15,9 @@
     </div>
     <input type="submit" value="Login" class="btn btn-primary" />
 </form>
-@if (Model.errorMessage != "")
+@if (Model.ErrorMessage != "")
 {
     <div class="alert alert-danger">
-        @Model.errorMessage
+        @Model.ErrorMessage
     </div>
 }

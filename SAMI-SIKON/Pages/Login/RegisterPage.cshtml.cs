@@ -12,14 +12,21 @@ namespace SAMI_SIKON.Pages.Login
 {
     public class RegisterPageModel : PageModel
     {
+        //Change this to individual properties
         [BindProperty]
-        public IUser User { get; set; }
+        public string Email { get; set; }
+        [BindProperty]
+        public string UserName { get; set; }
+        [BindProperty]
+        public string PhoneNumber { get; set; }
+        [BindProperty]
+        public string Password { get; set; }
 
-        
+
+
         public string CreationMessage;
         public RegisterPageModel()
         {
-            User = new Participant(0, "", "", "", "", "", new List<Booking>());
             CreationMessage = "";
         }
 
@@ -35,12 +42,13 @@ namespace SAMI_SIKON.Pages.Login
                 return Page();
             }
 
+            IUser User = new Participant(3, Email, Password, "", PhoneNumber, UserName, new List<Booking>());
             
             bool userCreated = User.Register();
             if (userCreated)
             {
-                CreationMessage = $"Success, User was created";
-                return Page();
+                User.Login();
+                return Redirect($"/Login/UserPage?Created=1");
             }
             else
             {

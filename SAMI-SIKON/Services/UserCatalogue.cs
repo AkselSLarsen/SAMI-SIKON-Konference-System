@@ -59,6 +59,10 @@ namespace SAMI_SIKON.Services {
                 result = new Participant(0, email, "", "", phoneNumber, userName, new List<Booking>());
             }
 
+            if (GetItemsWithAttribute(0,result.Email).Result.Count!=0)
+            {
+                return false;
+            }
             string salt = PasswordHasher.SaltMaker(saltSize);
             result.Salt = salt;
             result.Password = PasswordHasher.HashPasswordAndSalt(password, result.Salt, 1000, 48);
@@ -283,6 +287,17 @@ namespace SAMI_SIKON.Services {
                 Console.Beep();
             }
             return false;
+        }
+
+        public async Task<bool> UpdatePassword(IUser user, string password)
+        {
+            int saltSize = 16;
+            
+
+            string salt = PasswordHasher.SaltMaker(saltSize);
+            user.Salt = salt;
+            user.Password = PasswordHasher.HashPasswordAndSalt(password, user.Salt, 1000, 48);
+            return await UpdateItem(user, new int[] {user.Id});
         }
 
         public bool ValidateUser(string email, string password) {
