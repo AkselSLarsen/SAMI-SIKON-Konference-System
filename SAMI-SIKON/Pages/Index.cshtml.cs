@@ -86,6 +86,7 @@ namespace SAMI_SIKON.Pages {
             get { return _day; }
             set { _day = value; }
         }
+        [BindProperty]
         public DateTime Date { get; set; }
 
         [BindProperty]
@@ -139,7 +140,7 @@ namespace SAMI_SIKON.Pages {
         }
 
         public IActionResult OnPostNext() {
-            Date.AddDays(1);
+            Date = Date.AddDays(1);
 
             return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
         }
