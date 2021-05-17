@@ -9,6 +9,7 @@ namespace SAMI_SIKON.Services {
 
         private bool _automaticKeyIndexation;
 
+        #error Please update connectionString.
         /// <summary>
         /// The connection address to the underlying relational database in string format.
         /// </summary>
