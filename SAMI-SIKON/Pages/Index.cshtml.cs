@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SAMI_SIKON.Interfaces;
 using SAMI_SIKON.Model;
+using SAMI_SIKON.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,9 @@ namespace SAMI_SIKON.Pages {
         private List<List<Event>> _tracks;
         private double _viewStart = -1;
         private double _viewStop = -1;
+        private int _year = -1;
+        private int _month = -1;
+        private int _day = -1;
 
         private double ViewStart {
             get {
@@ -66,6 +70,22 @@ namespace SAMI_SIKON.Pages {
             }
         }
 
+
+        [FromQuery(Name = "year")]
+        public int Year {
+            get { return _year; }
+            set { _year = value; }
+        }
+        [FromQuery(Name = "month")]
+        public int Month {
+            get { return _month; }
+            set { _month = value; }
+        }
+        [FromQuery(Name = "day")]
+        public int Day {
+            get { return _day; }
+            set { _day = value; }
+        }
         public DateTime Date { get; set; }
 
         [BindProperty]
@@ -76,24 +96,24 @@ namespace SAMI_SIKON.Pages {
         [BindProperty]
         public int NrOfTracks { get; set; }
 
-        //[BindProperty]
-        //public ICatalogue<Room> Rooms { get; set; }
         [BindProperty]
-        public ICatalogue<IUser> Users { get; set; }
+        public RoomCatalogue Rooms { get; set; }
         [BindProperty]
-        public ICatalogue<Event> Events { get; set; }
+        public UserCatalogue Users { get; set; }
+        [BindProperty]
+        public EventCatalogue Events { get; set; }
 
         public IndexModel(ICatalogue<Room> rooms, ICatalogue<IUser> users, ICatalogue<Event> events) {
-            //Rooms = rooms;
-            Users = users;
-            Events = events;
+            Rooms = (RoomCatalogue)rooms;
+            Users = (UserCatalogue)users;
+            Events = (EventCatalogue)events;
         }
 
-        public async Task OnGetAsync(int year=-1, int month=-1, int day=-1) {
-            if(year == -1 || month == -1 || day == -1) {
+        public async Task OnGetAsync() {
+            if(Year == -1 || Month == -1 || Day == -1) {
                 Date = await GetClosestDate();
             } else {
-                Date = new DateTime(year, month, day);
+                Date = new DateTime(Year, Month, Day);
             }
             List<Event> evts = await GetEventsWithDate();
             EventTrackAssigner eta = new EventTrackAssigner(evts);
@@ -102,9 +122,32 @@ namespace SAMI_SIKON.Pages {
         }
 
         public async Task<IActionResult> OnPostFirstAsync() {
-            DateTime d = await getFirstDate();
-            
-            return Redirect($"~/?year={d.Year}&month={d.Month}&day={d.Day}");
+            Date = await getFirstDate();
+
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
+        }
+
+        public IActionResult OnPostPrevious() {
+            Date = Date.AddDays(-1);
+
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
+        }
+
+        public IActionResult OnPostToday() {
+            Date = DateTime.Today;
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
+        }
+
+        public IActionResult OnPostNext() {
+            Date.AddDays(1);
+
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
+        }
+
+        public async Task<IActionResult> OnPostLastAsync() {
+            Date = await getLastDate();
+
+            return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
         }
 
         public string TrackWidth() {
