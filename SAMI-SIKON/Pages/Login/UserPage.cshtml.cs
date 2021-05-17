@@ -46,7 +46,7 @@ namespace SAMI_SIKON.Pages.Login
             bool PasswordUpdated = UserLogin.NewPassword(NewPassword1);
             if (!PasswordUpdated)
             {
-                ErrorMessage = "Password not updated should not happen"; // I don't know if this will happen, but i don't think it should
+                ErrorMessage = "Password not updated, should not happen"; // I don't know if this will happen, but i don't think it should
                 return Page();
             }
             else

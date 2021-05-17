@@ -14,7 +14,7 @@ namespace SAMI_SIKON.Pages.Login
     {
         [BindProperty]
         public IUser User { get; set; }
-
+        //Change this to individual properties
         
         public string CreationMessage;
         public RegisterPageModel()
