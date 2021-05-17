@@ -47,8 +47,8 @@ namespace SAMI_SIKON.Pages.Login
             bool userCreated = User.Register();
             if (userCreated)
             {
-                CreationMessage = $"Success, User was created";
-                return Page();
+                User.Login();
+                return Redirect($"/Login/UserPage?Created=1");
             }
             else
             {

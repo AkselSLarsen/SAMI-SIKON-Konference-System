@@ -3,9 +3,16 @@
 @{
 }
 
-
-
-<form method="post">
+<h2>User Page</h2>
+<p></p>
+@if (Model.Created==1)
+{
+    <div class="alert alert-success">
+        User was created successfully
+    </div>
+}
+<p></p>
+<form method="post" asp-page-handler="pword">
     <div class="form-group">
         <label asp-for="@Model.UserPassword" class="custom-control-label"></label>
         <input type="password" asp-for="@Model.UserPassword" class="form-control" />
@@ -20,16 +27,30 @@
     </div>
     <input type="submit" value="Update Password" class="btn btn-primary" />
 </form>
+<p></p>
+@if (Model.ErrorMessage != null)
+{
+    @if (Model.ErrorMessage.StartsWith("Incorrect") | Model.ErrorMessage.StartsWith("New Password") | Model.ErrorMessage.StartsWith("Password not"))
+    {
+        <div class="alert alert-danger">
+            @Model.ErrorMessage
+        </div>
+    }
+}
+<p></p>
+@if (Model.SuccessMessage != null)
+{
+    @if (Model.SuccessMessage.StartsWith("Password"))
+    {
+        <div class="alert alert-success">
+            @Model.SuccessMessage
+        </div>
+    }
+}
 
-@if (Model.ErrorMessage.StartsWith("Incorrect") | Model.ErrorMessage.StartsWith("New Password") | Model.ErrorMessage.StartsWith("Password not"))
-{
-    <div class="alert alert-danger">
-        @Model.ErrorMessage
-    </div>
-}
-@if (Model.SuccessMessage.StartsWith("Password"))
-{
-    <div class="alert alert-success">
-        @Model.SuccessMessage
-    </div>
-}
+<p> </p>
+<p> </p>
+<p> </p>
+<form method="post" asp-page-handler="deleteuser">
+    <input type="submit" value="Delete User" class="btn btn-danger" />
+</form>

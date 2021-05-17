@@ -18,17 +18,17 @@ namespace SAMI_SIKON.Pages.Login
         public string NewPassword1 { get; set; }
         [BindProperty]
         public string NewPassword2 { get; set; }
-
         public string ErrorMessage { get; set; }
         public string SuccessMessage { get; set; }
-
+        [FromQuery]
+        public int Created { get; set; }
 
 
         public void OnGet()
         {
         }
         //Could maybe also allow updating the phone number
-        public IActionResult OnPost()
+        public IActionResult OnPostPWord()
         {
             IUser UserLogin = UserCatalogue.CurrentUser;
             UserLogin.Password = UserPassword;
@@ -56,5 +56,12 @@ namespace SAMI_SIKON.Pages.Login
             }
         }
 
+        public IActionResult OnPostDeleteUser()
+        {
+            IUser user = UserCatalogue.CurrentUser;
+            user.Delete();
+            UserCatalogue.Logout();
+            return Redirect("~/");
+        }
     }
 }

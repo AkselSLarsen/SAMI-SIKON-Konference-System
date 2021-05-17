@@ -59,6 +59,10 @@ namespace SAMI_SIKON.Services {
                 result = new Participant(0, email, "", "", phoneNumber, userName, new List<Booking>());
             }
 
+            if (GetItemsWithAttribute(0,result.Email).Result.Count!=0)
+            {
+                return false;
+            }
             string salt = PasswordHasher.SaltMaker(saltSize);
             result.Salt = salt;
             result.Password = PasswordHasher.HashPasswordAndSalt(password, result.Salt, 1000, 48);

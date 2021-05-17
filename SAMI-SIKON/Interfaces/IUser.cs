@@ -40,8 +40,14 @@ namespace SAMI_SIKON.Interfaces
             UserCatalogue users = new UserCatalogue();
             return users.UpdatePassword(this, password).Result;
         }
-
         //There is a difference between how the NewPassword and Login methods handle the password, in login it is contained as plain text in the IUser object,
         //in the NewPassword it is taken as a parameter, its worth discussing which is better since normally the Password property in a user is a hashed password, and not plain text.
+
+        public async virtual void Delete()
+        {
+            UserCatalogue users = new UserCatalogue();
+            await users.DeleteItem(new int[] {Id});
+        }
+
     }
 }
