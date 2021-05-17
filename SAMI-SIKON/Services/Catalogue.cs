@@ -12,7 +12,7 @@ namespace SAMI_SIKON.Services {
         /// <summary>
         /// The connection address to the underlying relational database in string format.
         /// </summary>
-        protected static string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        protected static string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=SAMI_SIKON;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         /// <summary>
         /// The name of the table in the relational database in string format.
         /// </summary>
