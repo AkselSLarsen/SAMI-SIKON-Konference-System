@@ -21,3 +21,8 @@
     border-bottom: 1px solid black; /*doesn't work :(*/
     cursor: pointer; /*doesn't work :(*/
 }
+
+.day_selector {
+    margin: auto;
+    height: auto;
+}
