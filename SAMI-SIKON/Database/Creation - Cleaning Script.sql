@@ -4,11 +4,11 @@
 -- This script will remove everything in the SAMI_SIKON Database and remake clean versions of the tables.
 
 -- Remove all data from the tables.
-DELETE FROM Booking;
-DELETE FROM Speaker;
-DELETE FROM _Event;
-DELETE FROM Room;
-DELETE FROM _User;
+--DELETE FROM Booking;
+--DELETE FROM Speaker;
+--DELETE FROM _Event;
+--DELETE FROM Room;
+--DELETE FROM _User;
 
 -- Delete the tables themselves in case of them having been created incorrectly.
 DROP TABLE IF EXISTS Booking;

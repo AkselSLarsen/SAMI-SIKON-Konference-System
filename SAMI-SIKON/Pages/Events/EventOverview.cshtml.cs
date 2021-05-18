@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SAMI_SIKON.Interfaces;
 using SAMI_SIKON.Model;
 using SAMI_SIKON.Services;
 
@@ -15,20 +16,63 @@ namespace SAMI_SIKON.Pages.Events
         public string FilterCriteria { get; set; }
         [BindProperty]
         public int Event_Id { get; set; }
+        [BindProperty]
+        public int RoomNr { get; set; }
+        private ICatalogue<Room> Rooms { get; set; }
+
         public List<Event> Events { get; private set; }
+        public List<Event> SortedEvents { get; set; }
 
-        private EventCatalogue eventCatalogue;
 
-        public async Task OnGetMyEvents(int event_Id)
+        public EventOverviewModel(ICatalogue<Event> eventcat)
         {
-            Events = await eventCatalogue.GetAllItems();
-            //Event_Id = event_Id;
-            //if (!String.IsNullOrEmpty(FilterCriteria))
-            //{
-            //    Events = await eventCatalogue.GetItemsWithKey(Event_Id);
-            //}
-            //else
-            //    Events = await eventCatalogue.GetAllItems();
+            eventCatalogue = eventcat;
+            SortedEvents = new List<Event>();
+
+        }
+
+        private ICatalogue<Event> eventCatalogue;
+
+        public async Task OnGetAsync()
+        {
+
+            if (FilterCriteria == null || FilterCriteria == "")
+            {
+                SortedEvents = await eventCatalogue.GetAllItems();
+            }
+            else
+            {
+                foreach (Event evt in await eventCatalogue.GetAllItems())
+                {
+                    bool add = false;
+
+                    if (evt.Name.ToLower().Contains(FilterCriteria.ToLower()))
+                    {
+                        add = true;
+                    }
+                    else if (evt.Theme.ToLower().Contains(FilterCriteria.ToLower()))
+                    {
+                        add = true;
+                    }
+
+                    if (evt.RoomNr != RoomNr)
+                    {
+                        add = false;
+                    }
+
+                    if (add)
+                    {
+                        SortedEvents.Add(evt);
+                    }
+                }
+            }
+
+            SortedEvents.Sort(Comparer<Event>.Create((x, y) => x.Name.CompareTo(y.Name)));
+        }
+
+        public IActionResult OnPostSort()
+        {
+            return Page();
         }
     }
 }
