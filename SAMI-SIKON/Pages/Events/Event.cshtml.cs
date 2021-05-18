@@ -4,11 +4,13 @@ using SAMI_SIKON.Interfaces;
 using SAMI_SIKON.Model;
 using SAMI_SIKON.Services;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SAMI_SIKON.Pages.Events {
     public class EventModel : PageModel {
 
+        [BindProperty]
         public int EventNumber { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -37,20 +39,79 @@ namespace SAMI_SIKON.Pages.Events {
             Seats = evt.SeatsLeft;
         }
 
-        public IActionResult OnPostBook() {
+        public async Task<IActionResult> OnPostBook() {
             if(UserCatalogue.CurrentUser == null) {
                 return Redirect("~/Login/LoginPage");
             }
 
-            Booking booking = new Booking(0, EventNumber, 0);
+            Booking booking = new Booking(0, EventNumber, null);
 
             UserCatalogue.CurrentUser.Bookings.Add(booking);
-            Users.UpdateItem(UserCatalogue.CurrentUser, new int[] { UserCatalogue.CurrentUser.Id });
-            return Page();
+            await Users.UpdateItem(UserCatalogue.CurrentUser, new int[] { UserCatalogue.CurrentUser.Id });
+            return Redirect("~/");
         }
 
         public IActionResult OnPostChooce() {
             return Redirect($"~/Rooms?id={EventNumber}");
+        }
+
+        public async Task<IActionResult> OnPostUnbook() {
+            Booking toDelete = null;
+            foreach(Booking booking in UserCatalogue.CurrentUser.Bookings) {
+                if(booking.Event_Id == EventNumber) {
+                    toDelete = booking;
+                }
+            }
+            if(toDelete != null) { UserCatalogue.CurrentUser.Bookings.Remove(toDelete); }
+
+            await Users.UpdateItem(UserCatalogue.CurrentUser, new int[] { UserCatalogue.CurrentUser.Id });
+            return Redirect("~/");
+        }
+
+        public bool HasBooking() {
+            if (UserCatalogue.CurrentUser != null) {
+                List<Booking> bookings = UserCatalogue.CurrentUser.Bookings;
+                foreach (Booking booking in bookings) {
+                    if (booking.Event_Id == EventNumber) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool HasSeat() {
+            if (UserCatalogue.CurrentUser != null) {
+                List<Booking> bookings = UserCatalogue.CurrentUser.Bookings;
+                foreach (Booking booking in bookings) {
+                    if (booking.Event_Id == EventNumber) {
+                        if (booking.Seat_Nr != null && booking.Seat_Nr != 0) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public async Task<bool> CanBook() {
+            if (UserCatalogue.CurrentUser != null) {
+                if (Seats <= 0) {
+                    return false;
+                }
+                Event evt = await Events.GetItem(new int[] { EventNumber });
+                bool overlaps = false;
+
+                List<Booking> bookings = UserCatalogue.CurrentUser.Bookings;
+                foreach (Booking booking in bookings) {
+                    Event e = await booking.FindEvent();
+                    if(e.Overlaps(evt)) {
+                        overlaps = true;
+                    }
+                }
+                return !overlaps;
+            }
+            return true;
         }
     }
 }

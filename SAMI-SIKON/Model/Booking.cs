@@ -19,7 +19,7 @@ namespace SAMI_SIKON.Model {
             Locked = false;
         }
 
-        public Booking(int id, int eventNr, int seatNr, bool locked) {
+        public Booking(int id, int eventNr, int? seatNr, bool locked) {
             Id = id;
             Event_Id = eventNr;
             Seat_Nr = seatNr;

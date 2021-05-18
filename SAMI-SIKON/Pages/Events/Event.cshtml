@@ -1,4 +1,5 @@
 ﻿@page
+@using SAMI_SIKON.Services;
 @model SAMI_SIKON.Pages.Events.EventModel
 @{
 }
@@ -19,15 +20,34 @@
             <p class="border border-info btn" style="margin-top:1em;">Seats Left: @Model.Seats</p>
         </div>
 
-        <form method="post" asp-page-handler="Book">
-            <div style="text-align:center;width:33%;float:left;">
-                <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Book Seat" />
-            </div>
-        </form>
+        @if (!Model.HasBooking()) {
+                <form method="post" asp-page-handler="Book">
+                    <input type="hidden" asp-for="@Model.EventNumber" /> <!--ensure that EventNumber is in scope-->
+                    <div style="text-align:center;width:33%;float:left;">
+                        @if (await Model.CanBook()) {
+                            <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Book Seat" />
+                        } else {
+                            <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Book Seat" disabled />
+                        }
+                    </div>
+                </form>
+        } else {
+            <form method="post" asp-page-handler="Unbook">
+                <input type="hidden" asp-for="@Model.EventNumber" /> <!--ensure that EventNumber is in scope-->
+                <div style="text-align:center;width:33%;float:left;">
+                    <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Unbook Seat" />
+                </div>
+            </form>
+        }
 
         <form method="post" asp-page-handler="Chooce">
+            <input type="hidden" asp-for="@Model.EventNumber" /> <!--ensure that EventNumber is in scope-->
             <div style="text-align:center;width:33%;float:right;">
-                <input class="border border-secondary btn" style="margin-top:1em;" type="submit" value="Chooce Seat" />
+                @if (!Model.HasSeat()) {
+                    <input class="border border-secondary btn" style="margin-top:1em;" type="submit" value="Chooce Seat" />
+                } else {
+                    <input class="border border-secondary btn" style="margin-top:1em;" type="submit" value="Change Seat" />
+                }
             </div>
         </form>
 

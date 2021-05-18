@@ -27,6 +27,7 @@ namespace SAMI_SIKON.Model
                 return StartTime.AddMinutes(_duration);
             }
         }
+
         public int SeatsLeft {
             get {
                 return FindRoom().Result.Seats - bookedSeats;
@@ -43,6 +44,7 @@ namespace SAMI_SIKON.Model
             _duration = duration;
             _seatsTaken = seatsTaken;
         }
+
         /// <summary>
         /// This is a testing constructor, please delete it after explaining all about what it was for in the report.
         /// </summary>
@@ -88,6 +90,14 @@ namespace SAMI_SIKON.Model
                 }
             }
             return participants;
+        }
+
+        public bool Overlaps(Event evt) {
+            if (this.StartTime.CompareTo(evt.StopTime) >= 0 || evt.StartTime.CompareTo(evt.StopTime) >= 0) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 }
