@@ -24,19 +24,20 @@ namespace SAMI_SIKON.Pages.Events
         {
             Rooms = rooms;
             Events = events;
+            SortedEvents = new List<Event>();
         }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
             List<Event> tmp = new List<Event>();
 
             if (Criteria == null || Criteria == "")
             {
-                tmp = Events.GetAllItems().Result;
+                tmp = await Events.GetAllItems();
             }
             else
             {
-                foreach (Event evt in Events.GetAllItems().Result)
+                foreach (Event evt in await Events.GetAllItems())
                 {
                     bool add = false;
 
