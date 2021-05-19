@@ -93,7 +93,7 @@ namespace SAMI_SIKON.Model
         }
 
         public bool Overlaps(Event evt) {
-            if (this.StartTime.CompareTo(evt.StopTime) >= 0 || evt.StartTime.CompareTo(evt.StopTime) >= 0) {
+            if (this.StartTime.CompareTo(evt.StopTime) >= 0 || evt.StartTime.CompareTo(this.StopTime) >= 0) {
                 return false;
             } else {
                 return true;
