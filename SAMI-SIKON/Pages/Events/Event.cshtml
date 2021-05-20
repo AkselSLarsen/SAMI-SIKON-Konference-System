@@ -4,53 +4,60 @@
 @{
 }
 
-<div class="col-6" style="float:left;margin:auto;">
-    <div style="background-color:beige;">
-        <h2 class="text-sm-center">@Model.Name</h2>
-    </div>
-    <p>@Model.Description</p>
-</div>
+<div class="col-xl-5" style="float:left;margin:auto;">
 
-<div class="col-6" style="float:right;margin:auto;height:85vh;">
-    <img src="@Model.PictureSrc" alt="@Model.PictureAlt" style="width:100%;height:auto;" />
+    <div style="background-color:cornsilk;">
+        <h2 class="text-sm-center">@Model.Name</h2>
+        <h6 class="text-sm-center">@Model.GetSpeakerNames().Result</h6>
+    </div>
 
     <div class="border border-dark" style="margin-top:1vh;overflow:hidden;">
 
         <div style="text-align:center;width:34%;float:left;">
-            <p class="border border-info btn" style="margin-top:1em;">Seats Left: @Model.Seats</p>
+            <p class="border border-info btn" style="margin-top:1em;">Seats Left: @Model.Event.SeatsLeft</p>
         </div>
 
-        @if (!Model.HasBooking()) {
-                <form method="post" asp-page-handler="Book">
-                    <input type="hidden" asp-for="@Model.EventNumber" /> <!--ensure that EventNumber is in scope-->
-                    <div style="text-align:center;width:33%;float:left;">
-                        @if (await Model.CanBook()) {
-                            <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Book Seat" />
-                        } else {
-                            <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Book Seat" disabled />
-                        }
-                    </div>
-                </form>
-        } else {
-            <form method="post" asp-page-handler="Unbook">
-                <input type="hidden" asp-for="@Model.EventNumber" /> <!--ensure that EventNumber is in scope-->
-                <div style="text-align:center;width:33%;float:left;">
-                    <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Unbook Seat" />
-                </div>
-            </form>
-        }
-
-        <form method="post" asp-page-handler="Chooce">
-            <input type="hidden" asp-for="@Model.EventNumber" /> <!--ensure that EventNumber is in scope-->
-            <div style="text-align:center;width:33%;float:right;">
-                @if (!Model.HasSeat()) {
-                    <input class="border border-secondary btn" style="margin-top:1em;" type="submit" value="Chooce Seat" />
+    @if (!Model.HasBooking()) {
+        <form method="post" asp-page-handler="Book">
+            <input type="hidden" asp-for="@Model.EventId" /> <!--ensure that EventId is in scope-->
+            <input type="hidden" asp-for="@Model.Tooltip" /> <!--ensure that Tooltip is in scope-->
+            <div style="text-align:center;width:33%;float:left;">
+                @if (await Model.CanBook()) {
+                    <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Book Plads" data-toggle="tooltip" data-placement="bottom" title="@Model.Tooltip"/>
                 } else {
-                    <input class="border border-secondary btn" style="margin-top:1em;" type="submit" value="Change Seat" />
+                    <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Book Plads" data-toggle="tooltip" data-placement="bottom" title="@Model.Tooltip" disabled/>
                 }
             </div>
         </form>
+    } else {
+        <form method="post" asp-page-handler="Unbook">
+            <input type="hidden" asp-for="@Model.EventId" /> <!--ensure that EventId is in scope-->
+            <div style="text-align:center;width:33%;float:left;">
+                <input class="border border-primary btn" style="margin-top:1em;" type="submit" value="Afbestil Plads" />
+            </div>
+        </form>
+    }
 
+    @if (!Model.HasBooking()) {
+        <form method="post" asp-page-handler="Chooce">
+            <input type="hidden" asp-for="@Model.EventId" /> <!--ensure that EventId is in scope-->
+            <div style="text-align:center;width:33%;float:right;">
+                @if (!Model.HasSeat()) {
+                    @if (await Model.CanBook()) {
+                        <input class="border border-secondary btn" style="margin-top:1em;" type="submit" value="Vælg Plads" data-toggle="tooltip" data-placement="bottom" title="@Model.Tooltip" />
+                    } else {
+                        <input class="border border-secondary btn" style="margin-top:1em;" type="submit" value="Vælg Plads" data-toggle="tooltip" data-placement="bottom" title="@Model.Tooltip" disabled />
+                    }
+                } else {
+                    <input class="border border-secondary btn" style="margin-top:1em;" type="submit" value="Ændre Plads" />
+                }
+            </div>
+        </form>
+    }
     </div>
 
+</div>
+
+<div class="col-xl-7" style="float:right;margin:auto;">
+    <p>@Model.Description</p>
 </div>

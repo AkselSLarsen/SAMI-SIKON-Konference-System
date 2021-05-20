@@ -45,6 +45,18 @@ namespace SAMI_SIKON.Model
             _seatsTaken = seatsTaken;
         }
 
+        public Event(int id, int roomNr, List<int> speakers, DateTime startTime, string description, string name, int duration, int[] seatsTaken, string theme) {
+            Id = id;
+            RoomNr = roomNr;
+            Speakers = speakers;
+            StartTime = startTime;
+            Description = description;
+            Name = name;
+            _duration = duration;
+            _seatsTaken = seatsTaken;
+            Theme = theme;
+        }
+
         /// <summary>
         /// This is a testing constructor, please delete it after explaining all about what it was for in the report.
         /// </summary>
