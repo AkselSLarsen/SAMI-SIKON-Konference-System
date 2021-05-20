@@ -102,28 +102,28 @@ namespace SAMI_SIKON.Pages {
         [BindProperty]
         public UserCatalogue Users { get; set; }
         [BindProperty]
-        public EventCatalogue Events { get; set; }
+        public List<Event> Events { get; set; }
 
         public IndexModel(ICatalogue<Room> rooms, ICatalogue<IUser> users, ICatalogue<Event> events) {
             Rooms = (RoomCatalogue)rooms;
             Users = (UserCatalogue)users;
-            Events = (EventCatalogue)events;
+            Events = events.GetAllItems().Result;
         }
 
-        public async Task OnGetAsync() {
+        public void OnGetAsync() {
             if(Year == -1 || Month == -1 || Day == -1) {
-                Date = await GetClosestDate();
+                Date = GetClosestDate();
             } else {
                 Date = new DateTime(Year, Month, Day);
             }
-            List<Event> evts = await GetEventsWithDate();
+            List<Event> evts = GetEventsWithDate();
             EventTrackAssigner eta = new EventTrackAssigner(evts);
 
             Tracks = eta.Tracks;
         }
 
-        public async Task<IActionResult> OnPostFirstAsync() {
-            Date = await getFirstDate();
+        public IActionResult OnPostFirst() {
+            Date = getFirstDate();
 
             return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
         }
@@ -145,8 +145,8 @@ namespace SAMI_SIKON.Pages {
             return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
         }
 
-        public async Task<IActionResult> OnPostLastAsync() {
-            Date = await getLastDate();
+        public IActionResult OnPostLast() {
+            Date = getLastDate();
 
             return Redirect($"~/?year={Date.Year}&month={Date.Month}&day={Date.Day}");
         }
@@ -155,17 +155,38 @@ namespace SAMI_SIKON.Pages {
             return (94 / NrOfTracks) + "%";
         }
 
-        public string ThemeToColor(Event evt) {
+        public string GetColor(Event evt) {
+            IUser user = UserCatalogue.CurrentUser;
+            bool booked = false;
 
-            if(evt.Theme == "a") {
-                return "antiquewhite";
+            if(user != null) {
+                foreach (Booking b in user.Bookings) {
+                    if (b.Event_Id == evt.Id) {
+                        booked = true;
+                    }
+                }
             }
 
-            if (evt.Theme == "b") {
-                return "gainsboro";
+            if(booked) {
+                return "beige";
+            } else {
+                return "azure";
+            }
+        }
+
+        public async Task<string> GetEventTooltip(Event evt) {
+            string re = evt.Name;
+            re += "\nOplægsholdere:\n";
+
+            foreach(Participant speaker in await evt.FindSpeakers()) {
+                re += speaker.Name + "\n";
             }
 
-            return "lightblue";
+            if(evt.Theme != null) {
+                re += "Tema: " + evt.Theme;
+            }
+
+            return re;
         }
 
         public string GetDuration(Event evt) {
@@ -216,8 +237,8 @@ namespace SAMI_SIKON.Pages {
             return string.Format("{0:N2}", offset * TimeScale).Replace(',', '.') + "vh";
         }
 
-        private async Task<List<DateTime>> GetDates() {
-            List<Event> evts = await Events.GetAllItems();
+        private List<DateTime> GetDates() {
+            List<Event> evts = Events;
             List<DateTime> dates = new List<DateTime>();
 
             foreach (Event evt in evts) {
@@ -226,8 +247,8 @@ namespace SAMI_SIKON.Pages {
             return dates;
         }
 
-        private async Task<DateTime> GetClosestDate() {
-            List<DateTime> dates = await GetDates();
+        private DateTime GetClosestDate() {
+            List<DateTime> dates = GetDates();
             DateTime re = dates[0];
             DateTime now = DateTime.Now;
             foreach(DateTime date in dates) {
@@ -238,8 +259,8 @@ namespace SAMI_SIKON.Pages {
             return re;
         }
 
-        private async Task<DateTime> getFirstDate() {
-            List<DateTime> dates = await GetDates();
+        private DateTime getFirstDate() {
+            List<DateTime> dates = GetDates();
             DateTime re = dates[0];
             foreach (DateTime date in dates) {
                 if (re.CompareTo(date) > 0) {
@@ -249,8 +270,8 @@ namespace SAMI_SIKON.Pages {
             return re;
         }
 
-        private async Task<DateTime> getLastDate() {
-            List<DateTime> dates = await GetDates();
+        private DateTime getLastDate() {
+            List<DateTime> dates =GetDates();
             DateTime re = dates[0];
             foreach (DateTime date in dates) {
                 if (re.CompareTo(date) < 0) {
@@ -260,8 +281,8 @@ namespace SAMI_SIKON.Pages {
             return re;
         }
 
-        private async Task<List<Event>> GetEventsWithDate() {
-            List<Event> evts = await Events.GetAllItems();
+        private List<Event> GetEventsWithDate() {
+            List<Event> evts = Events;
             List<Event> re = new List<Event>();
 
             foreach (Event evt in evts) {

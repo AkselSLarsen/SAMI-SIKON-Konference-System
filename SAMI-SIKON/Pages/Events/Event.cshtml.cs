@@ -96,7 +96,7 @@ namespace SAMI_SIKON.Pages.Events {
 
         public async Task<bool> CanBook() {
             if (UserCatalogue.CurrentUser != null) {
-                if (Seats <= 0) {
+                if (Seats <= 0 || UserCatalogue.CurrentUser is Administrator) {
                     return false;
                 }
                 Event evt = await Events.GetItem(new int[] { EventNumber });
