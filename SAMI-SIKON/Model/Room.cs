@@ -7,8 +7,13 @@ namespace SAMI_SIKON.Model
 {
     public class Room
     {
-        private static char SeatSymbol = 'S'; //should maybe be public, if you need it in some other class feel free to make it so.
-        private static char EndLineSymbol = ';';
+        public static char SeatSymbol = 'S';
+        public static char MobileSeatSymbol = 'M';
+        public static char SceneSymbol = 'C';
+        public static char TableSymbol = 'T';
+        public static char WallSymbol = 'W';
+        public static char FloorSymbol = 'F';
+        public static char EndLineSymbol = ';';
 
         public int Id;
         public string Name;

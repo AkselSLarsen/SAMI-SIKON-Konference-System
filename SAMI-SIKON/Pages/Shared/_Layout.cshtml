@@ -1,4 +1,5 @@
 ﻿@using SAMI_SIKON.Services
+@using SAMI_SIKON.Model
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,30 +23,26 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/Events">Events</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/EventOverview">Alle Oplæg</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/EventOverview">Overview</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
+                        @if (UserCatalogue.CurrentUser is Administrator) {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Rooms/Designer">Rum Designer</a>
+                            </li>
+                        }
                     </ul>
-                    
+
                 </div>
                 <div>
                     <ul class="nav navbar-nav navbar-right">
-                        @if (UserCatalogue.CurrentUser == null)
-                        {
+                        @if (UserCatalogue.CurrentUser == null) {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Login/RegisterPage">Register</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Login/LoginPage">Login</a>
                             </li>
-                        }
-                        else
-                        {
+                        } else {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Login/UserPage">Userpage</a>
                             </li>
@@ -64,11 +61,13 @@
         </main>
     </div>
 
+    <!--
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2021 - SAMI_SIKON - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
+   -->
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

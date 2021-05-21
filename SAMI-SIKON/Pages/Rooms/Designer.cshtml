@@ -1,5 +1,18 @@
 ﻿@page
+@using SAMI_SIKON.Model;
 @model SAMI_SIKON.Pages.Rooms.DesignerModel
 @{
 }
 
+<div class="grid" style="position:relative;">
+    @for (int x = 0; x < Model.Room.Layout.Count; x++) {
+        for (int y = 0; y < Model.Room.Layout[x].Count; y++) {
+            char c = Model.Room.Layout[x][y];
+
+            <img src="@Model.GetImageSource(c)" alt="@Model.GetImageAltText(c)" style="position:absolute;top:@Model.GetOffset(x);left:@Model.GetOffset(y);width:@Model.GetSymbolSize();height:auto;" />
+
+        }
+    }
+
+
+</div>
