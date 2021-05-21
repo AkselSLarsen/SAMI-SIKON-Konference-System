@@ -55,10 +55,10 @@ namespace SAMI_SIKON.Pages.Events
                         add = true;
                     }
 
-                    //if (evt.RoomNr != RoomNr)
-                    //{
-                    //    add = false;
-                    //}
+                    if (evt.RoomNr != RoomNr)
+                    {
+                        add = false;
+                    }
 
                     if (add)
                     {
@@ -74,7 +74,7 @@ namespace SAMI_SIKON.Pages.Events
         {
             await eventCatalogue.DeleteItem(new int[] {Event_Id});
         }
-        public IActionResult OnPostSortA()
+        public IActionResult OnPostSort()
         {
             return Page();
         }
