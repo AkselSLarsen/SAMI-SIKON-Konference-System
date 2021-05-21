@@ -55,10 +55,10 @@ namespace SAMI_SIKON.Pages.Events
                         add = true;
                     }
 
-                    if (evt.RoomNr != RoomNr)
-                    {
-                        add = false;
-                    }
+                    //if (evt.RoomNr != RoomNr)
+                    //{
+                    //    add = false;
+                    //}
 
                     if (add)
                     {
@@ -70,7 +70,11 @@ namespace SAMI_SIKON.Pages.Events
             SortedEvents.Sort(Comparer<Event>.Create((x, y) => x.Name.CompareTo(y.Name)));
         }
 
-        public IActionResult OnPostSort()
+        public async Task OnPostDeleteAsync()
+        {
+            await eventCatalogue.DeleteItem(new int[] {Event_Id});
+        }
+        public IActionResult OnPostSortA()
         {
             return Page();
         }
