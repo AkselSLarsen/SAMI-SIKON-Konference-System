@@ -183,8 +183,10 @@ namespace SAMI_SIKON.Pages {
             }
 
             if(evt.Theme != null) {
-                re += "Tema: " + evt.Theme;
+                re += "Tema: " + evt.Theme + "\n";
             }
+            Room room = await evt.FindRoom();
+            re += "Rum: " + room.Name;
 
             return re;
         }
