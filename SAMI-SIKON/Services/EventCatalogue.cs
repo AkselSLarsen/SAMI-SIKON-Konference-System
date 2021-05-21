@@ -1,40 +1,33 @@
-﻿using System;
+﻿using SAMI_SIKON.Model;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using SAMI_SIKON.Interfaces;
-using SAMI_SIKON.Model;
 
-namespace SAMI_SIKON.Services
-{
-    public class EventCatalogue : Catalogue<Event>
-    {
-        public EventCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes)
-        {
+namespace SAMI_SIKON.Services {
+    public class EventCatalogue : Catalogue<Event> {
+        public EventCatalogue(string relationalName, string[] relationalKeys, string[] relationalAttributes) : base(relationalName, relationalKeys, relationalAttributes) {
         }
-        public EventCatalogue() : base("_Event", new string[] { "Event_Id" }, new string[] { "_Description", "_Name", "StartTime", "Duration", "Room_Id" }) { }
+        public EventCatalogue() : base("_Event", new string[] { "Event_Id" }, new string[] { "_Description", "_Name", "Theme", "StartTime", "Duration", "Room_Id" }) { }
 
         #region Catalogue methods
-        public override async Task<List<Event>> GetAllItems()
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(SQLGetAll, connection))
-                    {
+        public override async Task<List<Event>> GetAllItems() {
+            try {
+                using (SqlConnection connection = new SqlConnection(connectionString)) {
+                    using (SqlCommand command = new SqlCommand(SQLGetAll, connection)) {
                         await command.Connection.OpenAsync();
-                        List <Event> events = new List<Event>();
+                        List<Event> events = new List<Event>();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        while (reader.Read())
-                        {
+                        while (reader.Read()) {
                             int event_Id = reader.GetInt32(0);
                             string description = reader.GetString(1);
                             string name = reader.GetString(2);
-                            DateTime startTime = reader.GetDateTime(3);
-                            int duration = reader.GetInt32(4);
-                            int room_Id = reader.GetInt32(5);
+                            if (!reader.IsDBNull(3)) {
+                                string theme = GetThemeFromDatabase(reader.GetString(3));
+                            }
+                            DateTime startTime = reader.GetDateTime(4);
+                            int duration = reader.GetInt32(5);
+                            int room_Id = reader.GetInt32(6);
 
                             Event evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetTakenSeats(event_Id));
 
@@ -58,14 +51,10 @@ namespace SAMI_SIKON.Services
             return result;
         }
 
-        public override async Task<List<Event>> GetItemsWithAttribute(int attributeNr, object attribute)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(SQLGetFromAttribute(attributeNr, attribute.ToString()), connection))
-                    {
+        public override async Task<List<Event>> GetItemsWithAttribute(int attributeNr, object attribute) {
+            try {
+                using (SqlConnection connection = new SqlConnection(connectionString)) {
+                    using (SqlCommand command = new SqlCommand(SQLGetFromAttribute(attributeNr, attribute.ToString()), connection)) {
 
                         command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
 
@@ -73,14 +62,16 @@ namespace SAMI_SIKON.Services
                         await command.Connection.OpenAsync();
                         List<Event> events = new List<Event>();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        while (reader.Read())
-                        {
+                        while (reader.Read()) {
                             int event_Id = reader.GetInt32(0);
                             string description = reader.GetString(1);
                             string name = reader.GetString(2);
-                            DateTime startTime = reader.GetDateTime(3);
-                            int duration = reader.GetInt32(4);
-                            int room_Id = reader.GetInt32(5);
+                            if (!reader.IsDBNull(3)) {
+                                string theme = GetThemeFromDatabase(reader.GetString(3));
+                            }
+                            DateTime startTime = reader.GetDateTime(4);
+                            int duration = reader.GetInt32(5);
+                            int room_Id = reader.GetInt32(6);
 
                             Event evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetTakenSeats(event_Id));
 
@@ -99,14 +90,10 @@ namespace SAMI_SIKON.Services
             return null;
         }
 
-        public override async Task<List<Event>> GetItemsWithAttributeLike(int attributeNr, string attribute)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(SQLGetLikeAtttribute(attributeNr, attribute), connection))
-                    {
+        public override async Task<List<Event>> GetItemsWithAttributeLike(int attributeNr, string attribute) {
+            try {
+                using (SqlConnection connection = new SqlConnection(connectionString)) {
+                    using (SqlCommand command = new SqlCommand(SQLGetLikeAtttribute(attributeNr, attribute), connection)) {
 
                         command.Parameters.AddWithValue($"@{_relationalAttributes[attributeNr]}", attribute);
 
@@ -114,14 +101,16 @@ namespace SAMI_SIKON.Services
                         await command.Connection.OpenAsync();
                         List<Event> events = new List<Event>();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        while (reader.Read())
-                        {
+                        while (reader.Read()) {
                             int event_Id = reader.GetInt32(0);
                             string description = reader.GetString(1);
                             string name = reader.GetString(2);
-                            DateTime startTime = reader.GetDateTime(3);
-                            int duration = reader.GetInt32(4);
-                            int room_Id = reader.GetInt32(5);
+                            if (!reader.IsDBNull(3)) {
+                                string theme = GetThemeFromDatabase(reader.GetString(3));
+                            }
+                            DateTime startTime = reader.GetDateTime(4);
+                            int duration = reader.GetInt32(5);
+                            int room_Id = reader.GetInt32(6);
 
                             Event evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetTakenSeats(event_Id));
 
@@ -140,14 +129,10 @@ namespace SAMI_SIKON.Services
             return null;
         }
 
-        public override async Task<Event> GetItem(int[] ids)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(SQLGet, connection))
-                    {
+        public override async Task<Event> GetItem(int[] ids) {
+            try {
+                using (SqlConnection connection = new SqlConnection(connectionString)) {
+                    using (SqlCommand command = new SqlCommand(SQLGet, connection)) {
 
                         command.Parameters.AddWithValue($"@{_relationalKeys[0]}", ids[0]);
 
@@ -155,14 +140,16 @@ namespace SAMI_SIKON.Services
 
                         await command.Connection.OpenAsync();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
-                        while (reader.Read())
-                        {
+                        while (reader.Read()) {
                             int event_Id = reader.GetInt32(0);
                             string description = reader.GetString(1);
                             string name = reader.GetString(2);
-                            DateTime startTime = reader.GetDateTime(3);
-                            int duration = reader.GetInt32(4);
-                            int room_Id = reader.GetInt32(5);
+                            if (!reader.IsDBNull(3)) {
+                                string theme = GetThemeFromDatabase(reader.GetString(3));
+                            }
+                            DateTime startTime = reader.GetDateTime(4);
+                            int duration = reader.GetInt32(5);
+                            int room_Id = reader.GetInt32(6);
 
                             evt = new Event(event_Id, room_Id, await GetSpeakersForEvent(event_Id), startTime, description, name, duration, await GetTakenSeats(event_Id));
                         }
@@ -178,33 +165,27 @@ namespace SAMI_SIKON.Services
             return null;
         }
 
-        public override async Task<bool> CreateItem(Event evt)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(SQLInsert, connection))
-                    {
+        public override async Task<bool> CreateItem(Event evt) {
+            try {
+                using (SqlConnection connection = new SqlConnection(connectionString)) {
+                    using (SqlCommand command = new SqlCommand(SQLInsert, connection)) {
                         //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", evt.Id); //not needed for tables that are auto indexed
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", evt.Description);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", evt.Name);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", evt.StartTime);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", evt.StopTime.TimeOfDay.TotalMinutes - evt.StartTime.TimeOfDay.TotalMinutes);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", evt.RoomNr);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", GetThemeToDatabase(evt.Theme));
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", evt.StartTime);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", evt.StopTime.TimeOfDay.TotalMinutes - evt.StartTime.TimeOfDay.TotalMinutes);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", evt.RoomNr);
 
                         await command.Connection.OpenAsync();
 
                         int i = await command.ExecuteNonQueryAsync();
-                        if (i != 1)
-                        {
+                        if (i != 1) {
                             return false;
-                        }
-                        else
-                        {
+                        } else {
                             int evt_Id = await GetHighstId();
                             bool re = true;
-                            foreach(int participant in evt.Speakers) {
+                            foreach (int participant in evt.Speakers) {
                                 if (!await CreateSpeaker(evt_Id, participant)) {
                                     re = false;
                                 }
@@ -221,31 +202,25 @@ namespace SAMI_SIKON.Services
             return false;
         }
 
-        public override async Task<bool> UpdateItem(Event evt, int[] ids)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(SQLUpdate, connection))
-                    {
+        public override async Task<bool> UpdateItem(Event evt, int[] ids) {
+            try {
+                using (SqlConnection connection = new SqlConnection(connectionString)) {
+                    using (SqlCommand command = new SqlCommand(SQLUpdate, connection)) {
                         //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", evt.Id); //not used
                         command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", evt.Description);
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", evt.Name);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", evt.StartTime);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", evt.StopTime.TimeOfDay.Minutes - evt.StartTime.TimeOfDay.Minutes);
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", evt.RoomNr);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[2]}", GetThemeToDatabase(evt.Theme));
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[3]}", evt.StartTime);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[4]}", evt.StopTime.TimeOfDay.TotalMinutes - evt.StartTime.TimeOfDay.TotalMinutes);
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[5]}", evt.RoomNr);
                         command.Parameters.AddWithValue($"@To_Update_0", ids[0]);
 
                         await command.Connection.OpenAsync();
 
                         int i = await command.ExecuteNonQueryAsync();
-                        if (i == 0)
-                        {
+                        if (i == 0) {
                             return false;
-                        }
-                        else
-                        {
+                        } else {
                             int evt_Id = await GetHighstId();
                             bool re = true;
                             await DeleteSpeakers(evt_Id);
@@ -266,14 +241,10 @@ namespace SAMI_SIKON.Services
             return false;
         }
 
-        public override async Task<Event> DeleteItem(int[] ids)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(SQLDelete, connection))
-                    {
+        public override async Task<Event> DeleteItem(int[] ids) {
+            try {
+                using (SqlConnection connection = new SqlConnection(connectionString)) {
+                    using (SqlCommand command = new SqlCommand(SQLDelete, connection)) {
 
                         command.Parameters.AddWithValue($"@{_relationalKeys[0]}", ids[0]);
 
@@ -412,12 +383,28 @@ namespace SAMI_SIKON.Services
         private async Task<int> GetHighstId() {
             List<Event> events = await GetAllItems();
             int maxId = 0;
-            foreach(Event evt in events) {
-                if(evt.Id > maxId) {
+            foreach (Event evt in events) {
+                if (evt.Id > maxId) {
                     maxId = evt.Id;
                 }
             }
             return maxId;
+        }
+
+        private string GetThemeFromDatabase(string s) {
+            if (s == "NULL") {
+                return null;
+            } else {
+                return s;
+            }
+        }
+
+        private string GetThemeToDatabase(string s) {
+            if (s == null) {
+                return "NULL";
+            } else {
+                return s;
+            }
         }
         #endregion
     }

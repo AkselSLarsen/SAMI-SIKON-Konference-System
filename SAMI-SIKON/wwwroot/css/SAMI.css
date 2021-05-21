@@ -2,6 +2,13 @@
     border-right: 1px solid black;
     float: right; /*doesn't work :(*/
     position: relative;
+    font-size: 0.1vh; /*doesn't work :(*/
+}
+
+.event_button {
+    position: absolute; /*doesn't work :(*/
+    width: 100%;
+    border-bottom: 1px solid black; /*doesn't work :(*/
 }
 
 .time_column {
@@ -13,13 +20,6 @@
 .time_indicator {
     position: absolute; /*doesn't work :(*/
     margin-top: 1em;
-}
-
-.overview_event {
-    position: absolute;
-    width: 100%;
-    border-bottom: 1px solid black; /*doesn't work :(*/
-    cursor: pointer; /*doesn't work :(*/
 }
 
 .day_selector {

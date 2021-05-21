@@ -11,15 +11,16 @@ namespace SAMI_SIKON.Model
         private static char EndLineSymbol = ';';
 
         public int Id;
-        private List<List<char>> _layout;
         public string Name;
+        private List<List<char>> _layout;
+        private int _seats;
 
         public int Seats {
             get {
-                return 0;
+                return _seats;
             }
-            set {
-                
+            private set {
+                _seats = value;
             }
         }
 

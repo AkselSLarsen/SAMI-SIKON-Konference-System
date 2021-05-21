@@ -340,9 +340,11 @@ namespace SAMI_SIKON.Services {
                         while (reader.Read()) {
 
                             int booking_Id = reader.GetInt32(0);
-                            int seat_Nr = reader.GetInt32(1);
+                            int? seat_Nr = reader.GetInt32(1);
                             int event_Id = reader.GetInt32(2);
                             bool locked = reader.GetBoolean(4);
+
+                            if(seat_Nr == 0) { seat_Nr = null; }
 
                             bookings.Add(new Booking(booking_Id, event_Id, seat_Nr, locked));
                         }
@@ -367,7 +369,11 @@ namespace SAMI_SIKON.Services {
                     using (SqlCommand command = new SqlCommand(SQLInsertBooking, connection)) {
 
                         //command.Parameters.AddWithValue("@Booking_Id", Booking_Id); // not used
-                        command.Parameters.AddWithValue("@Seat_Nr", Seat_Nr);
+                        if (Seat_Nr == null) {
+                            command.Parameters.AddWithValue("@Seat_Nr", 0);
+                        } else {
+                            command.Parameters.AddWithValue("@Seat_Nr", Seat_Nr);
+                        }
                         command.Parameters.AddWithValue("@Event_Id", Event_Id);
                         command.Parameters.AddWithValue("@_User_Id", _User_Id);
                         command.Parameters.AddWithValue("@Locked", Locked);
