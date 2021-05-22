@@ -4,15 +4,63 @@
 @{
 }
 
-<div class="grid" style="position:relative;">
-    @for (int x = 0; x < Model.Room.Layout.Count; x++) {
-        for (int y = 0; y < Model.Room.Layout[x].Count; y++) {
-            char c = Model.Room.Layout[x][y];
+<div>
+    <h2>
+        Rum Navn:
+        <input type="text" name="RoomName" value="@Model.RoomName" asp-for="@Model.RoomName" />
+    </h2>
+    
 
-            <img src="@Model.GetImageSource(c)" alt="@Model.GetImageAltText(c)" style="position:absolute;top:@Model.GetOffset(x);left:@Model.GetOffset(y);width:@Model.GetSymbolSize();height:auto;" />
+    <div class="grid" style="position:relative;float:left;top:4vh;">
+        @for (int x = 0; x < Model.Room.Layout.Count; x++) {
+            for (int y = 0; y < Model.Room.Layout[x].Count; y++) {
+                char c = Model.Room.Layout[x][y];
 
+                <input type="type" name="name" value="" />>
+
+
+                <!--
+                <a tabindex="@y+@y*@x" style="position:absolute;top:@Model.GetOffset(x);left:@Model.GetOffset(y);" data-toggle="popover-@x-@y" data-trigger="focus" data-container="body" data-placement="top" data-html="true">
+                    <img id="popover-@x-@y" src="@Model.GetImageSource(c)" alt="@Model.GetImageAltText(c)" style="width:@Model.GetSymbolSize();height:auto;" />
+                </a>
+
+                <div id="popover-content-@x-@y" class="hide">
+
+                    <form method="post" asp-page-handler="TooltipImgButton" asp-route-x="@x" asp-route-y="@y" asp-route-char="@Room.SeatSymbol">
+                        <input type="image" name="name" src="~/pictures/Seat_Open.png" />
+                    </form>
+
+
+                </div>
+
+                <script>
+                    (function ($) {
+                        $('#popover-@x-@y').popover({
+                        content: function () {
+                            return $('#popover-content-@x-@y').html();
+                        }
+                    });
+                    })(jQuery);
+                </script>
+                -->
+            }
         }
-    }
+    </div>
+
+    <div style="width:2vw;float:right;">
+        <form method="post" asp-page-handler="WidthDecrease" asp-route-id="@Model.RoomId" asp-route-layout="@Model.Room.GetLayoutAsString()">
+            <input type="submit" style="width:100%;" name="width_decrease" value="<" />
+        </form>
+        <form method="post" asp-page-handler="WidthIncrease" asp-route-id="@Model.RoomId" asp-route-layout="@Model.Room.GetLayoutAsString()">
+            <input type="submit" style="width:100%;" name="width_increase" value=">" />
+        </form>
+        <form method="post" asp-page-handler="HeightDecrease" asp-route-id="@Model.RoomId" asp-route-layout="@Model.Room.GetLayoutAsString()">
+            <input type="submit" style="width:100%;" name="height_decrease" value="/\" />
+        </form>
+        <form method="post" asp-page-handler="HeightIncrease" asp-route-id="@Model.RoomId" asp-route-layout="@Model.Room.GetLayoutAsString()">
+            <input type="submit" style="width:100%;" name="height_increase" value="\/" />
+        </form>
+    </div>
 
 
 </div>

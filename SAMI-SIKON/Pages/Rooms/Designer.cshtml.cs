@@ -13,7 +13,19 @@ namespace SAMI_SIKON.Pages.Rooms
     public class DesignerModel : PageModel
     {
         private int _roomId = -1;
+        private string _squareTooltip;
 
+        // Long string with HTML commands meant to be the tooltip information for every square of the grid.
+        public string SquareTooltip {
+            get {
+                if(_squareTooltip == null) {
+                    string re = "";
+
+                    _squareTooltip = re;
+                }
+                return _squareTooltip;
+            }
+        }
 
         public int GridHeight {
             get {
@@ -46,22 +58,65 @@ namespace SAMI_SIKON.Pages.Rooms
             get { return _roomId; }
             set { _roomId = value; }
         }
-        public Room Room { get; set; }
+        public List<List<char>> RoomLayout { get; set; }
+        public string RoomName { get; set; }
+        public Room Room {
+            get {
+                return new Room(RoomId, RoomLayout, RoomName);
+            }
+            set {
+                RoomId = value.Id;
+                RoomLayout = value.Layout;
+                RoomName = value.Name;
+            }
+        }
         public ICatalogue<Room> Rooms { get; set; }
 
         public DesignerModel(ICatalogue<Room> rooms) {
             Rooms = rooms;
         }
 
-        public async Task OnGet() {
-            if(!(UserCatalogue.CurrentUser is Administrator)) { Redirect("~/"); }
+        public async Task OnGetAsync() {
+            if (!(UserCatalogue.CurrentUser is Administrator)) { Redirect("~/"); }
 
-            if(RoomId < 0) {
+            if (RoomId < 0) {
                 Room = new Room(0, "", "");
             } else {
                 Room = await Rooms.GetItem(new int[] { RoomId });
             }
+        }
 
+        public async Task OnPostWidthIncrease(int id, string layout) {
+            await Load(layout);
+
+            foreach(List<char> cs in RoomLayout) {
+                cs.Add(Room.FloorSymbol);
+            }
+        }
+
+        public async Task OnPostWidthDecrease(int id, string layout) {
+            await Load(layout);
+
+            foreach (List<char> cs in RoomLayout) {
+                cs.RemoveAt(cs.Count-1);
+            }
+        }
+
+        public async Task OnPostHeightIncrease(int id, string layout) {
+            await Load(layout);
+
+            List<char> cs = new List<char>();
+
+            for(int i=0; i<GridWidth-1; i++) {
+                cs.Add(Room.FloorSymbol);
+            }
+            RoomLayout.Add(cs);
+        }
+
+        public async Task OnPostHeightDecrease(int id, string layout) {
+            await Load(layout);
+
+            RoomLayout.RemoveAt(GridHeight-1);
         }
 
 
@@ -109,6 +164,16 @@ namespace SAMI_SIKON.Pages.Rooms
             return s;
         }
 
+        private async Task Load(string layout) {
+            if (!(UserCatalogue.CurrentUser is Administrator)) { Redirect("~/"); }
 
+            if (RoomId < 0) {
+                Room = new Room(0, "", "");
+            } else {
+                Room = await Rooms.GetItem(new int[] { RoomId });
+            }
+
+            RoomLayout = Room.LayoutFromString(layout);
+        }
     }
 }

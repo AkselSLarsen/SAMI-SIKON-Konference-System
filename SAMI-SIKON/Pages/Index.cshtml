@@ -6,39 +6,41 @@
 }
 
 <div class="day_selector">
-    <div class="border border-dark" style="margin-top:1vh;overflow:hidden;">
+    <div style="overflow:hidden;background-color:wheat;">
+
+        <p style="width:10%;float:left;">@Model.Date.Day-@Model.Date.Month-@Model.Date.Year</p>
         
         <form method="post" asp-page-handler="First">
             <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
+            <div style="text-align:center;width:18%;float:left;">
                 <input class="border border-primary btn" type="submit" value="Første dag" />
             </div>
         </form>
 
         <form method="post" asp-page-handler="Previous">
             <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
+            <div style="text-align:center;width:18%;float:left;">
                 <input class="border border-primary btn" type="submit" value="Forrige dag" />
             </div>
         </form>
 
         <form method="post" asp-page-handler="Today">
             <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
+            <div style="text-align:center;width:18%;float:left;">
                 <input class="border border-primary btn" type="submit" value="I dag" />
             </div>
         </form>
 
         <form method="post" asp-page-handler="Next">
             <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
+            <div style="text-align:center;width:18%;float:left;">
                 <input class="border border-primary btn" type="submit" value="Næste dag" />
             </div>
         </form>
 
         <form method="post" asp-page-handler="Last">
             <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
+            <div style="text-align:center;width:18%;float:left;">
                 <input class="border border-primary btn" type="submit" value="Sidste dag" />
             </div>
         </form>
@@ -53,7 +55,6 @@
             <p class="border border-info btn time_indicator" style="position:absolute;Top:@Model.GetTimeIndicatorOffset(i)">@i:00</p>
         }
     </div>
-
 
     @for (int i = 0; i < Model.NrOfTracks; i++) {
         <div class="event_track" style="height:100vh;float:right;width:@Model.TrackWidth();font-size:10px;">
