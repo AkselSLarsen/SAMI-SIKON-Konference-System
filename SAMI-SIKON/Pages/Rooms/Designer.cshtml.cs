@@ -77,13 +77,7 @@ namespace SAMI_SIKON.Pages.Rooms
         }
 
         public async Task OnGetAsync() {
-            if (!(UserCatalogue.CurrentUser is Administrator)) { Redirect("~/"); }
-
-            if (RoomId < 0) {
-                Room = new Room(0, "", "");
-            } else {
-                Room = await Rooms.GetItem(new int[] { RoomId });
-            }
+            await Load();
         }
 
         public async Task OnPostWidthIncrease(int id, string layout) {
@@ -117,6 +111,10 @@ namespace SAMI_SIKON.Pages.Rooms
             await Load(layout);
 
             RoomLayout.RemoveAt(GridHeight-1);
+        }
+
+        public async Task OnPostCycle(int id, string layout, int x, int y) {
+            await Load(layout, x, y);
         }
 
 
@@ -164,16 +162,42 @@ namespace SAMI_SIKON.Pages.Rooms
             return s;
         }
 
-        private async Task Load(string layout) {
+        private async Task Load() {
             if (!(UserCatalogue.CurrentUser is Administrator)) { Redirect("~/"); }
 
-            if (RoomId < 0) {
+            if (RoomId <= 0) {
                 Room = new Room(0, "", "");
             } else {
                 Room = await Rooms.GetItem(new int[] { RoomId });
             }
+        }
+
+        private async Task Load(string layout) {
+            await Load();
 
             RoomLayout = Room.LayoutFromString(layout);
         }
+
+        private async Task Load(string layout, int x, int y) {
+            await Load(layout);
+            char pre = RoomLayout[x][y];
+
+            if (pre == Room.SeatSymbol) {
+                RoomLayout[x][y] = Room.MobileSeatSymbol;
+            } else if (pre == Room.MobileSeatSymbol) {
+                RoomLayout[x][y] = Room.SceneSymbol;
+            } else if (pre == Room.SceneSymbol) {
+                RoomLayout[x][y] = Room.TableSymbol;
+            } else if (pre == Room.TableSymbol) {
+                RoomLayout[x][y] = Room.WallSymbol;
+            } else if (pre == Room.WallSymbol) {
+                RoomLayout[x][y] = Room.FloorSymbol;
+            } else if (pre == Room.FloorSymbol) {
+                RoomLayout[x][y] = Room.SeatSymbol;
+            }
+        }
+
+
+
     }
 }
