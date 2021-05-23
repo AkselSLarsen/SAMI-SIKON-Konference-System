@@ -65,7 +65,7 @@ namespace SAMI_SIKON.Model
             throw new NotImplementedException();
         }
 
-        public List<List<char>> LayoutFromString(string layout) {
+        public static List<List<char>> LayoutFromString(string layout) {
             List<List<char>> llc = new List<List<char>>();
             llc.Add(new List<char>());
 
@@ -82,15 +82,18 @@ namespace SAMI_SIKON.Model
             return llc;
         }
 
-        public string GetLayoutAsString() {
+        public static string LayoutAsString(List<List<char>> llc) {
             string layout = "";
-            foreach (List<char> cs in _layout) {
-                foreach (char c in cs) {
-                    layout += c;
+
+            if(llc != null && llc.Count > 0) {
+                foreach (List<char> cs in llc) {
+                    foreach (char c in cs) {
+                        layout += c;
+                    }
+                    layout += EndLineSymbol;
                 }
-                layout += EndLineSymbol;
+                layout = layout.Remove(layout.Length - 1); //remove last EndLineSymbol
             }
-            layout = layout.Remove(layout.Length-1); //remove last EndLineSymbol
 
             return layout;
         }
