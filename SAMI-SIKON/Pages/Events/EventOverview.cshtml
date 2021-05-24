@@ -77,10 +77,8 @@
                         @item.RoomNr
                     </td>
                     <td>
-                        <form method="post" asp-page-handler="Delete">
-                            <input type="hidden" asp-for="@item.Id"/>
-                            <input type="submit" value="Delete" class="btn btn-danger"/>
-                        </form>
+                        <p>
+                            <a asp-page="/Events/EventUpdate" asp-route-id="@item.Id">Rediger</a>
                     </td>
                 </tr>
             }
