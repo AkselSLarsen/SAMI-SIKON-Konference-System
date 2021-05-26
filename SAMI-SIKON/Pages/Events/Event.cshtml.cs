@@ -115,7 +115,7 @@ namespace SAMI_SIKON.Pages.Events {
                     Tooltip = "Der er ikke nogen pladser tilbage.";
                     return false;
                 } else if(UserCatalogue.CurrentUser is Administrator) {
-                    Tooltip = "Administratorer kan ikke booke sig ind på et oplæg.";
+                    Tooltip = "Administratorer kan ikke booke sig ind pEet oplæg.";
                     return false;
                 }
                 Event evt = await Events.GetItem(new int[] { EventId });
@@ -128,7 +128,7 @@ namespace SAMI_SIKON.Pages.Events {
                         overlaps = true;
                     }
                 }
-                Tooltip = "Du er allerede booket til et oplæg der forgår på samme tid.";
+                Tooltip = "Du er allerede booket til et oplæg der forgår pEsamme tid.";
                 return !overlaps;
             }
             Tooltip = "Du skal være logget ind for at booke en plads.";
