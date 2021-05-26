@@ -142,7 +142,7 @@ namespace SAMI_Testing {
             Room room = rooms[0];
             List<Room> roomsWithKey = await rc.GetItemsWithKey(0, room.Id);
 
-            string roomLayout = room.LayoutAsString()[1..(room.LayoutAsString().Length - 1)];
+            string roomLayout = Room.LayoutAsString(room.Layout)[1..(Room.LayoutAsString(room.Layout).Length - 1)];
             List<Room> roomsWithAttributeLike = await rc.GetItemsWithAttributeLike(0, roomLayout);
 
             bool findsSameRoom = false;
