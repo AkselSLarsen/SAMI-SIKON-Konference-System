@@ -2,3 +2,63 @@
 @model SAMI_SIKON.Pages.Events.EventCreateModel
 @{
 }
+
+
+<h1>Opret et oplæg</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="None" class="text-danger">
+
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.Name" class="control-label"></label>
+            <input asp-for="@Model.evnt.Name" class="form-control" />
+            <span asp-validation-for="@Model.evnt.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.Description" class="control-label"></label>
+            <textarea asp-for="@Model.evnt.Description" class="form-control"></textarea>
+            <span asp-validation-for="@Model.evnt.Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.StartTime" class="control-label"></label>
+            <input asp-for="@Model.evnt.StartTime" class="form-control" />
+            <span asp-validation-for="@Model.evnt.StartTime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.StopTime" class="control-label"></label>
+            <input asp-for="@Model.evnt.StopTime" class="form-control" />
+            <span asp-validation-for="@Model.evnt.StopTime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.RoomNr" class="control-label"></label>
+            <select asp-for="@Model.evnt.RoomNr">
+                <option value="">Select a room</option>
+                @foreach (var item in Model.listRoom)
+                {
+                    <option value="@item.Id">@item.Id</option>
+                }
+            </select>
+            <span asp-validation-for="@Model.evnt.RoomNr" class="text-danger"></span>
+        </div>
+        @*<div class="form-group">
+            <label asp-for="@Model.evnt.Speakers" class="control-label"></label>
+            <select asp-for="@Model.evnt.Speakers">
+                <option value="">Select a speaker</option>
+                @foreach (var item in Model.listPart)
+                {
+                    <option value="@item.Name">@item.Name</option>
+                }
+            </select>
+            <span asp-validation-for="@Model.evnt.Speakers" class="text-danger"></span>
+        </div>*@
+    </div>
+</div>
+<div class="form-group">
+
+    <input type="submit" value="Create" class="btn btn-primary" />
+</div>
+<div>
+    <a asp-page="EventOverview">Back to overview</a>
+</div>

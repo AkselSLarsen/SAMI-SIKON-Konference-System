@@ -70,6 +70,10 @@ namespace SAMI_SIKON.Pages.Events
             SortedEvents.Sort(Comparer<Event>.Create((x, y) => x.Name.CompareTo(y.Name)));
         }
 
+        public async Task OnPostDeleteAsync()
+        {
+            await eventCatalogue.DeleteItem(new int[] {Event_Id});
+        }
         public IActionResult OnPostSort()
         {
             return Page();

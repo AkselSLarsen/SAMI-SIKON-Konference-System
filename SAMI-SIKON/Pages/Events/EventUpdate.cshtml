@@ -1,4 +1,114 @@
 ﻿@page
 @model SAMI_SIKON.Pages.Events.EventUpdateModel
 @{
+    ViewData["Title"] = "EventUpdate";
+
 }
+
+<h1>Hotel to update</h1>
+<dl class="row">
+    <dl class="col-sm-2">
+        @Html.DisplayNameFor(model => model.evnt.Id)
+    </dl>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.evnt.Id)
+    </dd>
+    <dl class="col-sm-2">
+        @Html.DisplayNameFor(model => model.evnt.RoomNr)
+    </dl>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.evnt.RoomNr)
+    </dd>
+    <dl class="col-sm-2">
+        @Html.DisplayNameFor(model => model.evnt.Name)
+    </dl>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.evnt.Name)
+    </dd>
+    <dl class="col-sm-2">
+        @Html.DisplayNameFor(model => model.evnt.Theme)
+    </dl>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.evnt.Theme)
+    </dd>
+    <dl class="col-sm-2">
+        @Html.DisplayNameFor(model => model.evnt.Description)
+    </dl>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.evnt.Description)
+    </dd>
+    <dl class="col-sm-2">
+        @Html.DisplayNameFor(model => model.evnt.StartTime)
+    </dl>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.evnt.StartTime)
+    </dd>
+    <dl class="col-sm-2">
+        @Html.DisplayNameFor(model => model.evnt.StopTime)
+    </dl>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.evnt.StopTime)
+    </dd>
+    <dl class="col-sm-2">
+        @Html.DisplayNameFor(model => model.evnt.Speakers)
+    </dl>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.evnt.Speakers)
+    </dd>
+</dl>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div asp-validation-summary="None" class="text-danger">
+
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.Id" class="control-label"></label>
+            <input asp-for="@Model.evnt.Id" class="form-control" />
+            <span asp-validation-for="@Model.evnt.Id" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.RoomNr" class="control-label"></label>
+            <input asp-for="@Model.evnt.RoomNr" class="form-control" />
+            <span asp-validation-for="@Model.evnt.RoomNr" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.Name" class="control-label"></label>
+            <input asp-for="@Model.evnt.Name" class="form-control" />
+            <span asp-validation-for="@Model.evnt.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.Theme" class="control-label"></label>
+            <input asp-for="@Model.evnt.Theme" class="form-control" />
+            <span asp-validation-for="@Model.evnt.Theme" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.Description" class="control-label"></label>
+            <input asp-for="@Model.evnt.Description" class="form-control" />
+            <span asp-validation-for="@Model.evnt.Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.StartTime" class="control-label"></label>
+            <input asp-for="@Model.evnt.StartTime" class="form-control" />
+            <span asp-validation-for="@Model.evnt.StartTime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.StopTime" class="control-label"></label>
+            <input asp-for="@Model.evnt.StopTime" class="form-control" />
+            <span asp-validation-for="@Model.evnt.StopTime" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.evnt.Speakers" class="control-label"></label>
+            <input asp-for="@Model.evnt.Speakers" class="form-control" />
+            <span asp-validation-for="@Model.evnt.Speakers" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+
+    <input type="submit" value="create" class="btn btn-primary" />
+</div>
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
