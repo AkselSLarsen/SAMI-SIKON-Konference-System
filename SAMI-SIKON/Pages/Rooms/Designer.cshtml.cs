@@ -16,7 +16,6 @@ namespace SAMI_SIKON.Pages.Rooms
         private int _x = -1;
         private int _y = -1;
 
-        [BindProperty]
         public int GridHeight {
             get {
                 if (Room != null && Room.Layout != null) {
@@ -25,7 +24,6 @@ namespace SAMI_SIKON.Pages.Rooms
                 return 0;
             }
         }
-        [BindProperty]
         public int GridWidth {
             get {
                 if(Room != null && Room.Layout != null) {
