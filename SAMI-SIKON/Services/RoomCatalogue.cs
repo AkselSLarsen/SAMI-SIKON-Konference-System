@@ -135,7 +135,7 @@ namespace SAMI_SIKON.Services {
                 using (SqlConnection connection = new SqlConnection(connectionString)) {
                     using (SqlCommand command = new SqlCommand(SQLInsert, connection)) {
                         //command.Parameters.AddWithValue($"@{_relationalKeys[0]}", room.Id); //not needed
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", room.GetLayoutAsString());
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", Room.LayoutAsString(room.Layout));
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", room.Name);
 
                         await command.Connection.OpenAsync();
@@ -162,7 +162,7 @@ namespace SAMI_SIKON.Services {
                     using (SqlCommand command = new SqlCommand(SQLUpdate, connection)) {
 
                         // command.Parameters.AddWithValue($"@{_relationalKeys[0]}", room.Id); // doesn't work
-                        command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", room.GetLayoutAsString());
+                        command.Parameters.AddWithValue($"@{_relationalAttributes[0]}", Room.LayoutAsString(room.Layout));
                         command.Parameters.AddWithValue($"@{_relationalAttributes[1]}", room.Name);
                         command.Parameters.AddWithValue($"@To_Update_0", ids[0]);
 

@@ -7,8 +7,13 @@ namespace SAMI_SIKON.Model
 {
     public class Room
     {
-        private static char SeatSymbol = 'S'; //should maybe be public, if you need it in some other class feel free to make it so.
-        private static char EndLineSymbol = ';';
+        public static char SeatSymbol = 'S';
+        public static char MobileSeatSymbol = 'M';
+        public static char SceneSymbol = 'C';
+        public static char TableSymbol = 'T';
+        public static char WallSymbol = 'W';
+        public static char FloorSymbol = 'F';
+        public static char EndLineSymbol = ';';
 
         public int Id;
         public string Name;
@@ -60,7 +65,7 @@ namespace SAMI_SIKON.Model
             throw new NotImplementedException();
         }
 
-        public List<List<char>> LayoutFromString(string layout) {
+        public static List<List<char>> LayoutFromString(string layout) {
             List<List<char>> llc = new List<List<char>>();
             llc.Add(new List<char>());
 
@@ -77,15 +82,18 @@ namespace SAMI_SIKON.Model
             return llc;
         }
 
-        public string GetLayoutAsString() {
+        public static string LayoutAsString(List<List<char>> llc) {
             string layout = "";
-            foreach (List<char> cs in _layout) {
-                foreach (char c in cs) {
-                    layout += c;
+
+            if(llc != null && llc.Count > 0) {
+                foreach (List<char> cs in llc) {
+                    foreach (char c in cs) {
+                        layout += c;
+                    }
+                    layout += EndLineSymbol;
                 }
-                layout += EndLineSymbol;
+                layout = layout.Remove(layout.Length - 1); //remove last EndLineSymbol
             }
-            layout = layout.Remove(layout.Length-1); //remove last EndLineSymbol
 
             return layout;
         }

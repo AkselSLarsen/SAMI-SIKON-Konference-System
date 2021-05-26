@@ -2,48 +2,48 @@
 @using SAMI_SIKON.Model;
 @model IndexModel
 @{
-    ViewData["Title"] = "Overview";
+    ViewData["Title"] = "Oversigt";
 }
 
-<div class="day_selector">
-    <div class="border border-dark" style="margin-top:1vh;overflow:hidden;">
+<div class="day_selector" style="overflow:hidden;background-color:wheat;">
+
+    <p style="width:10%;float:left;">@Model.Date.Day-@Model.Date.Month-@Model.Date.Year</p>
         
-        <form method="post" asp-page-handler="First">
-            <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
-                <input class="border border-primary btn" type="submit" value="Første dag" />
-            </div>
-        </form>
+    <form method="post" asp-page-handler="First">
+        <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
+        <div style="text-align:center;width:18%;float:left;">
+            <input class="border border-primary btn" type="submit" value="Første dag" />
+        </div>
+    </form>
 
-        <form method="post" asp-page-handler="Previous">
-            <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
-                <input class="border border-primary btn" type="submit" value="Forrige dag" />
-            </div>
-        </form>
+    <form method="post" asp-page-handler="Previous">
+        <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
+        <div style="text-align:center;width:18%;float:left;">
+            <input class="border border-primary btn" type="submit" value="Forrige dag" />
+        </div>
+    </form>
 
-        <form method="post" asp-page-handler="Today">
-            <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
-                <input class="border border-primary btn" type="submit" value="I dag" />
-            </div>
-        </form>
+    <form method="post" asp-page-handler="Today">
+        <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
+        <div style="text-align:center;width:18%;float:left;">
+            <input class="border border-primary btn" type="submit" value="I dag" />
+        </div>
+    </form>
 
-        <form method="post" asp-page-handler="Next">
-            <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
-                <input class="border border-primary btn" type="submit" value="Næste dag" />
-            </div>
-        </form>
+    <form method="post" asp-page-handler="Next">
+        <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
+        <div style="text-align:center;width:18%;float:left;">
+            <input class="border border-primary btn" type="submit" value="Næste dag" />
+        </div>
+    </form>
 
-        <form method="post" asp-page-handler="Last">
-            <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
-            <div style="text-align:center;width:20%;float:left;">
-                <input class="border border-primary btn" type="submit" value="Sidste dag" />
-            </div>
-        </form>
+    <form method="post" asp-page-handler="Last">
+        <input type="hidden" asp-for="@Model.Date" /> <!--ensure that Date is in scope-->
+        <div style="text-align:center;width:18%;float:left;">
+            <input class="border border-primary btn" type="submit" value="Sidste dag" />
+        </div>
+    </form>
 
-    </div>
 </div>
 
 <div style="height:100vh;">
@@ -54,14 +54,13 @@
         }
     </div>
 
-
     @for (int i = 0; i < Model.NrOfTracks; i++) {
         <div class="event_track" style="height:100vh;float:right;width:@Model.TrackWidth();font-size:10px;">
 
             @foreach (Event evt in Model.Tracks[i]) {
 
                 <a asp-page="/Events/Event" asp-route-id="@evt.Id" data-toggle="tooltip" data-placement="right" title="@Model.GetEventTooltip(evt).Result">
-                    <div class="event_button btn-block" style="position:absolute;border-bottom:1px solid black;background-color:@Model.GetColor(evt); top: @Model.GetOffset(evt);height:@Model.GetDuration(evt);">
+                    <div class="event_button btn-block" style="position:absolute;border-bottom:1px solid black;background-color:@Model.GetColor(evt);top:@Model.GetOffset(evt);height:@Model.GetDuration(evt);">
                         <p>@evt.Name<br>From: @Model.GetStartTime(evt) To: @Model.GetStopTime(evt)</p>
                     </div>
                 </a>

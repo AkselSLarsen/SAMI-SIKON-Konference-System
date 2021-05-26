@@ -1,4 +1,48 @@
 ﻿@page
+@using SAMI_SIKON.Model;
 @model SAMI_SIKON.Pages.Rooms.DesignerModel
 @{
 }
+
+<div>
+    <h2>
+        Rum Navn:
+        <input type="text" name="RoomName" value="@Model.RoomName" asp-for="@Model.RoomName" />
+    </h2>
+    
+
+    <div class="grid" style="position:relative;float:left;top:4vh;">
+        @for (int x = 0; x < Model.GridHeight; x++) {
+            @for (int y = 0; y < Model.GridWidth; y++) {
+                char c = Model.RoomLayout[x][y];
+
+                <form method="post" asp-page-handler="Cycle" asp-route-id="@Model.RoomId" asp-route-layout="@Room.LayoutAsString(Model.RoomLayout)" asp-route-x="@x" asp-route-y="@y">
+                    <input type="image" src="@Model.GetImageSource(c)" alt="@Model.GetImageAltText(c)" style="position:absolute;top:@Model.GetOffset(x);left:@Model.GetOffset(y);width:@Model.GetSymbolSize();height:auto;" />
+                </form>
+                
+            }
+        }
+    </div>
+
+    <div style="width:2vw;float:right;">
+        <form method="post" asp-page-handler="WidthDecrease" asp-route-id="@Model.RoomId" asp-route-layout="@Room.LayoutAsString(Model.RoomLayout)">
+            <input type="submit" style="width:100%;" name="width_decrease" value="<" />
+        </form>
+        <form method="post" asp-page-handler="WidthIncrease" asp-route-id="@Model.RoomId" asp-route-layout="@Room.LayoutAsString(Model.RoomLayout)">
+            <input type="submit" style="width:100%;" name="width_increase" value=">" />
+        </form>
+        <form method="post" asp-page-handler="HeightDecrease" asp-route-id="@Model.RoomId" asp-route-layout="@Room.LayoutAsString(Model.RoomLayout)">
+            <input type="submit" style="width:100%;" name="height_decrease" value="/\" />
+        </form>
+        <form method="post" asp-page-handler="HeightIncrease" asp-route-id="@Model.RoomId" asp-route-layout="@Room.LayoutAsString(Model.RoomLayout)">
+            <input type="submit" style="width:100%;" name="height_increase" value="\/" />
+        </form>
+    </div>
+
+    <div>
+
+<!-- Need two forms here. One to create the created room if the id is not set and one to update the room if it is. -->
+
+    </div>
+
+</div>
