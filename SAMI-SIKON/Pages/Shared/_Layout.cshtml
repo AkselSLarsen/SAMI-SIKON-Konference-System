@@ -24,13 +24,14 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/EventOverview">Alle Oplæg</a>
-                        </li>
+                        
                         @if (UserCatalogue.CurrentUser is Administrator) {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Rooms/Designer">Rum Designer</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Events/EventOverview">Alle Oplæg</a>
                             </li>
+                            @*<li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Rooms/Designer">Rum Designer</a>
+                            </li>*@
                         }
                     </ul>
 
@@ -39,17 +40,17 @@
                     <ul class="nav navbar-nav navbar-right">
                         @if (UserCatalogue.CurrentUser == null) {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/RegisterPage">Register</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/RegisterPage">Registrer</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Login/LoginPage">Login</a>
                             </li>
                         } else {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/UserPage">Userpage</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/UserPage">Brugerside</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/LogoutRedirectToFrontPage">Logout</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/LogoutRedirectToFrontPage">Logud</a>
                             </li>
                         }
                     </ul>

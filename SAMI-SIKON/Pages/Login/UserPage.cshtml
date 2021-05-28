@@ -3,29 +3,29 @@
 @{
 }
 
-<h2>User Page</h2>
+<h2>Brugerside</h2>
 <p></p>
 @if (Model.Created==1)
 {
     <div class="alert alert-success">
-        User was created successfully
+        Success, bruger opretted
     </div>
 }
 <p></p>
 <form method="post" asp-page-handler="pword">
     <div class="form-group">
-        <label asp-for="@Model.UserPassword" class="custom-control-label"></label>
+        <label asp-for="@Model.UserPassword" class="custom-control-label">Nuværende kodeord</label>
         <input type="password" asp-for="@Model.UserPassword" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="@Model.NewPassword1" class="custom-control-label"></label>
+        <label asp-for="@Model.NewPassword1" class="custom-control-label">Nyt kodeord</label>
         <input type="password" asp-for="@Model.NewPassword1" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="@Model.NewPassword2" class="custom-control-label"></label>
+        <label asp-for="@Model.NewPassword2" class="custom-control-label">Gentag nyt kodeord</label>
         <input type="password" asp-for="@Model.NewPassword2" class="form-control" />
     </div>
-    <input type="submit" value="Update Password" class="btn btn-primary" />
+    <input type="submit" value="Ændr Kodeord" class="btn btn-primary" />
 </form>
 <p></p>
 @if (Model.ErrorMessage != null)
@@ -52,5 +52,5 @@
 <p> </p>
 <p> </p>
 <form method="post" asp-page-handler="deleteuser">
-    <input type="submit" value="Delete User" class="btn btn-danger" />
+    <input type="submit" value="Slet bruger" class="btn btn-danger" />
 </form>
