@@ -57,6 +57,24 @@ namespace SAMI_SIKON.Model
             }
         }
 
+        public string LayoutAsString {
+            get {
+                string layout = "";
+
+                if (Layout != null && Layout.Count > 0) {
+                    foreach (List<char> cs in Layout) {
+                        foreach (char c in cs) {
+                            layout += c;
+                        }
+                        layout += EndLineSymbol;
+                    }
+                    layout = layout.Remove(layout.Length - 1); //remove last EndLineSymbol
+                }
+
+                return layout;
+            }
+        }
+
         public int Height { get { return Layout.Count; } }
         public int Width { get { return Layout[0].Count; } }
 
@@ -69,33 +87,55 @@ namespace SAMI_SIKON.Model
             List<List<char>> llc = new List<List<char>>();
             llc.Add(new List<char>());
 
-            int lineNr = 0;
-            foreach(char c in layout) {
-                if(c == EndLineSymbol) {
-                    lineNr++;
-                    llc.Add(new List<char>());
-                } else {
-                    llc[lineNr].Add(c);
+            if (layout != null) {
+                int lineNr = 0;
+                foreach (char c in layout) {
+                    if (c == EndLineSymbol) {
+                        lineNr++;
+                        llc.Add(new List<char>());
+                    } else {
+                        llc[lineNr].Add(c);
+                    }
                 }
             }
 
             return llc;
         }
 
-        public static string LayoutAsString(List<List<char>> llc) {
-            string layout = "";
 
-            if(llc != null && llc.Count > 0) {
-                foreach (List<char> cs in llc) {
-                    foreach (char c in cs) {
-                        layout += c;
-                    }
-                    layout += EndLineSymbol;
-                }
-                layout = layout.Remove(layout.Length - 1); //remove last EndLineSymbol
+        public static string GetImageSource(char c) {
+            if (c == Room.SeatSymbol) {
+                return "../pictures/Seat_Open.png";
+            } else if (c == Room.MobileSeatSymbol) {
+                return "../pictures/Seat_Mobile.png";
+            } else if (c == Room.SceneSymbol) {
+                return "../pictures/Scene.png";
+            } else if (c == Room.TableSymbol) {
+                return "../pictures/Table.png";
+            } else if (c == Room.WallSymbol) {
+                return "../pictures/Wall.png";
+            } else if (c == Room.FloorSymbol) {
+                return "../pictures/Floor.png";
             }
-
-            return layout;
+            return "";
         }
+
+        public static string GetImageAltText(char c) {
+            if (c == Room.SeatSymbol) {
+                return "Open Plads";
+            } else if (c == Room.MobileSeatSymbol) {
+                return "Flytbar Plads";
+            } else if (c == Room.SceneSymbol) {
+                return "Scene";
+            } else if (c == Room.TableSymbol) {
+                return "Bord eller lign.";
+            } else if (c == Room.WallSymbol) {
+                return "Væg";
+            } else if (c == Room.FloorSymbol) {
+                return "Gulv";
+            }
+            return "";
+        }
+
     }
 }

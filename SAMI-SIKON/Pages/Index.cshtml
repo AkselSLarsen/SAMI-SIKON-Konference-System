@@ -61,7 +61,7 @@
 
                 <a asp-page="/Events/Event" asp-route-id="@evt.Id" data-toggle="tooltip" data-placement="right" title="@Model.GetEventTooltip(evt).Result">
                     <div class="event_button btn-block" style="position:absolute;border-bottom:1px solid black;background-color:@Model.GetColor(evt);top:@Model.GetOffset(evt);height:@Model.GetDuration(evt);">
-                        <p>@evt.Name<br>From: @Model.GetStartTime(evt) To: @Model.GetStopTime(evt)</p>
+                        <p>@evt.Name<br>Fra: @Model.GetStartTime(evt) Til: @Model.GetStopTime(evt)</p>
                     </div>
                 </a>
 

@@ -13,12 +13,14 @@ namespace SAMI_SIKON.Pages.Rooms
     public class DesignerModel : PageModel
     {
         private int _roomId = -1;
+        private string _roomLayout = "";
+        private string _roomName = "";
         private int _x = -1;
         private int _y = -1;
 
         public int GridHeight {
             get {
-                if (Room != null && Room.Layout != null) {
+                if (Room != null && RoomLayout != null) {
                     return Room.Height;
                 }
                 return 0;
@@ -26,7 +28,7 @@ namespace SAMI_SIKON.Pages.Rooms
         }
         public int GridWidth {
             get {
-                if(Room != null && Room.Layout != null) {
+                if(Room != null && RoomLayout != null) {
                     return Room.Width;
                 }
                 return 0;
@@ -46,15 +48,29 @@ namespace SAMI_SIKON.Pages.Rooms
             get { return _roomId; }
             set { _roomId = value; }
         }
-        public List<List<char>> RoomLayout { get; set; }
-        public string RoomName { get; set; }
+
+        [FromQuery(Name = "layout")]
+        public string RoomLayout {
+            get { return _roomLayout; }
+            set { _roomLayout = value; }
+        }
+
+
+        [BindProperty]
+        public string Name { get; set; }
+        [FromQuery(Name = "name")]
+        public string RoomName {
+            get { return _roomName; }
+            set { _roomName = value; }
+        }
+
         public Room Room {
             get {
                 return new Room(RoomId, RoomLayout, RoomName);
             }
             set {
                 RoomId = value.Id;
-                RoomLayout = value.Layout;
+                RoomLayout = value.LayoutAsString;
                 RoomName = value.Name;
             }
         }
@@ -77,107 +93,86 @@ namespace SAMI_SIKON.Pages.Rooms
         }
 
         public async Task OnGetAsync() {
-            await Load();
-        }
+            if (!(UserCatalogue.CurrentUser is Administrator)) { Redirect("~/"); }
 
-        public async Task OnPostWidthIncrease(string layout) {
-            await Load();
-            RoomLayout = Room.LayoutFromString(layout);
-
-            foreach (List<char> cs in RoomLayout) {
-                cs.Add(Room.FloorSymbol);
+            if (RoomId <= 0) {
+                Room = new Room(0, "", "");
+            } else {
+                Room = await Rooms.GetItem(new int[] { RoomId });
+                Name = RoomName;
             }
         }
 
-        public async Task OnPostWidthDecrease(string layout) {
-            await Load();
-            RoomLayout = Room.LayoutFromString(layout);
+        public void OnPostNameChange() {
+            RoomName = Name;
+        }
 
-            foreach (List<char> cs in RoomLayout) {
+        public void OnPostWidthIncrease() {
+            List<List<char>> llc = Room.Layout;
+            foreach (List<char> cs in llc) {
+                cs.Add(Room.FloorSymbol);
+            }
+            Room = new Room(RoomId, llc, RoomName);
+        }
+
+        public void OnPostWidthDecrease() {
+            List<List<char>> llc = Room.Layout;
+            foreach (List<char> cs in llc) {
                 cs.RemoveAt(cs.Count-1);
             }
+            Room = new Room(RoomId, llc, RoomName);
         }
 
-        public async Task OnPostHeightIncrease(string layout) {
-            await Load();
-            RoomLayout = Room.LayoutFromString(layout);
-
+        public void OnPostHeightIncrease() {
+            List<List<char>> llc = Room.Layout;
             List<char> cs = new List<char>();
 
-            for(int i=0; i<GridWidth-1; i++) {
+            for(int i=0; i<GridWidth; i++) {
                 cs.Add(Room.FloorSymbol);
             }
-            RoomLayout.Add(cs);
+            llc.Add(cs);
+            Room = new Room(RoomId, llc, RoomName);
         }
 
-        public async Task OnPostHeightDecrease(string layout) {
-            await Load();
-            RoomLayout = Room.LayoutFromString(layout);
-
-            RoomLayout.RemoveAt(GridHeight-1);
+        public void OnPostHeightDecrease() {
+            List<List<char>> llc = Room.Layout;
+            llc.RemoveAt(GridHeight-1);
+            Room = new Room(RoomId, llc, RoomName);
         }
 
-        public async Task OnPostCycle(string layout) {
-            await Load();
-            RoomLayout = Room.LayoutFromString(layout);
-
+        public void OnPostCycle() {
             if (ClickedTokenRow >= 0 && ClickedTokenColumn >= 0) {
                 int x = ClickedTokenRow;
                 int y = ClickedTokenColumn;
 
-                char pre = RoomLayout[x][y];
+                List<List<char>> llc = Room.Layout;
+                char pre = llc[x][y];
 
                 if (pre == Room.SeatSymbol) {
-                    RoomLayout[x][y] = Room.MobileSeatSymbol;
+                    llc[x][y] = Room.MobileSeatSymbol;
                 } else if (pre == Room.MobileSeatSymbol) {
-                    RoomLayout[x][y] = Room.SceneSymbol;
+                    llc[x][y] = Room.SceneSymbol;
                 } else if (pre == Room.SceneSymbol) {
-                    RoomLayout[x][y] = Room.TableSymbol;
+                    llc[x][y] = Room.TableSymbol;
                 } else if (pre == Room.TableSymbol) {
-                    RoomLayout[x][y] = Room.WallSymbol;
+                    llc[x][y] = Room.WallSymbol;
                 } else if (pre == Room.WallSymbol) {
-                    RoomLayout[x][y] = Room.FloorSymbol;
+                    llc[x][y] = Room.FloorSymbol;
                 } else if (pre == Room.FloorSymbol) {
-                    RoomLayout[x][y] = Room.SeatSymbol;
+                    llc[x][y] = Room.SeatSymbol;
                 }
-
-
+                Room = new Room(RoomId, llc, RoomName);
             }
         }
 
-
-        public string GetImageSource(char c) {
-            if (c == Room.SeatSymbol) {
-                return "../pictures/Seat_Open.png";
-            } else if (c == Room.MobileSeatSymbol) {
-                return "../pictures/Seat_Mobile.png";
-            } else if (c == Room.SceneSymbol) {
-                return "../pictures/Scene.png";
-            } else if (c == Room.TableSymbol) {
-                return "../pictures/Table.png";
-            } else if (c == Room.WallSymbol) {
-                return "../pictures/Wall.png";
-            } else if (c == Room.FloorSymbol) {
-                return "../pictures/Floor.png";
-            }
-            return "";
+        public async Task OnPostCreate() {
+            await Rooms.CreateItem(Room);
+            Redirect("~/");
         }
 
-        public string GetImageAltText(char c) {
-                if (c == Room.SeatSymbol) {
-                return "Open Plads";
-            } else if (c == Room.MobileSeatSymbol) {
-                return "Flytbar Plads";
-            } else if (c == Room.SceneSymbol) {
-                return "Scene";
-            } else if (c == Room.TableSymbol) {
-                return "Bord eller lign.";
-            } else if (c == Room.WallSymbol) {
-                return "Væg";
-            } else if (c == Room.FloorSymbol) {
-                return "Gulv";
-            }
-            return "";
+        public async Task OnPostUpdate() {
+            await Rooms.UpdateItem(Room, new int[] { RoomId });
+            Redirect("~/");
         }
 
         public string GetOffset(int i) {
@@ -188,16 +183,6 @@ namespace SAMI_SIKON.Pages.Rooms
         public string GetSymbolSize() {
             string s = string.Format("{0:N2}", SquareSize).Replace(',', '.') + "vh";
             return s;
-        }
-
-        private async Task Load() {
-            if (!(UserCatalogue.CurrentUser is Administrator)) { Redirect("~/"); }
-
-            if (RoomId <= 0) {
-                Room = new Room(0, "", "");
-            } else {
-                Room = await Rooms.GetItem(new int[] { RoomId });
-            }
         }
 
 
