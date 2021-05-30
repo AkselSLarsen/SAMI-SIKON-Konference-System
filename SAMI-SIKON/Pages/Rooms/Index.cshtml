@@ -13,16 +13,29 @@
         @for (int y = 0; y < Model.GridWidth; y++) {
             char c = Model.Room.Layout[x][y];
 
-            <form method="post" asp-page-handler="Cycle" asp-route-id="@Model.EventId" asp-route-x="@x" asp-route-y="@y">
+            if (c == Room.SeatSymbol) {
+                if (Model.SeatTaken(x, y).Result) {
+                    <input type="image" src="~/pictures/Seat_Taken.png" alt="Booket Plads" style="position:absolute;top:@Model.GetOffset(x);left:@Model.GetOffset(y);width:@Model.GetSymbolSize();height:auto;" />
+                } else {
+                    if (Model.SeatSelected(x, y)) {
+                        <input type="image" src="~/pictures/Seat_Selected.png" alt="Valgt Plads" style="position:absolute;top:@Model.GetOffset(x);left:@Model.GetOffset(y);width:@Model.GetSymbolSize();height:auto;" />
+                    } else {
+                        <form method="post" asp-page-handler="Select" asp-route-id="@Model.EventId" asp-route-x="@x" asp-route-y="@y">
+                            <input type="image" src="@Room.GetImageSource(c)" alt="@Room.GetImageAltText(c)" style="position:absolute;top:@Model.GetOffset(x);left:@Model.GetOffset(y);width:@Model.GetSymbolSize();height:auto;" />
+                        </form>
+                    }
+                }
+            } else {
                 <input type="image" src="@Room.GetImageSource(c)" alt="@Room.GetImageAltText(c)" style="position:absolute;top:@Model.GetOffset(x);left:@Model.GetOffset(y);width:@Model.GetSymbolSize();height:auto;" />
-            </form>
-
+            }
         }
     }
 </div>
 
-<div style="float:right;position:relative;top:20vh;">
-    <form method="post" asp-page-handler="Chooce" asp-route-id="@Model.EventId">
-        <input type="submit" name="update" value="Update" />
-    </form>
-</div>
+@if(Model.GetSelectedSeat() > 0) {
+    <div style="float:right;position:relative;top:20vh;">
+        <form method="post" asp-page-handler="Chooce" asp-route-id="@Model.EventId" asp-route-x="@Model.SelectedSeatColumn" asp-route-y="@Model.SelectedSeatRow">
+            <input type="submit" name="chooce" value="Vælg Plads" />
+        </form>
+    </div>
+}

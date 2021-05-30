@@ -49,7 +49,7 @@ namespace SAMI_SIKON.Model
                 Seats = 0;
                 foreach(List<char> cs in _layout) {
                     foreach(char c in cs) {
-                        if(c == SeatSymbol) {
+                        if(c == SeatSymbol || c == MobileSeatSymbol) {
                             Seats++;
                         }
                     }
@@ -78,9 +78,35 @@ namespace SAMI_SIKON.Model
         public int Height { get { return Layout.Count; } }
         public int Width { get { return Layout[0].Count; } }
 
-        public int FindSeat(int x, int y)
-        {
-            throw new NotImplementedException();
+        public int FindSeat(int x, int y) {
+            int seatNr = 0;
+            for (int i=0; i <= x; i++) {
+                for (int j=0; j < Layout[i].Count; j++) {
+                    if (i == x && j >= y) {
+                        if (Layout[i][j] == SeatSymbol) {
+                            seatNr++;
+                        }
+                    }
+                }
+            }
+
+            return seatNr;
+        }
+
+        public int[] GetSeatPlacement(int i) {
+            int seatNr = 0;
+            for (int x=0; x < Layout.Count; x++) {
+                for (int y=0; y < Layout[x].Count; y++) {
+                    if (Layout[x][y] == SeatSymbol) {
+                        seatNr++;
+                    }
+                    if (seatNr == i) {
+                        return new int[] { x, y };
+                    }
+                }
+            }
+
+            return null;
         }
 
         public static List<List<char>> LayoutFromString(string layout) {

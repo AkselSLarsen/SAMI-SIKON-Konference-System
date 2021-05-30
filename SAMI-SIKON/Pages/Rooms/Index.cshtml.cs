@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SAMI_SIKON.Interfaces;
 using SAMI_SIKON.Model;
+using SAMI_SIKON.Services;
 
 namespace SAMI_SIKON.Pages.Rooms
 {
@@ -51,12 +52,12 @@ namespace SAMI_SIKON.Pages.Rooms
             set { _eventId = value; }
         }
         [FromQuery(Name = "x")]
-        public int ChosenSeatRow {
+        public int SelectedSeatRow {
             get { return _x; }
             set { _x = value; }
         }
         [FromQuery(Name = "y")]
-        public int ClickedSeatColumn {
+        public int SelectedSeatColumn {
             get { return _y; }
             set { _y = value; }
         }
@@ -89,19 +90,50 @@ namespace SAMI_SIKON.Pages.Rooms
 
         public ICatalogue<Room> Rooms { get; set; }
         public ICatalogue<Event> Events { get; set; }
+        public ICatalogue<IUser> Users { get; set; }
 
-        public IndexModel(ICatalogue<Room> rooms, ICatalogue<Event> events) {
+        public IndexModel(ICatalogue<Room> rooms, ICatalogue<Event> events, ICatalogue<IUser> users) {
             Rooms = rooms;
             Events = events;
+            Users = users;
         }
 
-        public void OnGet() {
-
+        public async Task OnGet() {
+            await OnLoad();
         }
 
+        public async Task OnPostSelect() {
+            await OnLoad();
+        }
 
+        public async Task<IActionResult> OnPostChooce() {
+            await OnLoad();
 
+            Booking booking = new Booking(-1, EventId, GetSelectedSeat());
+            UserCatalogue.CurrentUser.Bookings.Add(booking);
+            await Users.UpdateItem(UserCatalogue.CurrentUser, new int[] { UserCatalogue.CurrentUser.Id });
 
+            return Redirect("~/");
+        }
+
+        public int GetSelectedSeat() {
+            return Room.FindSeat(SelectedSeatRow, SelectedSeatColumn);
+        }
+
+        public async Task<bool> SeatTaken(int x, int y) {
+            int seatNr = Room.FindSeat(x, y);
+
+            Event evt = await Events.GetItem(new int[] { EventId });
+            return evt.SeatTaken(seatNr);
+        }
+
+        public bool SeatSelected(int x, int y) {
+            if(x == SelectedSeatRow && y == SelectedSeatColumn) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
         public string GetOffset(int i) {
             string s = string.Format("{0:N2}", i * SquareSize).Replace(',', '.') + "vh";
@@ -112,6 +144,11 @@ namespace SAMI_SIKON.Pages.Rooms
             string s = string.Format("{0:N2}", SquareSize).Replace(',', '.') + "vh";
             return s;
         }
+
+        private async Task OnLoad() {
+            Event evt = await Events.GetItem(new int[] { EventId });
+            Room = await evt.FindRoom();
+        } 
 
 
     }
