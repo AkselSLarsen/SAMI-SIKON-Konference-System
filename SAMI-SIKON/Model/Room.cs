@@ -82,7 +82,7 @@ namespace SAMI_SIKON.Model
             int seatNr = 0;
             for (int i=0; i <= x; i++) {
                 for (int j=0; j < Layout[i].Count; j++) {
-                    if (i == x && j >= y) {
+                    if (i < x || (i == x && j <= y)) {
                         if (Layout[i][j] == SeatSymbol) {
                             seatNr++;
                         }

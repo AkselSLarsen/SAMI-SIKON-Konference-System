@@ -52,12 +52,12 @@ namespace SAMI_SIKON.Pages.Rooms
             set { _eventId = value; }
         }
         [FromQuery(Name = "x")]
-        public int SelectedSeatRow {
+        public int SelectedSeatColumn {
             get { return _x; }
             set { _x = value; }
         }
         [FromQuery(Name = "y")]
-        public int SelectedSeatColumn {
+        public int SelectedSeatRow {
             get { return _y; }
             set { _y = value; }
         }
@@ -117,7 +117,7 @@ namespace SAMI_SIKON.Pages.Rooms
         }
 
         public int GetSelectedSeat() {
-            return Room.FindSeat(SelectedSeatRow, SelectedSeatColumn);
+            return Room.FindSeat(SelectedSeatColumn, SelectedSeatRow);
         }
 
         public async Task<bool> SeatTaken(int x, int y) {
@@ -128,7 +128,7 @@ namespace SAMI_SIKON.Pages.Rooms
         }
 
         public bool SeatSelected(int x, int y) {
-            if(x == SelectedSeatRow && y == SelectedSeatColumn) {
+            if(x == SelectedSeatColumn && y == SelectedSeatRow) {
                 return true;
             } else {
                 return false;
