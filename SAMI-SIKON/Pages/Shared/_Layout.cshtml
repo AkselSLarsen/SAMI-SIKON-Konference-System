@@ -1,10 +1,13 @@
 ﻿@using SAMI_SIKON.Services
+@using SAMI_SIKON.Model
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SIKON Konference System</title>
+    <script src="@Url.Content("~/lib/jquery/dist/jquery.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/lib/bootstrap/dist/js/bootstrap.js")" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/reset.css")" media="screen" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -22,35 +25,31 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/Events">Events</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/EventOverview">Alle Oplæg</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/EventOverview">Overview</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
+                        @if (UserCatalogue.CurrentUser is Administrator) {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Rooms/Designer">Rum Designer</a>
+                            </li>
+                        }
                     </ul>
-                    
+
                 </div>
                 <div>
                     <ul class="nav navbar-nav navbar-right">
-                        @if (UserCatalogue.CurrentUser == null)
-                        {
+                        @if (UserCatalogue.CurrentUser == null) {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/RegisterPage">Register</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/RegisterPage">Registrer</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Login/LoginPage">Login</a>
                             </li>
-                        }
-                        else
-                        {
+                        } else {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/UserPage">Userpage</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/UserPage">Brugerside</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/LogoutRedirectToFrontPage">Logout</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Login/LogoutRedirectToFrontPage">Logud</a>
                             </li>
                         }
                     </ul>
@@ -64,11 +63,13 @@
         </main>
     </div>
 
+    <!--
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2021 - SAMI_SIKON - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
+   -->
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -110,7 +110,7 @@ namespace SAMI_SIKON.Pages {
             Events = events.GetAllItems().Result;
         }
 
-        public void OnGetAsync() {
+        public void OnGet() {
             if(Year == -1 || Month == -1 || Day == -1) {
                 Date = GetClosestDate();
             } else {
@@ -183,8 +183,10 @@ namespace SAMI_SIKON.Pages {
             }
 
             if(evt.Theme != null) {
-                re += "Tema: " + evt.Theme;
+                re += "Tema: " + evt.Theme + "\n";
             }
+            Room room = await evt.FindRoom();
+            re += "Rum: " + room.Name;
 
             return re;
         }
@@ -238,7 +240,8 @@ namespace SAMI_SIKON.Pages {
         }
 
         private List<DateTime> GetDates() {
-            List<Event> evts = Events;
+            EventCatalogue ec = new EventCatalogue();
+            List<Event> evts = ec.GetAllItems().Result;
             List<DateTime> dates = new List<DateTime>();
 
             foreach (Event evt in evts) {

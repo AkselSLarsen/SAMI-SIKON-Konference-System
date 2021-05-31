@@ -3,7 +3,7 @@
 @{
 }
 
-<h2>Register User</h2>
+<h2>Registrer Bruger</h2>
 
 <div class="row">
     <div class="col-md-4">
@@ -15,22 +15,22 @@
                 <span asp-validation-for="@Model.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.UserName" class="custom-control-label"></label>
+                <label asp-for="@Model.UserName" class="custom-control-label">Navn</label>
                 <input asp-for="@Model.UserName" class="form-control" />
                 <span asp-validation-for="@Model.UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.PhoneNumber" class="custom-control-label"></label>
+                <label asp-for="@Model.PhoneNumber" class="custom-control-label">Telefon nummer</label>
                 <input asp-for="@Model.PhoneNumber" class="form-control" />
                 <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Password" class="custom-control-label"></label>
+                <label asp-for="@Model.Password" class="custom-control-label">Kodeord</label>
                 <input type="password" asp-for="@Model.Password" class="form-control" />
                 <span asp-validation-for="@Model.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Registrer" class="btn btn-primary" />
             </div>
         </form>
     </div>

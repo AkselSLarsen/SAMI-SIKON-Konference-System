@@ -300,7 +300,7 @@ namespace SAMI_SIKON.Services {
             return await UpdateItem(user, new int[] {user.Id});
         }
 
-        public bool ValidateUser(string email, string password) {
+        private bool ValidateUser(string email, string password) {
             IUser user = GetItemsWithAttribute(0, email).Result[0];
             string prePwd = PasswordHasher.HashPasswordAndSalt(password, user.Salt, 1000, 48);
             return prePwd.SequenceEqual(user.Password);

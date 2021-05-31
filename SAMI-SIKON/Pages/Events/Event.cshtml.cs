@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SAMI_SIKON.Interfaces;
 using SAMI_SIKON.Model;
@@ -115,7 +115,7 @@ namespace SAMI_SIKON.Pages.Events {
                     Tooltip = "Der er ikke nogen pladser tilbage.";
                     return false;
                 } else if(UserCatalogue.CurrentUser is Administrator) {
-                    Tooltip = "Administratorer kan ikke booke sig ind på et oplæg.";
+                    Tooltip = "Administratorer kan ikke booke sig ind pÃ¥ et oplÃ¦g.";
                     return false;
                 }
                 Event evt = await Events.GetItem(new int[] { EventId });
@@ -128,10 +128,10 @@ namespace SAMI_SIKON.Pages.Events {
                         overlaps = true;
                     }
                 }
-                Tooltip = "Du er allerede booket til et oplæg der forgår på samme tid.";
+                Tooltip = "Du er allerede booket til et oplÃ¦g der forgÃ¥r pÃ¥samme tid.";
                 return !overlaps;
             }
-            Tooltip = "Du skal være logget ind for at booke en plads.";
+            Tooltip = "Du skal vÃ¦re logget ind for at booke en plads.";
             return true;
         }
 
