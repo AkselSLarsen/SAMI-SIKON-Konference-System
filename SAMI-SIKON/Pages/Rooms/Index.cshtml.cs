@@ -116,6 +116,11 @@ namespace SAMI_SIKON.Pages.Rooms
             return Redirect("~/");
         }
 
+        public async Task<string> GetEventNameAsync() {
+            Event evt = await Events.GetItem(new int[] { EventId });
+            return evt.Name;
+        }
+
         public int GetSelectedSeat() {
             return Room.FindSeat(SelectedSeatColumn, SelectedSeatRow);
         }

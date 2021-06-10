@@ -252,7 +252,7 @@ VALUES ('Temagrupper', 'SSSSSSSSSSSSSSS;SSSSSSSSSSSSSSS;SSSSSSSSSSSSSSS');
 --Room_Id=2
 
 INSERT INTO Room (_Name, Layout)
-VALUES ('Workshops', 'SSSS;SSSS;SSSS;SSSS');
+VALUES ('Workshops', 'STMMM;STMMC;MMMMC;STMFC;STMFF');
 --Room_Id=3
 
 --___________________________________________________________________________________________________
