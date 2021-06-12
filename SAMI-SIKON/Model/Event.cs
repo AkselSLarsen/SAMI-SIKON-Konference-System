@@ -57,22 +57,6 @@ namespace SAMI_SIKON.Model
             Theme = theme;
         }
 
-        /// <summary>
-        /// This is a testing constructor, please delete it after explaining all about what it was for in the report.
-        /// </summary>
-        /// <param name="testing">Doesn't do anything, just there to make it not interfere with the rest of the class</param>
-        public Event(bool testing) {
-            Random r = new Random();
-            Id = r.Next(1, 10000);
-            RoomNr = r.Next(1, 100);
-            _duration = r.Next(1, 4) * 30;
-            StartTime = DateTime.Today.AddMinutes(r.Next(16, 28) * 30);
-            Description = "";
-            Name = "Name Here";
-            Theme = r.Next(0, 2) < 1 ? "a" : r.Next(0, 2) < 1 ? "b" : "c";
-            Speakers = null;
-        }
-
         public bool SeatTaken(int i) {
             foreach(int j in _seatsTaken) {
                 if(i == j) {
